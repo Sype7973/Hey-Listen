@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
 // import schema from Commission.js
-const commissionSchema = require('./Commission');
+// const commissionSchema = require('./Commission');
 const completedCommissionSchema = require('./CompletedCommissions');
 
 const userSchema = new Schema(
@@ -37,7 +37,7 @@ const userSchema = new Schema(
     musicLinks: [{
         type: String,
     }],
-    activeCommissions: [commissionSchema],
+    // activeCommissions: [commissionSchema],
     commissions: [completedCommissionSchema],
   },
   // set this to use virtual below
@@ -69,4 +69,3 @@ userSchema.virtual('commissionCount').get(function () {
 const User = model('User', userSchema);
 
 module.exports = User;
-a
