@@ -1,5 +1,7 @@
 const { Schema, model } = require('mongoose');
 
+
+//schema only
 const completedCommissionSchema = new Schema(
     {
         commisisonTitle: {
