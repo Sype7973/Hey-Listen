@@ -14,6 +14,10 @@ const commissionSchema = new Schema(
             type: String,
             required: true,
         },
+        username: {
+            type: String,
+            required: true,
+        },
         budget: {
             type: Number,
             required: true,
@@ -34,5 +38,6 @@ const commissionSchema = new Schema(
     }
 );
 
+const Commission = model('Commission', commissionSchema);
 
-module.exports = commissionSchema;
+module.exports = Commission;
