@@ -1,5 +1,5 @@
 // This is the main file for the portfolio website. It is the first file that is run when the website is loaded.
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -7,6 +7,8 @@ import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@ap
 import { setContext } from '@apollo/client/link/context';
 import Home from './pages/HomePage';
 import PostDashboard from './pages/PostDashboard';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -34,5 +36,17 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <ChakraProvider>
+          <Header />
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/postdashboard" element={<PostDashboard />} />
+          </Routes>
+          <Footer />
+        </ChakraProvider>
+      </Router>
+    </ApolloProvider>
+  );
 
 }
+
+export default App;
