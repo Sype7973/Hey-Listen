@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import Home from './pages/HomePage';
+import PostDashboard from './pages/PostDashboard';
 
 const httpLink = createHttpLink({
   uri: '/graphql',

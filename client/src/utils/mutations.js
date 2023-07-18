@@ -82,3 +82,46 @@ export const REMOVE_POST = gql`
     }
 `;
 
+// export const ADD_COMMISSION = gql`
+//     mutation addCommission($commissionTitle: String!, $commissionDescription: String!, $commissionType: String!, $commissionAuthor: String!, $commissionPrice: String!) {
+//         addCommission(commissionTitle: $commissionTitle, commissionDescription: $commissionDescription, commissionType: $commissionType, commissionAuthor: $commissionAuthor, commissionPrice: $commissionPrice){
+//             _id
+//             commissionTitle
+//             commissionDescription
+//             commissionType
+//             username
+//             budget
+//             completionDate
+//             status
+//             rating
+//             review
+//         }
+//     }
+// `;
+
+// export const UPDATE_COMMISSION = gql`
+//     mutation updateCommission($commissionTitle: String, $commissionDescription: String, $commissionType: String, $commissionAuthor: String, $commissionPrice: String) {
+    // _id: ID
+    // commissionTitle
+    // commissionType
+    // commissionDescription
+    // username
+    // budget
+    // completionDate
+    // status
+    // rating
+    // review
+
+// export const REMOVE_COMMISSION = gql`
+//     mutation removeCommission($commissionId: ID!) {
+// _id: ID
+// commissionTitle: String
+// commissionType: String
+// commissionDescription: String
+// username: String
+// budget: Int
+// completionDate: String
+// status: String
+// rating: Int
+// review: String
+
