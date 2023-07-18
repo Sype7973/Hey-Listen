@@ -4,6 +4,8 @@ const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
+    /*------------User------------*/
+
     me: async (parent, args, context) => {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user.data._id })
@@ -13,20 +15,23 @@ const resolvers = {
       }
       throw new AuthenticationError("You need to be logged in!");
     },
+    getUsers: async () => {
+      console.log("hello");
+      return User.find().select("-__v -password").populate("commissions posts");
+    },
+    getUser: async (parent, args) => {
+      return User.findOne({ _id: args._id })
+        .select("-__v -password")
+        .populate("commissions posts");
+    },
+
+    /*------------Post------------*/
+
     getPosts: async () => {
       return Post.find();
     },
     getPost: async (parent, args) => {
       return Post.findOne({ _id: args._id });
-    },
-    getUsers: async () => {
-      console.log("hello");
-      return User.find().select("-__v -password").populate("commissions");
-    },
-    getUser: async (parent, args) => {
-      return User.findOne({ _id: args._id })
-        .select("-__v -password")
-        .populate("commissions");
     },
   },
   Mutation: {
@@ -95,6 +100,7 @@ const resolvers = {
     addPost: async (parent, args, context) => {
       if (context.user) {
         try {
+          console.log(args);
           const post = await Post.create({
             ...args,
             username: context.user.username,
