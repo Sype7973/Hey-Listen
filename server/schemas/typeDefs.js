@@ -56,6 +56,7 @@ const typeDefs = gql`
         removeCommission(commissionId: ID!): User
         addPost(postTitle: String!, postDescription: String!, postText: String!, postAuthor: String!, postPrice: String!): Post
         updatePost(postTitle: String, postDescription: String, postText: String, postAuthor: String, postPrice: String): Post
+        removePost(postId: ID!): User
     }
 `;
 
