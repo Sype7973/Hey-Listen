@@ -10,7 +10,7 @@ const typeDefs = gql`
         userType: String
         bio: String
         profilePicture: String
-        musicLinks: String
+        musicLinks: [String]
         posts: [Post]
     }
 
