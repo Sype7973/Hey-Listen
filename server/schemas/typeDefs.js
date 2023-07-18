@@ -14,6 +14,20 @@ const typeDefs = gql`
         posts: [Post]
     }
 
+    type Commission {
+        _id: ID
+        commissionTitle: String
+        commissionType: String
+        commissionDescription: String
+        username: String
+        budget: Int
+        completionDate: String
+        status: String
+        rating: Int
+        review: String
+    }
+
+
     type Post {
         _id: ID
         postTitle: String
