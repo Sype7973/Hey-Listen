@@ -14,7 +14,7 @@ const typeDefs = gql`
         posts: [Post]
     }
 
-    Type Post {
+    type Post {
         _id: ID
         postTitle: String
         postDescription: String
@@ -35,8 +35,6 @@ const typeDefs = gql`
     type Query {
         me: User      
         getPosts(username: String): [Post]
-        getCommissions(username: String): [Commission]
-        getCommission(_id: ID!): Commission
         getUsers: [User]
         getUser(_id: ID!): User
         getPost(_id: ID!): Post
@@ -45,11 +43,8 @@ const typeDefs = gql`
     
     type Mutation {
         addUser(username: String!, email: String!, password: String!, userType: String!): Auth
-        addCommission(commissionName: String!, description: String!, price: String!, image: String!, link: String!): Commission
         login(email: String!, password: String!): Auth
         updateUser(username: String, email: String, password: String): User
-        updateCommission(commissionName: String, description: String, price: String, image: String, link: String): Commission
-        removeCommission(commissionId: ID!): User
         addPost(postTitle: String!, postDescription: String!, postText: String!, postAuthor: String!, postPrice: String!): Post
         updatePost(postTitle: String, postDescription: String, postText: String, postAuthor: String, postPrice: String): Post
         removePost(postId: ID!): User

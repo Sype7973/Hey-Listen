@@ -1,99 +1,121 @@
 import {gql} from '@apollo/client';
 
+// get your userprofile
 export const GET_ME = gql`
     query me {
         me {
             _id
             username
             email
-            commissions {
+            Post {
                 _id
-                commissionName
-                description
-                price
-                image
-                link
+                postTitle
+                postDescription
+                postType
+                username
+                budget
+                deadline
                 createdAt
             }
+            Commission {
+                _id
+                commissionTitle
+                commissionType
+                commissionDescription
+                budget
+                completionDate
+                status
+                rating
+                review
         }
     }
 `;
-
+// get all users
 export const GET_USERS = gql`
     query getUsers {
         users {
             _id
             username
             email
-            commissions {
+            Post {
                 _id
-                commissionName
-                description
-                price
-                image
-                link
+                postTitle
+                postDescription
+                postType
+                username
+                budget
+                deadline
                 createdAt
             }
+            Commission {
+                _id
+                commissionTitle
+                commissionType
+                commissionDescription
+                budget
+                completionDate
+                status
+                rating
+                review
         }
     }
 `;
-
+// get a single user by username
 export const GET_USER = gql`
     query getUser($username: String!) {
         user(username: $username) {
             _id
             username
             email
-            commissions {
+            Post {
                 _id
-                commissionName
-                description
-                price
-                image
-                link
+                postTitle
+                postDescription
+                postType
+                username
+                budget
+                deadline
                 createdAt
             }
+            Commission {
+                _id
+                commissionTitle
+                commissionType
+                commissionDescription
+                budget
+                completionDate
+                status
+                rating
+                review
         }
     }
 `;
-
-export const QUERY_COMMISSIONS = gql`
-    query getCommissions($username: String) {
-        commissions(username: $username) {
-            _id
-            commissionName
-            description
-            price
-            image
-            link
-            createdAt
-        }
-    }
-`;
-
-export const QUERY_COMMISSION = gql`
-    query getCommission($id: ID!) {
-        commission(_id: $id) {
-            _id
-            commissionName
-            description
-            price
-            image
-            link
-            createdAt
-        }
-    }
-`;
-
+//  get all posts
 export const QUERY_POSTS = gql`
     query getPosts($username: String) {
         getPosts(username: $username) {
             _id
             postTitle
             postDescription
-            postText
-            postAuthor
-            postPrice
+            postType
+            username
+            budget
+            deadline
+            createdAt
+        }
+    }
+`;
+// get a single post by id
+export const QUERY_POST = gql`
+    query getPost($id: ID!) {
+        getPost(_id: $id) {
+            _id
+            postTitle
+            postDescription
+            postType
+            username
+            budget
+            deadline
             createdAt
         }
     }
