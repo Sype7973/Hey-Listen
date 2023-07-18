@@ -6,29 +6,23 @@ const typeDefs = gql`
         username: String
         email: String
         commissions: [Commission]
-    }
-
-    type Commission {
-        _id: ID
-        commissionName: String
-        description: String
-        budget: String
-        image: String
-        link: String
-        createdAt: String
-        username: String
-        status: String
-        review: String
-        rating: Int
+        password: String
+        userType: String
+        bio: String
+        profilePicture: String
+        musicLinks: String
+        posts: [Post]
     }
 
     Type Post {
         _id: ID
         postTitle: String
         postDescription: String
-        postText: String
-        postAuthor: String
-        postPrice: String
+        postType: String
+        username: String
+        budget: String
+        deadline: String
+        userId: [User]
         createdAt: String
     }
 
@@ -45,6 +39,8 @@ const typeDefs = gql`
         getCommission(_id: ID!): Commission
         getUsers: [User]
         getUser(_id: ID!): User
+        getPost(_id: ID!): Post
+
     }
     
     type Mutation {
@@ -57,6 +53,7 @@ const typeDefs = gql`
         addPost(postTitle: String!, postDescription: String!, postText: String!, postAuthor: String!, postPrice: String!): Post
         updatePost(postTitle: String, postDescription: String, postText: String, postAuthor: String, postPrice: String): Post
         removePost(postId: ID!): User
+        deleteUser: User 
     }
 `;
 
