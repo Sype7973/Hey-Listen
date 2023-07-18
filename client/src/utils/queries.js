@@ -84,3 +84,17 @@ export const QUERY_COMMISSION = gql`
         }
     }
 `;
+
+export const QUERY_POSTS = gql`
+    query getPosts($username: String) {
+        getPosts(username: $username) {
+            _id
+            postTitle
+            postDescription
+            postText
+            postAuthor
+            postPrice
+            createdAt
+        }
+    }
+`;
