@@ -85,4 +85,45 @@ export const REMOVE_COMMISSION = gql`
     }
 `;
 
+export const ADD_POST = gql`
+    mutation addPost($postTitle: String!, $postDescription: String!, $postText: String!, $postAuthor: String!, $postPrice: String!) {
+        addPost(postTitle: $postTitle, postDescription: $postDescription, postText: $postText, postAuthor: $postAuthor, postPrice: $postPrice){
+            _id
+            postTitle
+            postDescription
+            postText
+            postAuthor
+            postPrice
+            createdAt
+        }
+    }
+`;
+
+export const UPDATE_POST = gql`
+    mutation updatePost($postTitle: String, $postDescription: String, $postText: String, $postAuthor: String, $postPrice: String) {
+        updatePost(postTitle: $postTitle, postDescription: $postDescription, postText: $postText, postAuthor: $postAuthor, postPrice: $postPrice){
+            _id
+            postTitle
+            postDescription
+            postText
+            postAuthor
+            postPrice
+            createdAt
+        }
+    }
+`;
+
+export const REMOVE_POST = gql`
+    mutation removePost($postId: ID!) {
+        removePost(postId: $postId){
+            _id
+            postTitle
+            postDescription
+            postText
+            postAuthor
+            postPrice
+            createdAt
+        }
+    }
+`;
 
