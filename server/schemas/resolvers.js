@@ -1,4 +1,4 @@
-const { User, Commission } = require("../models");
+const { User, Post } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -8,31 +8,28 @@ const resolvers = {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user.data._id })
           .select("-__v -password")
-          .populate("commissions", "activeCommissions");
+          .populate("commissions");
         return userData;
       }
       throw new AuthenticationError("You need to be logged in!");
     },
-    getCommissions: async () => {
-      return Commission.find();
+    getPosts: async () => {
+      return Post.find();
     },
-    getCommission: async (parent, args) => {
-      return Commission.findOne({ _id: args._id });
+    getPost: async (parent, args) => {
+      return Post.findOne({ _id: args._id });
     },
     getUsers: async () => {
       console.log("hello");
-      return User.find()
-        .select("-__v -password")
-        .populate("commissions", "activeCommissions");
+      return User.find().select("-__v -password").populate("commissions");
     },
     getUser: async (parent, args) => {
       return User.findOne({ _id: args._id })
         .select("-__v -password")
-        .populate("commissions", "activeCommissions");
+        .populate("commissions");
     },
   },
   Mutation: {
-
     /*------------User------------*/
 
     addUser: async (parent, args) => {
@@ -65,7 +62,7 @@ const resolvers = {
           const user = await User.findByIdAndDelete({
             _id: args._id,
           });
-          
+
           await Post.deleteMany({
             username: user.username,
           });
