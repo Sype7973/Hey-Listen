@@ -56,7 +56,7 @@ const resolvers = {
       }
     },
 
-    removeUser: async (parent, args, context) => {
+    deleteUser: async (parent, args, context) => {
       if (context.user) {
         try {
           const user = await User.findByIdAndDelete({
