@@ -1,4 +1,4 @@
 const User = require('./User');
-const Commission = require('./Commission');
+const Post = require('./Post');
 
-module.exports = { User, Commission };
+module.exports = { User, Post };
