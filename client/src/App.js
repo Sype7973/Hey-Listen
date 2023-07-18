@@ -30,5 +30,5 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <ChakraProvider>
-          <div className="App">
+
 }
