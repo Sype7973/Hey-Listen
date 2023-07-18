@@ -1,8 +1,6 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
-// import schema from Commission.js
-// const commissionSchema = require('./Commission');
 const commissionSchema = require('./Commission');
 
 const userSchema = new Schema(
@@ -41,7 +39,7 @@ const userSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'Post',
     }],
-    activeCommissions: [commissionSchema],
+    commissions: [commissionSchema],
   },
   // set this to use virtual below
   {

@@ -30,6 +30,10 @@ const postSchema = new Schema(
             type: Date,
             required: true,
         },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        },
     }
 );
 
