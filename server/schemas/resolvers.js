@@ -14,16 +14,18 @@ const resolvers = {
             }
             throw new AuthenticationError("You need to be logged in!");
         },
-        getCommisions: async () => {
+        getCommissions: async () => {
             return Commission.find()
         },
         getCommission: async (parent, args) => {
             return Commission.findOne({ _id: args._id })
         },
         getUsers: async () => {
+            console.log("hello")
             return User.find()
             .select("-__v -password")
             .populate("commissions", "activeCommissions");
+
         },
         getUser: async (parent, args) => {
             return User.findOne({ _id: args._id })
@@ -33,8 +35,10 @@ const resolvers = {
     },
     Mutation: {
         addUser: async (parent, args) => {
+            console.log(args);
             const user = await User.create(args);
             const token = signToken(user);
+            
             return { token, user };
         },
         addCommission: async (parent, args, context) => {
@@ -114,3 +118,5 @@ const resolvers = {
         }
     }
 };
+
+module.exports = resolvers;

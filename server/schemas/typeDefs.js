@@ -39,16 +39,16 @@ const typeDefs = gql`
     }
 
     type Query {
-        me: User
-        commissions(username: String): [Commission]
-        commission(_id: ID!): Commission
-        users: [User]
-        user(username: String!): User
+        me: User      
         getPosts(username: String): [Post]
+        getCommissions(username: String): [Commission]
+        getCommission(_id: ID!): Commission
+        getUsers: [User]
+        getUser(_id: ID!): User
     }
     
     type Mutation {
-        addUser(username: String!, email: String!, password: String!): Auth
+        addUser(username: String!, email: String!, password: String!, userType: String!): Auth
         addCommission(commissionName: String!, description: String!, price: String!, image: String!, link: String!): Commission
         login(email: String!, password: String!): Auth
         updateUser(username: String, email: String, password: String): User
