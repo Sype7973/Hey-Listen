@@ -1,5 +1,7 @@
 const { gql } = require('apollo-server-express');
 
+// addcommission, updatecommission, removecommission can be added later if needed for front end
+
 const typeDefs = gql`
     type User {
         _id: ID
@@ -10,7 +12,7 @@ const typeDefs = gql`
         userType: String
         bio: String
         profilePicture: String
-        musicLinks: String
+        musicLinks: [String]
         posts: [Post]
     }
 
@@ -34,9 +36,9 @@ const typeDefs = gql`
         postDescription: String
         postType: String
         username: String
-        budget: String
+        budget: Int
         deadline: String
-        userId: [User]
+        userId: ID
         createdAt: String
     }
 
@@ -55,14 +57,17 @@ const typeDefs = gql`
 
     }
     
+
+
     type Mutation {
         addUser(username: String!, email: String!, password: String!, userType: String!): Auth
         login(email: String!, password: String!): Auth
         updateUser(username: String, email: String, password: String): User
-        addPost(postTitle: String!, postDescription: String!, postText: String!, postAuthor: String!, postPrice: String!): Post
-        updatePost(postTitle: String, postDescription: String, postText: String, postAuthor: String, postPrice: String): Post
+        addPost(postTitle: String!, postDescription: String!, postType: String!, username: String!, budget: Int, deadline: String!): Post
+        updatePost(postTitle: String, postDescription: String, postType: String, username: String, budget: Int, deadline: String): Post
         removePost(postId: ID!): User
         deleteUser: User 
+
     }
 `;
 
