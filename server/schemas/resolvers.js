@@ -17,7 +17,7 @@ const resolvers = {
     },
     getUsers: async () => {
       console.log("hello");
-      return User.find().select("-__v -password").populate("commissions posts");
+      return User.find().select("-__v").populate("commissions posts");
     },
     getUser: async (parent, args) => {
       return User.findOne({ _id: args._id })
@@ -50,7 +50,7 @@ const resolvers = {
         try {
           const user = await User.findByIdAndUpdate(
             { _id: args._id },
-            { $set: { ...args } },
+            { $set: { ...args }},
             { new: true }
           );
           return user;
@@ -142,6 +142,24 @@ const resolvers = {
             _id: args._id,
           });
           return post;
+        } catch (err) {
+          console.log(err);
+          throw new Error(err);
+        }
+      }
+    },
+
+    /*------------Commission------------*/
+
+    addCommission: async (parent, args, context) => {
+      if (context.user) {
+        try {
+          const user = await User.findByIdAndUpdate(
+            { _id: args._id },
+            { $push: {commissions: [args.commissions]}},
+            { new: true }
+          );
+          return user;
         } catch (err) {
           console.log(err);
           throw new Error(err);
