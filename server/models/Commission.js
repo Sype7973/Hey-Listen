@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const commissionSchema = new Schema(
     {
-        commisisonTitle: {
+        commissionTitle: {
             type: String,
             required: true,
         },

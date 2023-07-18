@@ -32,9 +32,9 @@ const userSchema = new Schema(
     profilePicture: {
         type: String,
     },
-    musicLinks: [{
-        type: String,
-    }],
+    musicLinks: {
+        type: [String],
+    },
     posts: [{
         type: Schema.Types.ObjectId,
         ref: 'Post',
