@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 // import schema from Commission.js
 // const commissionSchema = require('./Commission');
-const completedCommissionSchema = require('./CompletedCommissions');
+const commissionSchema = require('./Commission');
 
 const userSchema = new Schema(
   {
@@ -37,8 +37,11 @@ const userSchema = new Schema(
     musicLinks: [{
         type: String,
     }],
-    // activeCommissions: [commissionSchema],
-    commissions: [completedCommissionSchema],
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+    }],
+    activeCommissions: [commissionSchema],
   },
   // set this to use virtual below
   {

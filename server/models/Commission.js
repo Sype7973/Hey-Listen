@@ -22,13 +22,20 @@ const commissionSchema = new Schema(
             type: Number,
             required: true,
         },
-        deadline: {
+        completionDate: {
             type: Date,
             required: true,
         },
         status: {
             type: String,
             required: true,
+            default: false,
+        },
+        rating: {
+            type: Number,
+        },
+        review: {
+            type: String,
         },
     },
     {
@@ -38,6 +45,6 @@ const commissionSchema = new Schema(
     }
 );
 
-const Commission = model('Commission', commissionSchema);
+// const Commission = model('Commission', commissionSchema);
 
-module.exports = Commission;
+module.exports = commissionSchema;
