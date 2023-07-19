@@ -1,12 +1,13 @@
 // This is the main file for the portfolio website. It is the first file that is run when the website is loaded.
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
+import { useLocation } from 'react-router-dom';
 import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import Home from './pages/HomePage';
 import PostDashboard from './pages/PostDashboard';
+import Login from './pages/LoginForm';
+import Signup from './pages/SignupForm';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -32,18 +33,24 @@ const client = new ApolloClient({
 });
 
 function App() {
+  const [currentPath] = useState(window.location.pathname);
+  const location = useLocation();
+
+useEffect(() => {
+  console.log('location changed to ' + location.pathname);
+}, [location]);
   return (
     <ApolloProvider client={client}>
-      <Router>
+        <div>
         <ChakraProvider>
-          <Header />
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/postdashboard" element={<PostDashboard />} />
-          </Routes>
+          <Header currentPath={currentPath} />
+          {location.pathname === '/' && <Home />}
+          {location.pathname === '/postdashboard' && <PostDashboard />}
+          {location.pathname === '/login' && <Login />}
+          {location.pathname === '/signup' && <Signup />}
           <Footer />
         </ChakraProvider>
-      </Router>
+        </div>
     </ApolloProvider>
   );
 
