@@ -3,13 +3,11 @@ import Auth from "../utils/auth";
 import { Link } from "react-router-dom";
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from "../utils/mutations";
-import { FormControl, FormLabel, Input, Button, Text, Alert, AlertIcon, Box } from "@chakra-ui/react";
-import SignupForm from "./SignupForm";
+import { FormControl, FormLabel, Input, Button, Alert, AlertIcon, Box } from "@chakra-ui/react";
 
 function LoginForm() {
   const [formState, setFormState] = useState({ email: '', password: '' });
-  const [showSignupForm, setShowSignupForm] = useState(false);
-  const [login, { error, data }] = useMutation(LOGIN_USER);
+  const [login, { error }] = useMutation(LOGIN_USER);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();

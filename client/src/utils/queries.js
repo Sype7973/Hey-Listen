@@ -2,32 +2,14 @@ import { gql } from "@apollo/client";
 
 // get your userprofile
 export const GET_ME = gql`
-    query me {
-        me {
-            _id
-            username
-            email
-            Post {
-                _id
-                postTitle
-                postDescription
-                postType
-                username
-                budget
-                deadline
-            }
-            Commission {
-                _id
-                commissionTitle
-                commissionType
-                commissionDescription
-                budget
-                completionDate
-                status
-                rating
-                review
-        }
+  query Me {
+    me {
+      username
+      email
+      profilePicture
+      userType
     }
+  }
 `;
 
 // get all users
@@ -58,6 +40,7 @@ export const GET_USERS = gql`
                 review
         }
     }
+}
 `;
 // get a single user by username
 export const GET_USER = gql`
@@ -87,6 +70,7 @@ export const GET_USER = gql`
                 review
         }
     }
+}
 `;
 //  get all posts
 export const QUERY_POSTS = gql`

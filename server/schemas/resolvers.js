@@ -7,19 +7,20 @@ const resolvers = {
     /*------------User------------*/
 
     me: async (parent, args, context) => {
+   
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user.data._id })
+        const userData = await User.findOne({ _id: context.user._id })
           .select("-__v -password")
-          .populate("commissions");
+          console.log(userData)
         return userData;
       }
       throw new AuthenticationError("You need to be logged in!");
     },
-    getUsers: async () => {
-      console.log("hello");
+    getUsers: async (parent, args, context) => {
+
       return User.find().select("-__v").populate("commissions posts");
     },
-    getUser: async (parent, args) => {
+    getUser: async (parent, args, context) => {
       return User.findOne({ _id: args._id })
         .select("-__v -password")
         .populate("commissions posts");

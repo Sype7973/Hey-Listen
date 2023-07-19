@@ -53,7 +53,6 @@ const typeDefs = gql`
         getUsers: [User]
         getUser(_id: ID!): User
         getPost(_id: ID!): Post
-
     }
     
 

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Flex,
   Text,
@@ -11,24 +11,40 @@ import {
 } from "@chakra-ui/react";
 import { FiMenu, FiHome, FiUser } from "react-icons/fi";
 import { BsPencilSquare } from "react-icons/bs";
-import { MdLibraryMusic, MdDashboard, MdLogin } from "react-icons/md";
+import { MdLibraryMusic, MdDashboard, MdLogin, MdLogout } from "react-icons/md";
 import NavItem from "../components/NavItem";
+import Auth from "../utils/auth";
+import { useQuery } from "@apollo/client";
+import { GET_ME } from "../utils/queries";
 
 export default function Sidebar() {
   const [navSize, changeNavSize] = useState("large");
-  const [activeLink, setActiveLink] = useState("/");
+  const [user, setUser] = useState(null);
+  const { data } = useQuery(GET_ME);
 
-  const handleNavItemClick = (link) => {
-    setActiveLink(link);
-  };
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        if (data.me) {
+          setUser(data.me);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        setUser(null);
+      }
+    };
+    fetchUserProfile();
+  }, [data]);
+
+  const location = useLocation();
 
   return (
     <Flex
       bg="white"
       align="center"
-      pos="absolute" // Use absolute positioning to overlay the sidebar on top of the main content
+      pos="absolute"
       left="5"
-      top="2.5vh" // Adjust the top positioning as needed
+      top="2.5vh"
       h="95vh"
       border="1px solid rgba(0, 0, 0, 0.08)"
       boxShadow="8px 4px 6px 0 rgba(0, 0, 0, 0.3)"
@@ -62,59 +78,58 @@ export default function Sidebar() {
 
         <Box w="100%">
           {" "}
-          <Link to="/" onClick={() => handleNavItemClick("/")}>
+          <Link to="/">
             {" "}
             <NavItem
               navSize={navSize}
               icon={FiHome}
               title="Home"
-              isActive={activeLink === "/"}
+              isActive={location.pathname === "/"}
             />
           </Link>
-          <Link
-            to="/myprofile"
-            onClick={() => handleNavItemClick("/myprofile")}
-          >
+          <Link to="/myprofile">
             {" "}
             <NavItem
               navSize={navSize}
               icon={FiUser}
               title="Profile"
-              isActive={activeLink === "/myprofile"}
+              isActive={location.pathname === "/myprofile"}
             />
           </Link>
-          <Link
-            to="/dashboard"
-            onClick={() => handleNavItemClick("/dashboard")}
-          >
+          <Link to="/dashboard">
             {" "}
             <NavItem
               navSize={navSize}
               icon={MdDashboard}
               title="Dashboard"
-              isActive={activeLink === "/dashboard"}
+              isActive={location.pathname === "/dashboard"}
             />
           </Link>
-          <Link to="/post" onClick={() => handleNavItemClick("/post")}>
+          <Link to="/post">
             {" "}
             <NavItem
               navSize={navSize}
               icon={MdLibraryMusic}
               title="Posts"
-              isActive={activeLink === "/post"}
+              isActive={location.pathname === "/post"}
             />
           </Link>
         </Box>
         <Flex
-          flex="1" // Occupy all available space and push its children to the bottom
+          flex="1"
           w="100%"
           flexDir="column"
           alignItems={navSize === "small" ? "center" : "flex-start"}
           justifyContent="flex-end"
           mb="10%"
         >
-
-          <Flex mt={4} align="center" w="100%" mb="20px" justifyContent="center">
+          <Flex
+            mt={4}
+            align="center"
+            w="100%"
+            mb="20px"
+            justifyContent="center"
+          >
             <Avatar size="sm" src="avatar-1.jpg" />
             <Flex
               flexDir="column"
@@ -123,33 +138,47 @@ export default function Sidebar() {
               transition="0.3s ease-in-out"
             >
               <Heading as="h3" size="sm">
-                USERNAME
+                {user ? user.username : ""}
               </Heading>
-              <Text color="gray">usertype</Text>
+              <Text color="gray">{user ? user.userType : ""}</Text>
             </Flex>
           </Flex>
-          
+
           <Divider display={navSize === "small" ? "none" : "flex"} />
 
           <Box w="100%">
-            <Link to="/signup" onClick={() => handleNavItemClick("/signup")}>
-              {" "}
-              <NavItem
-                navSize={navSize}
-                icon={BsPencilSquare}
-                title="Signup"
-                isActive={activeLink === "/signup"}
-              />
-            </Link>
-            <Link to="/login" onClick={() => handleNavItemClick("/login")}>
-              {" "}
-              <NavItem
-                navSize={navSize}
-                icon={MdLogin}
-                title="Login"
-                isActive={activeLink === "/login"}
-              />
-            </Link>
+            {user ? (
+              <Link to="/" onClick={() => Auth.logout()}>
+                {" "}
+                <NavItem
+                  navSize={navSize}
+                  icon={MdLogout}
+                  title="Logout"
+                  isActive={location.pathname === "/logout"}
+                />
+              </Link>
+            ) : (
+              <Box>
+                <Link to="/signup">
+                  {" "}
+                  <NavItem
+                    navSize={navSize}
+                    icon={BsPencilSquare}
+                    title="Signup"
+                    isActive={location.pathname === "/signup"}
+                  />
+                </Link>
+                <Link to="/login">
+                  {" "}
+                  <NavItem
+                    navSize={navSize}
+                    icon={MdLogin}
+                    title="Login"
+                    isActive={location.pathname === "/login"}
+                  />
+                </Link>
+              </Box>
+            )}
           </Box>
         </Flex>
       </Flex>

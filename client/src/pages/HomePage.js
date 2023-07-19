@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Flex,
@@ -6,8 +6,28 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { GET_ME } from "../utils/queries";
+import { useQuery } from '@apollo/client';
 
 const HomePage = () => {
+  const [user, setUser] = useState(null); 
+
+  const { data } = useQuery(GET_ME);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        if (data.me) {
+          setUser(data.me);
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        setUser(null);
+      }
+    };
+    fetchUserProfile();
+  }, [data]);
+
   return (
     <Flex
       minHeight="100vh"
@@ -20,14 +40,18 @@ const HomePage = () => {
           Hey Listen!
         </Heading>
         <Text fontSize="xl" color="white">
-          Make music with everyone
+          Make music with everyone{user ? `, ${user.username}` : ''}
         </Text>
         <Button
           colorScheme="teal"
           size="lg"
           onClick={() => {
-            window.location.href = '/signup';
-            }}
+            if (data) {
+              window.location.href = '/post';
+            } else {
+              window.location.href = '/signup';
+            }
+          }}
         >
           Get Started
         </Button>
