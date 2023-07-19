@@ -15,7 +15,6 @@ export const GET_ME = gql`
                 username
                 budget
                 deadline
-                createdAt
             }
             Commission {
                 _id
@@ -45,7 +44,6 @@ export const GET_USERS = gql`
                 username
                 budget
                 deadline
-                createdAt
             }
             Commission {
                 _id
@@ -75,7 +73,6 @@ export const GET_USER = gql`
                 username
                 budget
                 deadline
-                createdAt
             }
             Commission {
                 _id
@@ -92,18 +89,19 @@ export const GET_USER = gql`
 `;
 //  get all posts
 export const QUERY_POSTS = gql`
-    query getPosts($username: String) {
-        getPosts(username: $username) {
-            _id
-            postTitle
-            postDescription
-            postType
-            username
-            budget
-            deadline
-            createdAt
-        }
+  query Posts {
+    getPosts {
+      _id
+      budget
+      deadline
+      postDescription
+      postTitle
+      postType
+      userId
+      username
+      createdAt
     }
+  }
 `;
 // get a single post by id
 export const QUERY_POST = gql`

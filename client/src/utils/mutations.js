@@ -16,7 +16,6 @@ export const ADD_USER = gql`
         postType
         postDescription
         deadline
-        createdAt
         budget
         _id
       }
@@ -59,8 +58,8 @@ export const UPDATE_USER = gql`
 `;
 // add post
 export const ADD_POST = gql`
-    mutation addPost($postTitle: String!, $postDescription: String!, $postText: String!, $postAuthor: String!, $postPrice: String!) {
-        addPost(postTitle: $postTitle, postDescription: $postDescription, postText: $postText, postAuthor: $postAuthor, postPrice: $postPrice){
+    mutation addPost($postTitle: String!, $postDescription: String!, $postType: String!, $username: String!, $budget: Int!, $deadline: String!, $createdAt: String) {
+        addPost(postTitle: $postTitle, postDescription: $postDescription, postType: $postType, username: $username, budget: $budget, deadline: $deadline, createdAt: $createdAt){
             _id
             postTitle
             postDescription
@@ -72,10 +71,12 @@ export const ADD_POST = gql`
         }
     }
 `;
+
+
 // update Post
 export const UPDATE_POST = gql`
-    mutation updatePost($postTitle: String, $postDescription: String, $postText: String, $postAuthor: String, $postPrice: String) {
-        updatePost(postTitle: $postTitle, postDescription: $postDescription, postText: $postText, postAuthor: $postAuthor, postPrice: $postPrice){
+    mutation updatePost($postId: ID!, $postTitle: String, $postDescription: String, $postType: String, $username: String, $budget: Int, $deadline: String, $createdAt: Date) {
+        updatePost(postId: $postId, postTitle: $postTitle, postDescription: $postDescription, postType: $postType, username: $username, budget: $budget, deadline: $deadline, createdAt: $createdAt){
             _id
             postTitle
             postDescription
@@ -87,6 +88,7 @@ export const UPDATE_POST = gql`
         }
     }
 `;
+
 // remove post
 export const REMOVE_POST = gql`
     mutation removePost($postId: ID!) {
