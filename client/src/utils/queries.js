@@ -15,7 +15,6 @@ export const GET_ME = gql`
                 username
                 budget
                 deadline
-                createdAt
             }
             Commission {
                 _id
@@ -46,7 +45,6 @@ export const GET_USERS = gql`
                 username
                 budget
                 deadline
-                createdAt
             }
             Commission {
                 _id
@@ -76,7 +74,6 @@ export const GET_USER = gql`
                 username
                 budget
                 deadline
-                createdAt
             }
             Commission {
                 _id
