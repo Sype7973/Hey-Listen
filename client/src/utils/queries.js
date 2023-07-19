@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from "@apollo/client";
 
 // get your userprofile
 export const GET_ME = gql`
@@ -30,6 +30,7 @@ export const GET_ME = gql`
         }
     }
 `;
+
 // get all users
 export const GET_USERS = gql`
     query getUsers {
@@ -92,33 +93,32 @@ export const GET_USER = gql`
 `;
 //  get all posts
 export const QUERY_POSTS = gql`
-    query getPosts($username: String) {
-        getPosts(username: $username) {
-            _id
-            postTitle
-            postDescription
-            postType
-            username
-            budget
-            deadline
-            createdAt
-        }
+  query Posts {
+    getPosts {
+      _id
+      budget
+      createdAt
+      deadline
+      postDescription
+      postTitle
+      postType
+      userId
+      username
     }
+  }
 `;
 // get a single post by id
 export const QUERY_POST = gql`
-    query getPost($id: ID!) {
-        getPost(_id: $id) {
-            _id
-            postTitle
-            postDescription
-            postType
-            username
-            budget
-            deadline
-            createdAt
-        }
+  query getPost($id: ID!) {
+    getPost(_id: $id) {
+      _id
+      postTitle
+      postDescription
+      postType
+      username
+      budget
+      deadline
+      createdAt
     }
+  }
 `;
-
-
