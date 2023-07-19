@@ -6,7 +6,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import Sidebar from '../components/Sidebar';
 
 const HomePage = () => {
   return (
@@ -16,7 +15,6 @@ const HomePage = () => {
       justifyContent="center"
       bg="teal.500"
     >
-      <Sidebar />
       <VStack spacing={4} textAlign="center">
         <Heading as="h1" size="xl" color="white">
           Hey Listen!
