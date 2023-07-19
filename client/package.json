@@ -5,20 +5,22 @@
   "proxy": "http://localhost:3001",
   "dependencies": {
     "@apollo/client": "^3.3.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@chakra-ui/react": "^2.8.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "bootstrap": "^4.4.1",
+    "framer-motion": "^10.12.22",
     "graphql": "^15.4.0",
     "jwt-decode": "^2.2.0",
     "mongodb": "^5.7.0",
     "react": "^18.2.0",
-    "react-bootstrap": "^1.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.1",
-    "react-scripts": "^5.0.1",
-    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

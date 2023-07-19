@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 // add user
 export const ADD_USER = gql`
-    mutation addUser(username: String!, email: String!, password: String!, userType: String!, musicLinks: String, bio: String, profilePicture: String) {
+    mutation addUser($username: String!, $email: String!, $password: String!, $userType: String!, $musicLinks: String, $bio: String, $profilePicture: String) {
         addUser(username: $username, email: $email, password: $password, userType: $userType, musicLinks: $musicLinks, bio: $bio, profilePicture: $profilePicture){
             token
             user {
@@ -33,7 +33,7 @@ export const LOGIN_USER = gql`
 
 //  Update user
 export const UPDATE_USER = gql`
-    mutation updateUser(username: String, email: String, password: String, musicLinks: String, bio: String, profilePicture: String) {
+    mutation updateUser($username: String, $email: String, $password: String, $musicLinks: String, $bio: String, $profilePicture: String) {
         updateUser(username: $username, email: $email, password: $password musicLinks: $musicLinks, bio: $bio, profilePicture: $profilePicture){
             _id
             username
