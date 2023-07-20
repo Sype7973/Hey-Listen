@@ -11,7 +11,6 @@ const resolvers = {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
           .select("-__v -password")
-          console.log(userData)
         return userData;
       }
       throw new AuthenticationError("You need to be logged in!");
@@ -183,10 +182,13 @@ const resolvers = {
     },
 
     updateCommission: async (parent, args, context) => {
+      console.log(context.user)
+      console.log(args)
+
       if (context.user) {
         try {
           const user = await User.findByIdAndUpdate(
-            { _id: args._id },
+            { _id: context.user._id },
             { $set: { commissions: args.commissions } },
             { new: true }
           );

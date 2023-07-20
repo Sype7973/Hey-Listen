@@ -10,16 +10,15 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
-  Button,
+  Heading,
 } from "@chakra-ui/react";
 import CommissionPost from "../components/CommissionPost";
 import { UPDATE_COMMISSION } from "../utils/mutations";
 
-const Commissions = ({ commissions }) => {
+const Commissions = ({ commissions, user, refetch }) => {
   const [activeCommissionIndex, setActiveCommissionIndex] = useState(null);
 
-  const [updateCommission] = useMutation(UPDATE_COMMISSION);
-
+  const [updateCommission, { error }] = useMutation(UPDATE_COMMISSION);
 
   const openModal = (index) => {
     setActiveCommissionIndex(index);
@@ -29,18 +28,51 @@ const Commissions = ({ commissions }) => {
     setActiveCommissionIndex(null);
   };
 
-  const handleUpdateCommission = (commissionData) => {
-    console.log(commissionData);
-    // updateCommission({
-    //     variables: {
-    //         commissionTitle: commissionData.commissionTitle,
-    //         commissionDescription: commissionData.commissionDescription,
-    //         budget: commissionData.budget,
-    //         commissionType: commissionData.commissionType,
-    //     },
-    // });
-    // Implement your mutation logic here
-    closeModal(); // Close the modal after the mutation is performed
+  const handleUpdateCommission = async (updatedCommission) => {
+    const commissionIndex = user.commissions.findIndex(
+      (commission) => commission._id === updatedCommission._id
+    );
+
+    if (commissionIndex === -1) {
+      console.error("Commission not found!");
+      return;
+    }
+
+    const updatedCommissions = [
+      ...user.commissions.slice(0, commissionIndex),
+      updatedCommission,
+      ...user.commissions.slice(commissionIndex + 1),
+    ];
+
+    const updatedUser = {
+      ...user,
+      commissions: updatedCommissions,
+    };
+
+    console.log(user._id);
+    console.log(updatedUser.commissions);
+    
+    const data = await updateCommission({
+        variables: {
+          id: updatedUser._id, // The ID of the user you want to update
+          commissions: updatedUser.commissions.map(commission => ({
+            _id: commission._id,
+            commissionTitle: commission.commissionTitle,
+            commissionType: commission.commissionType,
+            commissionDescription: commission.commissionDescription,
+            username: commission.username,
+            collaborator: commission.collaborator,
+            budget: commission.budget,
+            completionDate: commission.completionDate,
+            status: commission.status,
+            rating: commission.rating,
+            review: commission.review,
+          })),
+        },
+      });
+    console.log(data)
+      refetch();
+    closeModal();
   };
 
   return (
@@ -63,8 +95,8 @@ const Commissions = ({ commissions }) => {
             onClick={() => openModal(index)}
             cursor="pointer"
           >
-            <h2>{`Title: ${commission.commissionTitle}`}</h2>
-            <p>{`Description: ${commission.commissionDescription}`}</p>
+            <Heading size="">{`~ ${commission.commissionTitle} ~`}</Heading>
+            <p>{`${commission.commissionDescription}`}</p>
             {/* ... Other commission details */}
           </Flex>
         ))
@@ -76,7 +108,7 @@ const Commissions = ({ commissions }) => {
         <Modal isOpen={true} onClose={closeModal}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
+            <ModalHeader>Commissions</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <CommissionPost
@@ -87,8 +119,11 @@ const Commissions = ({ commissions }) => {
             </ModalBody>
           </ModalContent>
         </Modal>
+        
       )}
+      {error && <Box mt={4} color="red.500">Something went wrong...</Box>}
     </Box>
+    
   );
 };
 

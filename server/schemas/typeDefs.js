@@ -29,6 +29,20 @@ const typeDefs = gql`
         review: String
     }
 
+    input CommissionInput {
+        _id: ID
+        commissionTitle: String
+        commissionType: String
+        commissionDescription: String
+        username: String
+        collaborator: String
+        budget: Int
+        completionDate: String
+        status: String
+        rating: Int
+        review: String
+    }
+
 
     type Post {
         _id: ID
@@ -66,7 +80,7 @@ const typeDefs = gql`
         updatePost(postTitle: String, postDescription: String, postType: String, username: String, budget: Int, deadline: String, createdAt: String): Post
         removePost(postId: ID!): User
         deleteUser: User 
-        updateCommission(commissionTitle: String, commissionType: String, commissionDescription: String, username: String, budget: Int, completionDate: String, status: String, rating: Int, review: String): Commission
+        updateCommission(commissions: [CommissionInput]): User
         addCommission(commissionTitle: String!, commissionType: String!, commissionDescription: String!, username: String!, collaborator: String!, budget: Int, completionDate: String!): Commission
         getCommission(_id: ID!): Commission
     }
