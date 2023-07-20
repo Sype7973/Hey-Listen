@@ -21,6 +21,7 @@ const typeDefs = gql`
         commissionType: String
         commissionDescription: String
         username: String
+        collaborator: String
         budget: Int
         completionDate: String
         status: String
@@ -66,7 +67,8 @@ const typeDefs = gql`
         removePost(postId: ID!): User
         deleteUser: User 
         updateCommission(commissionTitle: String, commissionType: String, commissionDescription: String, username: String, budget: Int, completionDate: String, status: String, rating: Int, review: String): Commission
-        addCommission(commissionTitle: String!, commissionType: String!, commissionDescription: String!, username: String!, budget: Int, completionDate: String!): Commission
+        addCommission(commissionTitle: String!, commissionType: String!, commissionDescription: String!, username: String!, collaborator: String!, budget: Int, completionDate: String!): Commission
+        getCommission(_id: ID!): Commission
     }
 `;
 

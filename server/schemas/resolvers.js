@@ -151,6 +151,19 @@ const resolvers = {
     },
 
     /*------------Commission------------*/
+    getCommission: async (parent, args, context) => {
+      if (context.user) {
+        try {
+          const user = await User.findOne({ _id: args._id })
+            .select("-__v -password")
+            .populate("commissions");
+          return user;
+        } catch (err) {
+          console.log(err);
+          throw new Error(err);
+        }
+      }
+    },
 
     addCommission: async (parent, args, context) => {
       if (context.user) {
@@ -167,6 +180,22 @@ const resolvers = {
         }
       }
     },
+
+    updateCommission: async (parent, args, context) => {
+      if (context.user) {
+        try {
+          const user = await User.findByIdAndUpdate(
+            { _id: args._id },
+            { $set: { commissions: args.commissions } },
+            { new: true }
+          );
+          return user;
+        } catch (err) {
+          console.log(err);
+          throw new Error(err);
+        }
+      }
+    }
   },
 };
 
