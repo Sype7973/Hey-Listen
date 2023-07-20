@@ -13,9 +13,11 @@ import Home from "./pages/HomePage";
 import PostDashboard from "./pages/PostDashboard";
 import Login from "./pages/LoginForm";
 import Signup from "./pages/SignupForm";
-// import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
+import Posts from "./components/Posts";
+import MyProfile from "./pages/MyProfile";
+import CreatePost from "./pages/CreatePost";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -55,9 +57,12 @@ function App() {
             <Box flex="1" zIndex="1">
               {/* <Header currentPath={currentPath} /> */}
               {location.pathname === "/" && <Home />}
-              {location.pathname === "/postdashboard" && <PostDashboard />}
+              {location.pathname === "/my-profile" && <MyProfile />}
+              {location.pathname === "/post-dashboard" && <PostDashboard />}
               {location.pathname === "/login" && <Login />}
               {location.pathname === "/signup" && <Signup />}
+              {location.pathname === "/posts" && <Posts />}
+              {location.pathname === "/create-post" && <CreatePost />}
               <Footer />
             </Box>
           </Flex>
