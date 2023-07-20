@@ -8,6 +8,32 @@ export const GET_ME = gql`
       email
       profilePicture
       userType
+      commissions {
+        _id
+        budget
+        commissionDescription
+        commissionTitle
+        completionDate
+        commissionType
+        rating
+        review
+        status
+        username
+      }
+      musicLinks
+      bio
+      _id
+      posts {
+        username
+        userId
+        postType
+        postTitle
+        postDescription
+        deadline
+        createdAt
+        budget
+        _id
+      }
     }
   }
 `;

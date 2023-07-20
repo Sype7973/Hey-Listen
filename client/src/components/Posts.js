@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Button } from "@chakra-ui/react";
 import { QUERY_POSTS } from "../utils/queries";
 import Auth from "../utils/auth";
 
@@ -11,15 +11,26 @@ const Posts = () => {
   const { loading, data } = useQuery(QUERY_POSTS);
   const [posts, setPosts] = useState([]);
 
+//   doesn't render data on dashboard
   useEffect(() => {
     if (data) {
-      setPosts(data.posts);
+      setPosts(data.getPosts);
     }
   }, [data]);
-
+  console.log(data);
   if (loading) {
     return <div>Loading...</div>;
   }
+ 
+  const handleContactPoster = (postId) => {
+    // Implement the logic to contact the poster for the given postId
+    console.log(`Contacting the poster for post with ID: ${postId}`);
+  };
+
+  const handleAcceptPost = (postId) => {
+    // Implement the logic to accept the post for the given postId
+    console.log(`Accepting the post with ID: ${postId}`);
+  };
 
   return (
     <Box>
@@ -46,8 +57,15 @@ const Posts = () => {
               <p>{post.username}</p>
               <p>Budget: {post.budget}</p>
               <p>Deadline: {post.deadline}</p>
-              <p>Created By: {post.userId}</p>
+              <p>Created By: {post.username}</p>
               <p>Created At: {post.createdAt}</p>
+
+              <Button colorScheme="teal" mt={2} onClick={() => handleContactPoster(post._id)}>
+                Contact Poster
+              </Button>
+              <Button colorScheme="blue" mt={2} onClick={() => handleAcceptPost(post._id)}>
+                Accept Post
+              </Button>
             </Box>
           </Flex>
         ))}
