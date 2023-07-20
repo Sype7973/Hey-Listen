@@ -105,6 +105,7 @@ const resolvers = {
           const post = await Post.create({
             ...args,
             username: context.user.username,
+            
           });
 
           const updateUser = await User.findByIdAndUpdate(
