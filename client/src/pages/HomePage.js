@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from "react-router-dom";
+
 import {
   Button,
   Flex,
@@ -42,19 +44,21 @@ const HomePage = () => {
         <Text fontSize="xl" color="white">
           Make music with everyone{user ? `, ${user.username}` : ''}
         </Text>
+        <Link to={user ? "/my-profile" : "/signup"}>
         <Button
           colorScheme="teal"
           size="lg"
-          onClick={() => {
-            if (data) {
-              window.location.href = '/post';
-            } else {
-              window.location.href = '/signup';
-            }
-          }}
+          // onClick={() => {
+          //   if (data) {
+          //     window.location.href = '/post';
+          //   } else {
+          //     window.location.href = '/signup';
+          //   }
+          // }}
         >
           Get Started
         </Button>
+        </Link>
       </VStack>
     </Flex>
   );

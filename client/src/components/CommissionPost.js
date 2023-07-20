@@ -1,13 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, ModalFooter, Button, Input, Divider } from "@chakra-ui/react";
 
 const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
+  const [updatedTitle, setUpdatedTitle] = useState(commission.commissionTitle);
+  const [updatedDescription, setUpdatedDescription] = useState(
+    commission.commissionDescription
+  );
+
+  const handleUpdateCommission = () => {
+    const updatedCommission = {
+      ...commission,
+      commissionTitle: updatedTitle,
+      commissionDescription: updatedDescription,
+    };
+    onUpdateCommission(updatedCommission);
+  };
+
   return (
     <Box>
       <h2>Title:</h2>
-      <Input defaultValue={`${commission.commissionTitle}`}></Input>
-      <h2 >Descrption:</h2>
-      <Input defaultValue={`${commission.commissionDescription}`}></Input>
+      <Input
+        defaultValue={`${updatedTitle}`}
+        onChange={(e) => setUpdatedTitle(e.target.value)}
+      ></Input>
+      <h2>Descrption:</h2>
+      <Input
+        defaultValue={`${updatedDescription}`}
+        onChange={(e) => setUpdatedDescription(e.target.value)}
+      ></Input>
       <Divider />
       <h2>Type:</h2>
       <p>{`Type: ${commission.commissionType}`}</p>
@@ -25,7 +45,7 @@ const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
         <Button colorScheme="blue" mr={3} onClick={closeModal}>
           Close
         </Button>
-        <Button variant="ghost" onClick={() => onUpdateCommission(commission)}>
+        <Button variant="ghost" onClick={handleUpdateCommission}>
           Update User
         </Button>
       </ModalFooter>
