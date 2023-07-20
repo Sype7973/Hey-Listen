@@ -87,22 +87,22 @@ export default function Sidebar() {
               isActive={location.pathname === "/"}
             />
           </Link>
-          <Link to="/myprofile">
+          <Link to="/my-profile">
             {" "}
             <NavItem
               navSize={navSize}
               icon={FiUser}
               title="Profile"
-              isActive={location.pathname === "/myprofile"}
+              isActive={location.pathname === "/my-profile"}
             />
           </Link>
-          <Link to="/dashboard">
+          <Link to="/post-dashboard">
             {" "}
             <NavItem
               navSize={navSize}
               icon={MdDashboard}
               title="Dashboard"
-              isActive={location.pathname === "/dashboard"}
+              isActive={location.pathname === "/post-dashboard"}
             />
           </Link>
           <Link to="/post">
