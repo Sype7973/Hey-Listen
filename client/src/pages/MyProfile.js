@@ -1,10 +1,12 @@
 // component to render a commission into PostDashboard.js
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { Box, Flex, Heading, Card, CardBody } from "@chakra-ui/react";
 import { GET_ME } from "../utils/queries";
 import Commissions from "./Commission";
 import spinner from "../assets/images/spinner.gif";
+import { UPDATE_COMMISSION } from "../utils/mutations";
+
 
 // function that maps and renders commissions
 const MyProfile = () => {
@@ -12,17 +14,87 @@ const MyProfile = () => {
   const [user, setUser] = useState(null);
   const [commissions, setCommissions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [updateCommission, { error }] = useMutation(UPDATE_COMMISSION);
+
+  const [activeCommissions, setActiveCommissions] = useState([]);
+  const [completedCommissions, setCompletedCommissions] = useState([]);
+
+  
+    
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
 
+
+
     if (data && data.me !== null) {
       setUser(data.me);
       setCommissions(data.me.commissions);
     }
+
+   
   }, [data]);
+
+  useEffect(() => {
+    const activeCommissions = commissions.filter(
+        (commission) => commission.status === true
+        );
+    const completedCommissions = commissions.filter(
+        (commission) => commission.status !== true
+        );
+    setActiveCommissions(activeCommissions);
+    setCompletedCommissions(completedCommissions);
+    }, [commissions]);
+
+    
+    const handleUpdateCommission = async (updatedCommission) => {
+        console.log(updatedCommission);
+        const commissionIndex = user.commissions.findIndex(
+          (commission) => commission._id === updatedCommission._id
+        );
+    
+        if (commissionIndex === -1) {
+          console.error("Commission not found!");
+          return;
+        }
+    
+        const updatedCommissions = [
+          ...user.commissions.slice(0, commissionIndex),
+          updatedCommission,
+          ...user.commissions.slice(commissionIndex + 1),
+        ];
+    
+        const updatedUser = {
+          ...user,
+          commissions: updatedCommissions,
+        };
+    
+        console.log(user._id);
+        console.log(updatedUser.commissions);
+    
+        const data = await updateCommission({
+          variables: {
+            id: updatedUser._id, // The ID of the user you want to update
+            commissions: updatedUser.commissions.map((commission) => ({
+              _id: commission._id,
+              commissionTitle: commission.commissionTitle,
+              commissionType: commission.commissionType,
+              commissionDescription: commission.commissionDescription,
+              username: commission.username,
+              collaborator: commission.collaborator,
+              budget: commission.budget,
+              completionDate: commission.completionDate,
+              status: commission.status,
+              rating: commission.rating,
+              review: commission.review,
+            })),
+          },
+        });
+        console.log(data);
+        refetch();
+      };
 
 
   const handleRefetch = async () => {
@@ -54,8 +126,6 @@ const MyProfile = () => {
     );
   }
 
-  
-
   return (
     <Box>
       {user ? (
@@ -77,9 +147,10 @@ const MyProfile = () => {
                 <CardBody textAlign="center">
                   <Heading>Active Commissions</Heading>
                   <Commissions
-                    commissions={commissions}
+                    commissions={activeCommissions}
                     user={user}
-                    refetch={handleRefetch}
+                    onHandleUpdateCommission={handleUpdateCommission}
+
                   />
                 </CardBody>
               </Card>
@@ -87,9 +158,9 @@ const MyProfile = () => {
                 <CardBody textAlign="center">
                   <Heading>Completed Commissions</Heading>
                   <Commissions
-                    commissions={commissions}
+                    commissions={completedCommissions}
                     user={user}
-                    refetch={handleRefetch}
+                    onHandleUpdateCommission={handleUpdateCommission}
                   />
                 </CardBody>
               </Card>
