@@ -8,19 +8,23 @@ import Auth from "../utils/auth";
 
 // function that maps and renders posts
 const Posts = () => {
-  const { loading, data } = useQuery(QUERY_POSTS);
+  const { loading, data, refetch } = useQuery(QUERY_POSTS);
   const [posts, setPosts] = useState([]);
 
 //   doesn't render data on dashboard
   useEffect(() => {
     if (data) {
       setPosts(data.getPosts);
+      refetch();
     }
   }, [data]);
+
   console.log(data);
+
   if (loading) {
     return <div>Loading...</div>;
   }
+  console.log("posts", posts)
  
   const handleContactPoster = (postId) => {
     // Implement the logic to contact the poster for the given postId
