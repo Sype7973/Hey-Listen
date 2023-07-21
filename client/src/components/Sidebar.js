@@ -36,8 +36,9 @@ export default function Sidebar() {
     fetchUserProfile();
   }, [data]);
 
-  const location = useLocation();
+  console.log(data);
 
+  const location = useLocation();
   return (
     <Flex
       bg="white"

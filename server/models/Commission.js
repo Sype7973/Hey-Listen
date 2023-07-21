@@ -14,8 +14,14 @@ const commissionSchema = new Schema(
             type: String,
             required: true,
         },
-        username: {
-            type: String,
+        creatorId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        collaboratorId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
             required: true,
         },
         budget: {
@@ -27,9 +33,9 @@ const commissionSchema = new Schema(
             required: true,
         },
         status: {
-            type: String,
+            type: Boolean,
             required: true,
-            default: false,
+            default: true,
         },
         rating: {
             type: Number,

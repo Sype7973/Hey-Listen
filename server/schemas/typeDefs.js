@@ -20,11 +20,11 @@ const typeDefs = gql`
         commissionTitle: String
         commissionType: String
         commissionDescription: String
-        username: String
-        collaborator: String
+        creatorId: String
+        collaboratorId: String
         budget: Int
         completionDate: String
-        status: String
+        status: Boolean
         rating: Int
         review: String
     }
@@ -34,11 +34,11 @@ const typeDefs = gql`
         commissionTitle: String
         commissionType: String
         commissionDescription: String
-        username: String
-        collaborator: String
+        creatorId: String
+        collaboratorId: String
         budget: Int
         completionDate: String
-        status: String
+        status: Boolean
         rating: Int
         review: String
     }
@@ -81,7 +81,7 @@ const typeDefs = gql`
         removePost(postId: ID!): User
         deleteUser: User 
         updateCommission(commissions: [CommissionInput]): User
-        addCommission(commissionTitle: String!, commissionType: String!, commissionDescription: String!, username: String!, collaborator: String!, budget: Int, completionDate: String!): Commission
+        addCommission(commissions: CommissionInput): User
         getCommission(_id: ID!): Commission
     }
 `;
