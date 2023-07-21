@@ -19,7 +19,6 @@ import { GET_ME } from "../utils/queries";
 import Auth from "../utils/auth";
 
 const CreatePost = () => {
-    
   const [formData, setFormData] = useState({
     postTitle: "",
     postType: "",
@@ -29,7 +28,7 @@ const CreatePost = () => {
   });
 
   const [addPost, { error }] = useMutation(ADD_POST);
-//  get user data from me query
+  //  get user data from me query
   const { data } = useQuery(GET_ME);
   const [user, setUser] = useState(null);
   useEffect(() => {
@@ -38,16 +37,15 @@ const CreatePost = () => {
     }
   }, [data]);
   console.log(data);
-    console.log(user);
+  console.log(user);
 
-    const [username, setUsername] = useState("");
-    useEffect(() => {
-        if (user) {
-            setUsername(user.username);
-        }
-    }, [user]);
-    console.log(username);
-
+  const [username, setUsername] = useState("");
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+    }
+  }, [user]);
+  console.log(username);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -60,34 +58,43 @@ const CreatePost = () => {
 
   const handleDateChange = (date) => {
     setFormData({ ...formData, deadline: date });
-    };
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-        if (!Auth.loggedIn()) {
-            throw new Error("You must be logged in to create a post!");
-        }
-        const { data } = await addPost({
-            variables: {
-                postTitle: formData.postTitle,
-                postType: formData.postType,
-                postDescription: formData.postDescription,
-                budget: formData.budget,
-                deadline: formData.deadline,
-                userId: user._id,
-                username: username,
-            },
-        });
-        console.log(username);
-        console.log(data);
+      if (!Auth.loggedIn()) {
+        throw new Error("You must be logged in to create a post!");
+      }
+      const { data } = await addPost({
+        variables: {
+          postTitle: formData.postTitle,
+          postType: formData.postType,
+          postDescription: formData.postDescription,
+          budget: formData.budget,
+          deadline: formData.deadline,
+          userId: user._id,
+          username: username,
+        },
+      });
+      console.log(username);
+      console.log(data);
+      window.location.replace("/post-dashboard");
+
     } catch (err) {
-        console.error(err);
+      console.error(err);
     }
-    };
+  };
   return (
     <Flex justifyContent="center" alignItems="center" height="100vh">
-      <Box p={5} shadow="md" borderWidth="1px" borderRadius="md" bg="gray.50" w="1000px">
+      <Box
+        p={5}
+        shadow="md"
+        borderWidth="1px"
+        borderRadius="md"
+        bg="gray.50"
+        w="1000px"
+      >
         <Box>
           <h2>Create a Post</h2>
           <form onSubmit={handleFormSubmit}>
@@ -158,7 +165,11 @@ const CreatePost = () => {
               Submit
             </Button>
           </form>
-          {error && <Box mt={4} color="red.500">Something went wrong...</Box>}
+          {error && (
+            <Box mt={4} color="red.500">
+              Something went wrong...
+            </Box>
+          )}
         </Box>
       </Box>
     </Flex>
