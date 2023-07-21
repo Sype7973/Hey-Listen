@@ -15,14 +15,15 @@ const MyProfile = () => {
 
   useEffect(() => {
     setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      setIsLoading(false);
+    }, 1000);
 
-    if (data) {
+    if (data && data.me !== null) {
       setUser(data.me);
       setCommissions(data.me.commissions);
     }
   }, [data]);
+
 
   const handleRefetch = async () => {
     // Call the refetch function from useQuery to fetch updated data
@@ -35,7 +36,7 @@ const MyProfile = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return (
       <Flex
         minHeight="100vh"
@@ -70,12 +71,36 @@ const MyProfile = () => {
               <p>{user.userType}</p>
             </CardBody>
           </Card>
-          <Card mb="3vh" mt="3vh" width="40vw" h="auto">
-            <CardBody textAlign="center">
-              <Heading>Active Commissions</Heading>
-              <Commissions  commissions={commissions} user={user} refetch={handleRefetch}/>
-            </CardBody>
-          </Card>
+          {commissions ? (
+            <Box>
+              <Card mb="3vh" mt="3vh" width="40vw" h="auto">
+                <CardBody textAlign="center">
+                  <Heading>Active Commissions</Heading>
+                  <Commissions
+                    commissions={commissions}
+                    user={user}
+                    refetch={handleRefetch}
+                  />
+                </CardBody>
+              </Card>
+              <Card mb="3vh" mt="3vh" width="40vw" h="auto">
+                <CardBody textAlign="center">
+                  <Heading>Completed Commissions</Heading>
+                  <Commissions
+                    commissions={commissions}
+                    user={user}
+                    refetch={handleRefetch}
+                  />
+                </CardBody>
+              </Card>
+            </Box>
+          ) : (
+            <Card mb="3vh" mt="3vh" width="40vw" h="auto">
+              <CardBody textAlign="center">
+                <Heading>No Active Commissions</Heading>
+              </CardBody>
+            </Card>
+          )}
         </Flex>
       ) : (
         <Flex

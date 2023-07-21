@@ -11,9 +11,14 @@ import {
   ModalBody,
   ModalCloseButton,
   Heading,
+  Image,
 } from "@chakra-ui/react";
 import CommissionPost from "../components/CommissionPost";
 import { UPDATE_COMMISSION } from "../utils/mutations";
+
+import greenLight from "../assets/images/greenlight.png";
+import redLight from "../assets/images/redlight.png";
+import orangeLight from "../assets/images/orangelight.png";
 
 const Commissions = ({ commissions, user, refetch }) => {
   const [activeCommissionIndex, setActiveCommissionIndex] = useState(null);
@@ -51,27 +56,27 @@ const Commissions = ({ commissions, user, refetch }) => {
 
     console.log(user._id);
     console.log(updatedUser.commissions);
-    
+
     const data = await updateCommission({
-        variables: {
-          id: updatedUser._id, // The ID of the user you want to update
-          commissions: updatedUser.commissions.map(commission => ({
-            _id: commission._id,
-            commissionTitle: commission.commissionTitle,
-            commissionType: commission.commissionType,
-            commissionDescription: commission.commissionDescription,
-            username: commission.username,
-            collaborator: commission.collaborator,
-            budget: commission.budget,
-            completionDate: commission.completionDate,
-            status: commission.status,
-            rating: commission.rating,
-            review: commission.review,
-          })),
-        },
-      });
-    console.log(data)
-      refetch();
+      variables: {
+        id: updatedUser._id, // The ID of the user you want to update
+        commissions: updatedUser.commissions.map((commission) => ({
+          _id: commission._id,
+          commissionTitle: commission.commissionTitle,
+          commissionType: commission.commissionType,
+          commissionDescription: commission.commissionDescription,
+          username: commission.username,
+          collaborator: commission.collaborator,
+          budget: commission.budget,
+          completionDate: commission.completionDate,
+          status: commission.status,
+          rating: commission.rating,
+          review: commission.review,
+        })),
+      },
+    });
+    console.log(data);
+    refetch();
     closeModal();
   };
 
@@ -86,7 +91,7 @@ const Commissions = ({ commissions, user, refetch }) => {
             borderWidth="1px"
             flex="1"
             borderRadius="md"
-            flexDirection="column"
+            flexDirection="row"
             alignItems="center"
             justifyContent="center"
             textAlign="center"
@@ -95,8 +100,30 @@ const Commissions = ({ commissions, user, refetch }) => {
             onClick={() => openModal(index)}
             cursor="pointer"
           >
-            <Heading size="">{`~ ${commission.commissionTitle} ~`}</Heading>
-            <p>{`${commission.commissionDescription}`}</p>
+            <Box
+              p={5}
+              flex="1"
+              w="50vw"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              textAlign="center"
+              m={5}
+            >
+              <Heading size="">{`~ ${commission.commissionTitle} ~`}</Heading>
+              <p>{`${commission.commissionDescription}`}</p>
+            </Box>
+            {commission.status ? (
+              <Image
+                boxSize="100px"
+                objectFit="cover"
+                src={orangeLight}
+                alt="active"
+              ></Image>
+            ) : (
+              <Image boxSize="100px"
+              objectFit="cover" src={greenLight} alt="complete"></Image>
+            )}
             {/* ... Other commission details */}
           </Flex>
         ))
@@ -119,11 +146,13 @@ const Commissions = ({ commissions, user, refetch }) => {
             </ModalBody>
           </ModalContent>
         </Modal>
-        
       )}
-      {error && <Box mt={4} color="red.500">Something went wrong...</Box>}
+      {error && (
+        <Box mt={4} color="red.500">
+          Something went wrong...
+        </Box>
+      )}
     </Box>
-    
   );
 };
 

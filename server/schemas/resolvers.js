@@ -166,19 +166,27 @@ const resolvers = {
     },
 
     addCommission: async (parent, args, context) => {
-      if (context.user) {
+      // if (context.user) {
+        const creator = true;
         try {
           const user = await User.findByIdAndUpdate(
-            { _id: args._id },
+            { _id: args.commissions.creatorId },
             { $push: {commissions: [args.commissions]}},
             { new: true }
           );
+
+          const collaborator = await User.findByIdAndUpdate(
+            { _id: args.commissions.collaboratorId },
+            { $push: {commissions: [args.commissions]}},
+            { new: true }
+          );
+
           return user;
         } catch (err) {
           console.log(err);
           throw new Error(err);
         }
-      }
+      // }
     },
 
     updateCommission: async (parent, args, context) => {

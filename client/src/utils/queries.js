@@ -18,7 +18,8 @@ export const GET_ME = gql`
         rating
         review
         status
-        username
+        creatorId
+        collaboratorId
       }
       musicLinks
       bio
