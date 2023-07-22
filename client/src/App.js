@@ -18,6 +18,7 @@ import Sidebar from "./components/Sidebar";
 import MyProfile from "./pages/MyProfile";
 import CreatePost from "./pages/CreatePost";
 import MyPosts from "./pages/MyPosts";
+import SearchBar from "./components/SearchBar";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -52,9 +53,9 @@ function App() {
       <div>
         <ChakraProvider>
           <Flex>
-            
             <Sidebar />
             <Box flex="1" zIndex="1">
+            <SearchBar />
               {/* <Header currentPath={currentPath} /> */}
               {location.pathname === "/" && <Home />}
               {location.pathname === "/my-profile" && <MyProfile />}
