@@ -7,7 +7,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ME } from "../utils/queries";
 
 const PostDashboard = () => {
-  const { loading, data, refetch } = useQuery(GET_ME);
+  const { loading, data} = useQuery(GET_ME);
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
