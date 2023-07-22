@@ -6,6 +6,7 @@ import { GET_ME } from "../utils/queries";
 import Commissions from "./Commission";
 import spinner from "../assets/images/spinner.gif";
 import { UPDATE_COMMISSION } from "../utils/mutations";
+import MyPosts from "./MyPosts";
 
 // function that maps and renders commissions
 const MyProfile = () => {

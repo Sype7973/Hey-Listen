@@ -15,9 +15,9 @@ import Login from "./pages/LoginForm";
 import Signup from "./pages/SignupForm";
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
-import Posts from "./components/Posts";
 import MyProfile from "./pages/MyProfile";
 import CreatePost from "./pages/CreatePost";
+import MyPosts from "./pages/MyPosts";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -61,7 +61,7 @@ function App() {
               {location.pathname === "/post-dashboard" && <PostDashboard />}
               {location.pathname === "/login" && <Login />}
               {location.pathname === "/signup" && <Signup />}
-              {location.pathname === "/posts" && <Posts />}
+              {location.pathname === "/my-posts" && <MyPosts />}
               {location.pathname === "/create-post" && <CreatePost />}
               <Footer />
             </Box>

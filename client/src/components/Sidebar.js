@@ -148,13 +148,13 @@ export default function Sidebar() {
                       isActive={location.pathname === "/post-dashboard"}
                     />
                   </Link>
-                  <Link to="/post">
+                  <Link to="/my-posts">
                     {" "}
                     <NavItem
                       navSize={navSize}
                       icon={MdLibraryMusic}
                       title="Posts"
-                      isActive={location.pathname === "/post"}
+                      isActive={location.pathname === "/my-posts"}
                     />
                   </Link>
                 </Box>
