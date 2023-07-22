@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { Box, Flex, Button } from "@chakra-ui/react";
 import { QUERY_POSTS } from "../utils/queries";
+import { REMOVE_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
 
 const Posts = () => {
   const { loading, data, refetch } = useQuery(QUERY_POSTS);
   const [posts, setPosts] = useState([]);
+  const [removePost, { error }] = useMutation(REMOVE_POST);
 
   useEffect(() => {
     if (data) {
@@ -33,6 +35,24 @@ const Posts = () => {
   const handleAcceptPost = (postId) => {
     console.log(`Accepting the post with ID: ${postId}`);
   };
+
+  const handleRemovePost = (postId) => {
+    console.log(`Removing the post with ID: ${postId}`);
+    removePost({
+      variables: { postId },
+      update: (cache, { data }) => {
+        const { removePost } = data;
+        const existingPosts = cache.readQuery({ query: QUERY_POSTS });
+        const updatedPosts = existingPosts.getPosts.filter((post) => post._id !== removePost._id);
+        cache.writeQuery({
+          query: QUERY_POSTS,
+          data: { getPosts: updatedPosts },
+        });
+      },
+    });
+  };
+
+
 
   const formatDate = (timestamp) => {
     if (timestamp) {
@@ -73,6 +93,13 @@ const Posts = () => {
               <p>Created At: {formatDate(post.createdAt)}</p>
 
               {/* Check if the logged-in user is the same as the post's creator */}
+              {loggedInUsername === post.username && (
+                <>
+                  <Button colorScheme="red" mt={2} onClick={() => handleRemovePost(post._id)}>
+                    Remove Post
+                  </Button>
+                </>
+              )}
               {loggedInUsername !== post.username && (
                 <>
                   <Button colorScheme="teal" mt={2} onClick={() => handleContactPoster(post._id, post.email, post.postTitle, post.username )}>
