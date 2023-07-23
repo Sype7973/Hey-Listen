@@ -62,4 +62,5 @@ const commissionSchema = new Schema(
     }
 );
 
-module.exports = commissionSchema;
+const Commission = model('Commission', commissionSchema);
+module.exports = Commission;

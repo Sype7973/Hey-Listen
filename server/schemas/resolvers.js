@@ -1,4 +1,4 @@
-const { User, Post } = require("../models");
+const { User, Post, Commission } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -34,7 +34,14 @@ const resolvers = {
     getPost: async (parent, args) => {
       return Post.findOne({ _id: args._id });
     },
+
+    getCommissions: async () => {
+      return Commission.find().select("-__v");
+
+    },
   },
+
+  
   Mutation: {
     /*------------User------------*/
 
@@ -96,6 +103,11 @@ const resolvers = {
       return { token, user };
     },
 
+
+    /*------------Commission------------*/
+
+  
+
     /*------------Post------------*/
 
     addPost: async (parent, args, context) => {
@@ -139,29 +151,28 @@ const resolvers = {
     },
 
     acceptPost: async (parent, args, context) => {
-
-      console.log("args.commissions")
-      console.log(args.commissions.deadline)
-
+      console.log(args.commissions)
+      console.log(args.commissions.creatorId)
+      console.log(args.commissions.collaboratorId)
+      
 
       if (context.user) {
         try {
+          // Create the new commission using args directly
+          const newCommission = await Commission.create(args.commissions);
 
+          // Update the relevant users with the new commission ID
           const updateCreator = await User.findByIdAndUpdate(
-            { _id: args.commissions.creatorId },
-            { $push: { commissions: args.commissions } },
+            args.commissions.creatorId,
+            { $push: { commissionIds: newCommission._id } },
             { new: true }
           );
 
           const updateCollaborator = await User.findByIdAndUpdate(
-            { _id: args.commissions.collaboratorId },
-            { $push: { commissions: args.commissions } },
+            args.commissions.collaboratorId,
+            { $push: { commissionIds: newCommission._id } },
             { new: true }
           );
-          
-          console.log("updateCreator.commissions")
-          console.log(updateCreator)
-            
 
           return updateCollaborator;
         } catch (err) {
@@ -204,7 +215,7 @@ const resolvers = {
       // if (context.user) {
         const creator = true;
         try {
-          const user = await User.findByIdAndUpdate(
+          const creator = await User.findByIdAndUpdate(
             { _id: args.commissions.creatorId },
             { $push: {commissions: [args.commissions]}},
             { new: true }
@@ -216,7 +227,7 @@ const resolvers = {
             { new: true }
           );
 
-          return user;
+          return creator;
         } catch (err) {
           console.log(err);
           throw new Error(err);

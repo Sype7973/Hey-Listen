@@ -9,22 +9,7 @@ export const GET_ME = gql`
       email
       profilePicture
       userType
-      commissions {
-        _id
-        budget
-        commissionDescription
-        commissionTitle
-        completionDate
-        commissionType
-        rating
-        review
-        status
-        creatorId
-        collaboratorId
-        deadline
-        username
-        createdAt
-      }
+      commissionIds
       musicLinks
       bio
       posts {
@@ -58,17 +43,7 @@ export const GET_USERS = gql`
         budget
         deadline
       }
-      commissions {
-        _id
-        commissionTitle
-        commissionType
-        commissionDescription
-        budget
-        completionDate
-        status
-        rating
-        review
-      }
+      commissionIds
     }
   }
 `;
@@ -78,18 +53,7 @@ export const GET_USER = gql`
   getUser(_id: $id) {
     _id
     bio
-    commissions {
-      rating
-      username
-      status
-      review
-      completionDate
-      commissionType
-      commissionTitle
-      commissionDescription
-      budget
-      _id
-    }
+    commissionIds
     email
     musicLinks
     password
@@ -140,4 +104,24 @@ export const QUERY_POST = gql`
       createdAt
     }
   }
+`;
+
+
+export const GET_COMMISSIONS = gql`
+query GetCommissions {
+  getCommissions {
+    username
+    deadline
+    creatorId
+    createdAt
+    completionDate
+    commissionType
+    commissionTitle
+    commissionDescription
+    collaboratorId
+    budget
+    _id
+    status
+  }
+}
 `;
