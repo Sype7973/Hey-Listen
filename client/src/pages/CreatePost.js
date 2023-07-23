@@ -12,6 +12,9 @@ import {
   SliderFilledTrack,
   SliderThumb,
   Select,
+  Card,
+  CardBody,
+  Heading,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -119,6 +122,8 @@ const CreatePost = () => {
   };
 
   return (
+    <>
+    {user ? (
     <Flex justifyContent="center" alignItems="center" height="100vh">
       <Box p={5} shadow="md" borderWidth="1px" borderRadius="md" bg="gray.50" w="1000px">
         <Box>
@@ -217,7 +222,17 @@ const CreatePost = () => {
         </Box>
       </Box>
     </Flex>
-  );
+    ) : (
+      <Flex minHeight="100vh" alignItems="center" bg="teal.500" direction="column">
+        <Card my="auto" width="auto" h="auto">
+          <CardBody textAlign="center">
+            <Heading>Not Logged In!</Heading>
+          </CardBody>
+        </Card>
+      </Flex>
+    )}
+  </>
+);
 };
 
 export default CreatePost;
