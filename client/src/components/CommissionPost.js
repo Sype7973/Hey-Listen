@@ -3,12 +3,24 @@ import { Box, ModalFooter, Button, Input, Divider } from "@chakra-ui/react";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../utils/queries";
 
-const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
+const CommissionPost = ({
+  commission,
+  onUpdateCommission,
+  closeModal,
+  completeCommission,
+}) => {
   const [updatedTitle, setUpdatedTitle] = useState(commission.commissionTitle);
   const [updatedDescription, setUpdatedDescription] = useState(
     commission.commissionDescription
   );
 
+  console.log(commission);
+
+
+  const [date] = useState(Date.now());
+
+
+  
 
 
   const handleUpdateCommission = () => {
@@ -20,6 +32,16 @@ const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
     onUpdateCommission(updatedCommission);
   };
 
+  const handleCompleteCommission = () => {
+    const updatedCommission = {
+      ...commission,
+      // completionDate: date,
+      status: false,
+    };
+    onUpdateCommission(updatedCommission);
+  };
+
+  const handleDeleteCommission = () => {};
 
   const formatDate = (timestamp) => {
     if (timestamp) {
@@ -31,9 +53,8 @@ const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
     }
     return "Invalid Date";
   };
-  const updatedDeadline = formatDate(commission.deadline)
-  const updatedCreatedAt = formatDate(commission.createdAt)
-
+  const updatedDeadline = formatDate(commission.deadline);
+  const updatedCreatedAt = formatDate(commission.createdAt);
 
   return (
     <Box>
@@ -61,11 +82,23 @@ const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
       <h2>Created At:</h2>
       <p>{`${updatedCreatedAt}`}</p>
       <ModalFooter>
-        <Button colorScheme="blue" mr={3} onClick={closeModal}>
-          Close
-        </Button>
+        {commission.status === true ? (
+          <>
+            <Button colorScheme="green" onClick={handleCompleteCommission}>
+              Complete Commission
+            </Button>
+            <Button colorScheme="red" onClick={handleDeleteCommission}>
+              Delete Commission
+            </Button>
+          </>
+        ) : (
+          <></>
+        )}
         <Button variant="ghost" onClick={handleUpdateCommission}>
           Update Commission
+        </Button>
+        <Button colorScheme="blue" mr={3} onClick={closeModal}>
+          Close
         </Button>
       </ModalFooter>
     </Box>
@@ -73,6 +106,3 @@ const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
 };
 
 export default CommissionPost;
-
-
-

@@ -20,15 +20,15 @@ const typeDefs = gql`
         commissionTitle: String
         commissionType: String
         commissionDescription: String
-        creatorId: String
+        username: String
         collaboratorId: String
+        creatorId: String
         budget: Int
         deadline: String
         completionDate: String
         status: Boolean
         rating: Int
         review: String
-        username: String
         createdAt: String
     }
 
@@ -37,15 +37,15 @@ const typeDefs = gql`
         commissionTitle: String
         commissionType: String
         commissionDescription: String
-        creatorId: String
+        username: String
         collaboratorId: String
+        creatorId: String
         budget: Int
         deadline: String
         completionDate: String
         status: Boolean
         rating: Int
         review: String
-        username: String
         createdAt: String
     }
 

@@ -20,6 +20,7 @@ const resolvers = {
       return User.find().select("-__v").populate("commissions posts");
     },
     getUser: async (parent, args, context) => {
+
       return User.findOne({ _id: args._id })
         .select("-__v -password")
         .populate("commissions posts");
@@ -138,6 +139,8 @@ const resolvers = {
     },
 
     acceptPost: async (parent, args, context) => {
+
+      console.log("args.commissions")
       console.log(args.commissions.deadline)
 
 
@@ -155,7 +158,9 @@ const resolvers = {
             { $push: { commissions: args.commissions } },
             { new: true }
           );
-            console.log(updateCreator.commissions)
+          
+          console.log("updateCreator.commissions")
+          console.log(updateCreator)
             
 
           return updateCollaborator;
@@ -220,23 +225,23 @@ const resolvers = {
     },
 
     updateCommission: async (parent, args, context) => {
-      console.log(context.user)
-      console.log(args)
-
       if (context.user) {
         try {
-          const user = await User.findByIdAndUpdate(
+          const creatorData = await User.findByIdAndUpdate(
             { _id: context.user._id },
             { $set: { commissions: args.commissions } },
             { new: true }
           );
-          return user;
+
+          return creatorData;
         } catch (err) {
           console.log(err);
           throw new Error(err);
         }
       }
-    }
+    },
+
+    
   },
 };
 
