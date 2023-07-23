@@ -35,11 +35,9 @@ const Posts = () => {
 
   // still need to implement these functions correctly, coming up as undefined
   const handleContactPoster = (postId, email, postTitle, username) => {
-    const subject = `I'm interested in your post with ID: ${postTitle}`;
-    const body = `Hi ${username},\n\nI'm interested in your post with ID: ${postTitle}.\n\nPlease let me know if it's still available.\n\nThanks!`;
-    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
+    const subject = `I'm interested in your post: ${postTitle}`;
+    const body = `Hi ${username},\n\nI'm interested in: ${postTitle}.\n\nPlease let me know if it's still available.\n\nThanks!`;
+    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoLink;
     console.log(`Contacting the poster for post with ID: ${postId}`);
   };
@@ -89,8 +87,7 @@ const Posts = () => {
     console.log(`Removing the post with ID: ${postId}`);
     removePost({
       variables: { postId },
-      update: (cache, { data }) => {
-        const { removePost } = data;
+      update: (cache, { data: { removePost } }) => { // Destructure the response to get the removed post
         const existingPosts = cache.readQuery({ query: QUERY_POSTS });
         const updatedPosts = existingPosts.getPosts.filter(
           (post) => post._id !== removePost._id

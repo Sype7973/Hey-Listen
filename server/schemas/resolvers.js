@@ -104,6 +104,7 @@ const resolvers = {
           const post = await Post.create({
             ...args,
             username: context.user.username,
+            email: context.user.email,
             
           });
 
@@ -170,9 +171,7 @@ const resolvers = {
     removePost: async (parent, args, context) => {
       if (context.user) {
         try {
-          const post = await Post.findByIdAndDelete({
-            _id: args._id,
-          });
+          const post = await Post.findByIdAndDelete(args.postId); // Use args.postId instead of args._id
           return post;
         } catch (err) {
           console.log(err);
