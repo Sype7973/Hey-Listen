@@ -5,6 +5,7 @@ import { GET_ME, QUERY_POSTS } from "../utils/queries";
 import { REMOVE_POST } from "../utils/mutations";
 import spinner from "../assets/images/spinner.gif";
 import Auth from "../utils/auth";
+import { Link } from "react-router-dom";
 
 const formatDate = (timestamp) => {
   if (timestamp) {
@@ -73,10 +74,16 @@ const MyPosts = () => {
                   <p>Created By: {post.username}</p>
                   <p>Created At: {formatDate(post.createdAt)}</p>
                   {loggedInUsername === post.username && (
+                    <>
                     <Button colorScheme="red" mt={2} onClick={() => handleRemovePost(post._id)}>
                       Remove Post
                     </Button>
-                  // update post button
+                 <Link to={`/update-post/${post._id}`}>
+                    <Button colorScheme="teal" mt={2} ml={2}>
+                      Update Post
+                    </Button>
+                  </Link>
+                    </>
                   )}
                 </CardBody>
               </Card>
