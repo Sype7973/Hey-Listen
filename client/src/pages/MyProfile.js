@@ -2,26 +2,71 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Box, Flex, Heading, Card, CardBody } from "@chakra-ui/react";
-import { GET_ME } from "../utils/queries";
+import { GET_ME, GET_USER } from "../utils/queries";
 import Commissions from "./Commission";
 import spinner from "../assets/images/spinner.gif";
 import { UPDATE_COMMISSION } from "../utils/mutations";
-import MyPosts from "./MyPosts";
+// import MyPosts from "./MyPosts";
 
 // function that maps and renders commissions
 const MyProfile = () => {
+  
   const { loading, data, refetch } = useQuery(GET_ME);
   const [user, setUser] = useState(null);
   const [commissions, setCommissions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updateCommission, { error }] = useMutation(UPDATE_COMMISSION);
 
+  const [updatedCommission, setUpdatedCommission] = useState(null);
+
   const [activeCommissions, setActiveCommissions] = useState([]);
   const [completedCommissions, setCompletedCommissions] = useState([]);
 
+
+
+  const { data: getCollaboratorData, refetch: refetchCollaboratorData } =
+  useQuery(GET_USER, {
+    variables: {
+      id: updatedCommission ? updatedCommission.collaboratorId : null,
+    },
+    skip: !updatedCommission,
+  });
+
+const { data: getCreatorData, refetch: refetchCreatorData } = useQuery(
+  GET_USER,
+  {
+    variables: {
+      id: updatedCommission ? updatedCommission.creatorId : null,
+    },
+    skip: !updatedCommission,
+  }
+);
+
+const [creatorData, setCreatorData] = useState(null);
+const [collaboratorData, setCollaboratorData] = useState(null);
+
+
+
   useEffect(() => {
-    refetch()
-  }, [])
+    // Check if getCollaboratorData is available and set the state
+    if (getCollaboratorData) {
+      setCollaboratorData(getCollaboratorData.getUser);
+    }
+
+    // Check if getCreatorData is available and set the state
+    if (getCreatorData) {
+      setCreatorData(getCreatorData.getUser);
+    }
+  }, [getCollaboratorData, getCreatorData, updatedCommission]);
+
+
+  const handleInitialRefetch = async () => {
+    await refetch();
+  };
+
+  useEffect(() => {
+    handleInitialRefetch();
+  });
 
   useEffect(() => {
     setTimeout(() => {
@@ -45,67 +90,124 @@ const MyProfile = () => {
     setCompletedCommissions(completedCommissions);
   }, [commissions]);
 
-  const handleUpdateCommission = async (updatedCommission) => {
-    console.log(updatedCommission);
-    const commissionIndex = user.commissions.findIndex(
-      (commission) => commission._id === updatedCommission._id
-    );
 
-    if (commissionIndex === -1) {
-      console.error("Commission not found!");
+  const handleUpdateCommission = async (updatedCommission) => {
+
+    setUpdatedCommission(updatedCommission);
+
+    console.log("CREATOR DATA");
+    console.log(creatorData);
+    console.log("COLLABORATOR DATA");
+    console.log(collaboratorData);
+
+
+    if (!collaboratorData || !creatorData || !updatedCommission) {
+      console.log("Data not available yet. Waiting...");
       return;
     }
 
-    const updatedCommissions = [
-      ...user.commissions.slice(0, commissionIndex),
+    // const commissionIndex = user.commissions.findIndex(
+    //   (commission) => commission._id === updatedCommission._id
+    // );
+
+    // if (commissionIndex === -1) {
+    //   console.error("Commission not found!");
+    //   return;
+    
+    // }
+    const collaboratorIndex = collaboratorData.commissions.findIndex(
+      (commission) => commission._id === updatedCommission._id
+    );
+    console.log("COLLABORATOR INDEX");
+    console.log(collaboratorData.commissions);
+    console.log(collaboratorIndex);
+
+    const creatorIndex = creatorData.commissions.findIndex(
+      (commission) => commission._id === updatedCommission._id
+    );
+
+    if (collaboratorIndex === -1) {
+      console.error("Collaborator Commission not found!");
+      return;
+    }
+
+    if (creatorIndex === -1) {
+      console.error("Creator Commission not found!");
+      return;
+    }
+
+    const updatedCreatorCommissions = [
+      ...creatorData.commissions.slice(0, creatorIndex),
       updatedCommission,
-      ...user.commissions.slice(commissionIndex + 1),
+      ...creatorData.commissions.slice(creatorIndex + 1),
     ];
 
-    const updatedUser = {
-      ...user,
-      commissions: updatedCommissions,
+    const updatedCollaboratorCommissions = [
+      ...collaboratorData.commissions.slice(0, collaboratorIndex),
+      updatedCommission,
+      ...collaboratorData.commissions.slice(collaboratorIndex + 1),
+    ];
+
+    const updatedCreator = {
+      ...creatorData,
+      commissions: updatedCreatorCommissions,
     };
 
-    console.log(user._id);
-    console.log(updatedUser.commissions);
+    const updatedCollaborator = {
+      ...collaboratorData,
+      commissions: updatedCollaboratorCommissions,
+    };
 
-    const data = await updateCommission({
+    console.log("Updated User COmmissions");
+   
+
+    const newCreatorData = await updateCommission({
       variables: {
-        id: updatedUser._id, // The ID of the user you want to update
-        commissions: updatedUser.commissions.map((commission) => ({
+        // The ID of the user you want to update
+        commissions: updatedCreator.commissions.map((commission) => ({
           _id: commission._id,
           commissionTitle: commission.commissionTitle,
           commissionType: commission.commissionType,
           commissionDescription: commission.commissionDescription,
           username: commission.username,
-          collaborator: commission.collaborator,
+          collaboratorId: commission.collaboratorId,
+          creatorId: commission.creatorId,
           budget: commission.budget,
+          deadline: commission.deadline,
           completionDate: commission.completionDate,
           status: commission.status,
           rating: commission.rating,
           review: commission.review,
-          deadline: formatDate(commission.deadline),
-          createdAt: formatDate(commission.createdAt),
+          createdAt: commission.createdAt,
         })),
       },
     });
-    console.log(data);
+
+    const newCollaboratorData = await updateCommission({
+      variables: {
+        // The ID of the user you want to update
+        commissions: updatedCollaborator.commissions.map((commission) => ({
+          _id: commission._id,
+          commissionTitle: commission.commissionTitle,
+          commissionType: commission.commissionType,
+          commissionDescription: commission.commissionDescription,
+          username: commission.username,
+          collaboratorId: commission.collaboratorId,
+          creatorId: commission.creatorId,
+          budget: commission.budget,
+          deadline: commission.deadline,
+          completionDate: commission.completionDate,
+          status: commission.status,
+          rating: commission.rating,
+          review: commission.review,
+          createdAt: commission.createdAt,
+        })),
+      },
+    });
+
     refetch();
   };
 
-  const formatDate = (timestamp) => {
-    if (timestamp) {
-      const date = new Date(parseInt(timestamp));
-      const day = String(date.getDate()).padStart(2, "0");
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = String(date.getFullYear()).slice(-2);
-      return `${day}/${month}/${year}`;
-    }
-    return "Invalid Date";
-  };
-
-  console.log(commissions);
 
   if (isLoading || loading) {
     return (
@@ -135,7 +237,7 @@ const MyProfile = () => {
           direction="column"
         >
           <Card mt="3vh" width="200px" h="auto">
-            <CardBody  textAlign="center">
+            <CardBody textAlign="center">
               <Heading>{user.username}</Heading>
               <p>{user.userType}</p>
             </CardBody>

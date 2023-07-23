@@ -74,33 +74,40 @@ export const GET_USERS = gql`
 `;
 // get a single user by username
 export const GET_USER = gql`
-  query getUser($username: String!) {
-    getUser(username: $username) {
-      _id
+  query SingleUser($id: ID!) {
+  getUser(_id: $id) {
+    _id
+    bio
+    commissions {
+      rating
       username
-      email
-      posts {
-        _id
-        postTitle
-        postDescription
-        postType
-        username
-        budget
-        deadline
-      }
-      commissions {
-        _id
-        commissionTitle
-        commissionType
-        commissionDescription
-        budget
-        completionDate
-        status
-        rating
-        review
-      }
+      status
+      review
+      completionDate
+      commissionType
+      commissionTitle
+      commissionDescription
+      budget
+      _id
     }
+    email
+    musicLinks
+    password
+    posts {
+      _id
+      budget
+      createdAt
+      deadline
+      postDescription
+      postTitle
+      postType
+      username
+    }
+    profilePicture
+    userType
+    username
   }
+}
 `;
 //  get all posts
 export const QUERY_POSTS = gql`

@@ -113,7 +113,7 @@ const CreatePost = () => {
           email: user.email,
         },
       });
-      console.log(username);
+      console.log(formData.deadline);
       console.log(data);
       window.location.replace("/post-dashboard");
     } catch (err) {

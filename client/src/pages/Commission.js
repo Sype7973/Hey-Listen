@@ -18,13 +18,16 @@ import greenLight from "../assets/images/greenlight.png";
 import redLight from "../assets/images/redlight.png";
 import orangeLight from "../assets/images/orangelight.png";
 
-const Commissions = ({ onHandleUpdateCommission, commissions, user, refetch }) => {
+const Commissions = ({ onHandleUpdateCommission, commissions, user }) => {
   const [activeCommissionIndex, setActiveCommissionIndex] = useState(null);
 
 
   const openModal = (index) => {
+    console.log("OPEN MODAL")
     setActiveCommissionIndex(index);
   };
+  console.log(activeCommissionIndex)
+
 
   const closeModal = () => {
     setActiveCommissionIndex(null);
@@ -40,7 +43,6 @@ const Commissions = ({ onHandleUpdateCommission, commissions, user, refetch }) =
       {commissions.length > 0 ? (
         commissions.map((commission, index) => (
           <Flex
-            key={commission._id}
             p={5}
             shadow="md"
             borderWidth="1px"

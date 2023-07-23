@@ -19,6 +19,11 @@ const Posts = () => {
       data: acceptedPostData,
     },
   ] = useMutation(ACCEPT_POST);
+
+  useEffect(() => {
+    refetch();
+  }, [posts]);
+
   useEffect(() => {
     if (data) {
       setPosts(data.getPosts);
@@ -43,6 +48,7 @@ const Posts = () => {
   };
   // accepts posts and moves them to the user's accepted posts
   const handleAcceptPost = async (postId) => {
+
     setPostId(postId);
     if (!data || !data.getPosts) {
       console.error("No posts found!");
@@ -65,9 +71,12 @@ const Posts = () => {
    console.log(postData[0].username)
     const updatedDeadline = formatDate(postData[0].deadline);
 
+    const updatedCreatedAt = formatDate(postData[0].createdAt);
 
-    
+    console.log("Updated deadline")
     console.log(updatedDeadline)
+
+
     const acceptedCommission = {
       commissionTitle: postData[0].postTitle,
       commissionType: postData[0].postType,
@@ -78,7 +87,7 @@ const Posts = () => {
       deadline: updatedDeadline,
       status: true,
       username: postData[0].username,
-      createdAt: postData[0].createdAt,
+      createdAt: updatedCreatedAt,
     };
 
     console.log("ACCEPTED COMMISSION");
@@ -88,6 +97,9 @@ const Posts = () => {
       const { data: acceptedPostData, error: acceptError } = await acceptPost({
         variables: { acceptedCommission,
       }});
+
+      handleRemovePost(postId);
+      refetch();
 
       if (acceptError) {
         console.error("Error accepting the post:", acceptError);
@@ -105,7 +117,7 @@ const Posts = () => {
     console.log(`Removing the post with ID: ${postId}`);
     removePost({
       variables: { postId },
-      update: (cache, { data: { removePost } }) => { // Destructure the response to get the removed post
+      update: (cache, { data: { removePost } }) => { 
         const existingPosts = cache.readQuery({ query: QUERY_POSTS });
         const updatedPosts = existingPosts.getPosts.filter(
           (post) => post._id !== removePost._id
@@ -118,15 +130,17 @@ const Posts = () => {
     });
   };
 
-  const formatDate = (timestamp) => {
-    if (timestamp) {
-      const date = new Date(parseInt(timestamp));
-      const day = String(date.getDate()).padStart(2, "0");
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = String(date.getFullYear()).slice(-2);
-      return `${day}/${month}/${year}`;
+  const formatDate = (dateString) => {
+    if (dateString) {
+      // Convert the date string to a Date object
+      const dateParts = dateString.split('/');
+      const day = parseInt(dateParts[0], 10);
+      const month = parseInt(dateParts[1], 10) - 1; 
+      const year = parseInt(dateParts[2], 10) + 2000; 
+  
+      return new Date(year, month, day);
     }
-    return "Invalid Date";
+    return null;
   };
 
   return (
@@ -149,13 +163,12 @@ const Posts = () => {
           >
             <Box>
               <h2>Title: {post.postTitle}</h2>
+              <p style={{fontStyle: "italic"}}>{post.username}</p>
               <p>Description: {post.postDescription}</p>
               <p>Post Type: {post.postType}</p>
-              <p>User: {post.username}</p>
               <p>Budget: ${post.budget}</p>
-              <p>Deadline: {formatDate(post.deadline)}</p>
-              <p>Created By: {post.username}</p>
-              <p>Created At: {formatDate(post.createdAt)}</p>
+              <p>Deadline: {post.deadline}</p>
+              <p>Created At: {post.createdAt}</p>
 
               {/* Check if the logged-in user is the same as the post's creator */}
               {loggedInUsername === post.username && (
