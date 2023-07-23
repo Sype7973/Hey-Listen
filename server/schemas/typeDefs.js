@@ -54,6 +54,7 @@ const typeDefs = gql`
         deadline: String
         userId: ID
         createdAt: String
+        email: String
     }
 
 
@@ -78,7 +79,7 @@ const typeDefs = gql`
         updateUser(username: String, email: String, password: String, musicLinks: [String], bio: String, profilePicture: String): User
         addPost(postTitle: String!, postDescription: String!, postType: String!, userId: ID! budget: Int, deadline: String!): Post
         updatePost(postTitle: String, postDescription: String, postType: String, username: String, budget: Int, deadline: String, createdAt: String): Post
-        removePost(postId: ID!): User
+        removePost(postId: ID!): Post
         deleteUser: User 
         updateCommission(commissions: [CommissionInput]): User
         addCommission(commissions: CommissionInput): User

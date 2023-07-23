@@ -11,6 +11,7 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
+  Select,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -28,24 +29,55 @@ const CreatePost = () => {
   });
 
   const [addPost, { error }] = useMutation(ADD_POST);
-  //  get user data from me query
   const { data } = useQuery(GET_ME);
   const [user, setUser] = useState(null);
+
   useEffect(() => {
     if (data) {
       setUser(data.me);
     }
   }, [data]);
-  console.log(data);
-  console.log(user);
 
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   useEffect(() => {
     if (user) {
       setUsername(user.username);
+      setEmail(user.email);
     }
   }, [user]);
-  console.log(username);
+
+  const postTypeOptions = [
+    "Need Artist",
+    "Need Producer",
+    "Need Sample",
+    "Need Mixing",
+    "Need Mastering",
+    "Need Vocals",
+    "Need Guitarist",
+    "Need Bassist",
+    "Need Drummer",
+    "Need Pianist",
+    "Need Synth",
+    "Need Other",
+  ];
+
+  const [selectedPostType, setSelectedPostType] = useState("");
+
+  const handlePostTypeChange = (e) => {
+    setSelectedPostType(e.target.value);
+  };
+
+  const handleAddCustomPostType = () => {
+    setShowCustomPostTypeInput(true);
+  };
+
+  const [showCustomPostTypeInput, setShowCustomPostTypeInput] = useState(false);
+  const [customPostType, setCustomPostType] = useState("");
+
+  const handleCustomPostTypeChange = (e) => {
+    setCustomPostType(e.target.value);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -69,32 +101,26 @@ const CreatePost = () => {
       const { data } = await addPost({
         variables: {
           postTitle: formData.postTitle,
-          postType: formData.postType,
+          postType: showCustomPostTypeInput ? customPostType : selectedPostType,
           postDescription: formData.postDescription,
           budget: formData.budget,
           deadline: formData.deadline,
           userId: user._id,
           username: username,
+          email: user.email,
         },
       });
       console.log(username);
       console.log(data);
       window.location.replace("/post-dashboard");
-
     } catch (err) {
       console.error(err);
     }
   };
+
   return (
     <Flex justifyContent="center" alignItems="center" height="100vh">
-      <Box
-        p={5}
-        shadow="md"
-        borderWidth="1px"
-        borderRadius="md"
-        bg="gray.50"
-        w="1000px"
-      >
+      <Box p={5} shadow="md" borderWidth="1px" borderRadius="md" bg="gray.50" w="1000px">
         <Box>
           <h2>Create a Post</h2>
           <form onSubmit={handleFormSubmit}>
@@ -110,13 +136,31 @@ const CreatePost = () => {
             </FormControl>
             <FormControl id="postType" marginBottom="1rem">
               <FormLabel>Post Type</FormLabel>
-              <Input
-                type="text"
+              <Select
                 name="postType"
                 placeholder="Post Type"
-                value={formData.postType}
-                onChange={handleInputChange}
-              />
+                value={selectedPostType}
+                onChange={handlePostTypeChange}
+              >
+                {postTypeOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </Select>
+              <Button colorScheme="teal" size="sm" onClick={handleAddCustomPostType} ml={2}>
+                Add Custom
+              </Button>
+              {showCustomPostTypeInput && (
+                <Input
+                  type="text"
+                  name="customPostType"
+                  placeholder="Enter Custom Post Type"
+                  value={customPostType}
+                  onChange={handleCustomPostTypeChange}
+                  mt={2}
+                />
+              )}
             </FormControl>
             <FormControl id="postDescription" marginBottom="1rem">
               <FormLabel>Post Description</FormLabel>

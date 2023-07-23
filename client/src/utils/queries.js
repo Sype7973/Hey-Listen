@@ -4,6 +4,7 @@ import { gql } from "@apollo/client";
 export const GET_ME = gql`
   query Me {
     me {
+      _id
       username
       email
       profilePicture
@@ -23,7 +24,6 @@ export const GET_ME = gql`
       }
       musicLinks
       bio
-      _id
       posts {
         username
         userId
@@ -112,6 +112,7 @@ export const QUERY_POSTS = gql`
       postType
       userId
       username
+      email
     }
   }
 `;
