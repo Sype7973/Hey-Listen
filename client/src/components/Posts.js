@@ -130,6 +130,16 @@ const Posts = () => {
     });
   };
 
+  const formatDateForm = (timestamp) => {
+    if (timestamp) {
+      const date = new Date(parseInt(timestamp));
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = String(date.getFullYear()).slice(-2);
+      return `${day}/${month}/${year}`;
+    }
+    return "Invalid Date";
+  };
   const formatDate = (dateString) => {
     if (dateString) {
       // Convert the date string to a Date object
@@ -167,8 +177,8 @@ const Posts = () => {
               <p>Description: {post.postDescription}</p>
               <p>Post Type: {post.postType}</p>
               <p>Budget: ${post.budget}</p>
-              <p>Deadline: {post.deadline}</p>
-              <p>Created At: {post.createdAt}</p>
+              <p>Deadline: {formatDateForm(post.deadline)}</p>
+              <p>Created At: {formatDateForm(post.createdAt)}</p>
 
               {/* Check if the logged-in user is the same as the post's creator */}
               {loggedInUsername === post.username && (
