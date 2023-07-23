@@ -44,7 +44,24 @@ const Posts = () => {
   // accepts posts and moves them to the user's accepted posts
   const handleAcceptPost = async (postId) => {
     setPostId(postId);
+    if (!data || !data.getPosts) {
+      console.error("No posts found!");
+      return;
+    }
     const postData = data.getPosts.filter((post) => post._id === postId);
+
+    if (postData.length === 0) {
+      console.error(`No post found with ID: ${postId}`);
+      return;
+    }
+
+    const post = postData[0];
+
+    if (!post.deadline) {
+      console.error(`No deadline found for post with ID: ${postId}`);
+      return;
+    }
+
    console.log(postData[0].username)
     const updatedDeadline = formatDate(postData[0].deadline);
 
@@ -69,7 +86,7 @@ const Posts = () => {
 
     try {
       const { data: acceptedPostData, error: acceptError } = await acceptPost({
-        variables: { commissions: acceptedCommission,
+        variables: { acceptedCommission,
       }});
 
       if (acceptError) {
