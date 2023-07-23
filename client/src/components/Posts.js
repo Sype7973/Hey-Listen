@@ -42,13 +42,14 @@ const Posts = () => {
   const handleContactPoster = (postId, email, postTitle, username) => {
     const subject = `I'm interested in your post: ${postTitle}`;
     const body = `Hi ${username},\n\nI'm interested in: ${postTitle}.\n\nPlease let me know if it's still available.\n\nThanks!`;
-    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoLink;
     console.log(`Contacting the poster for post with ID: ${postId}`);
   };
   // accepts posts and moves them to the user's accepted posts
   const handleAcceptPost = async (postId) => {
-
     setPostId(postId);
     if (!data || !data.getPosts) {
       console.error("No posts found!");
@@ -68,14 +69,13 @@ const Posts = () => {
       return;
     }
 
-   console.log(postData[0].username)
-    const updatedDeadline = formatDate(postData[0].deadline);
+    console.log(postData[0].deadline);
+    // const updatedDeadline = formatDateForm(postData[0].deadline);
 
-    const updatedCreatedAt = formatDate(postData[0].createdAt);
+    // const updatedCreatedAt = formatDateForm(postData[0].createdAt);
 
-    console.log("Updated deadline")
-    console.log(updatedDeadline)
-
+    // console.log("Updated deadline");
+    // console.log(updatedDeadline);
 
     const acceptedCommission = {
       commissionTitle: postData[0].postTitle,
@@ -84,10 +84,10 @@ const Posts = () => {
       creatorId: postData[0].userId,
       collaboratorId: myUserData.me._id,
       budget: postData[0].budget,
-      deadline: updatedDeadline,
+      deadline: postData[0].deadline,
       status: true,
       username: postData[0].username,
-      createdAt: updatedCreatedAt,
+      createdAt: postData[0].createdAt,
     };
 
     console.log("ACCEPTED COMMISSION");
@@ -95,9 +95,8 @@ const Posts = () => {
 
     try {
       const { data: acceptedPostData, error: acceptError } = await acceptPost({
-        variables: { acceptedCommission,
-      }});
-
+        variables: { commissions: acceptedCommission }
+      });
       handleRemovePost(postId);
       refetch();
 
@@ -117,7 +116,7 @@ const Posts = () => {
     console.log(`Removing the post with ID: ${postId}`);
     removePost({
       variables: { postId },
-      update: (cache, { data: { removePost } }) => { 
+      update: (cache, { data: { removePost } }) => {
         const existingPosts = cache.readQuery({ query: QUERY_POSTS });
         const updatedPosts = existingPosts.getPosts.filter(
           (post) => post._id !== removePost._id
@@ -136,18 +135,18 @@ const Posts = () => {
       const day = String(date.getDate()).padStart(2, "0");
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = String(date.getFullYear()).slice(-2);
-      return `${day}/${month}/${year}`;
+      return `${year}/${month}/${day}`;
     }
     return "Invalid Date";
   };
   const formatDate = (dateString) => {
     if (dateString) {
       // Convert the date string to a Date object
-      const dateParts = dateString.split('/');
+      const dateParts = dateString.split("/");
       const day = parseInt(dateParts[0], 10);
-      const month = parseInt(dateParts[1], 10) - 1; 
-      const year = parseInt(dateParts[2], 10) + 2000; 
-  
+      const month = parseInt(dateParts[1], 10) - 1;
+      const year = parseInt(dateParts[2], 10) + 2000;
+
       return new Date(year, month, day);
     }
     return null;
@@ -173,7 +172,7 @@ const Posts = () => {
           >
             <Box>
               <h2>Title: {post.postTitle}</h2>
-              <p style={{fontStyle: "italic"}}>{post.username}</p>
+              <p style={{ fontStyle: "italic" }}>{post.username}</p>
               <p>Description: {post.postDescription}</p>
               <p>Post Type: {post.postType}</p>
               <p>Budget: ${post.budget}</p>

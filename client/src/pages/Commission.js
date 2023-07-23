@@ -43,6 +43,7 @@ const Commissions = ({ onHandleUpdateCommission, commissions, user }) => {
       {commissions.length > 0 ? (
         commissions.map((commission, index) => (
           <Flex
+            key={commission._id}
             p={5}
             shadow="md"
             borderWidth="1px"

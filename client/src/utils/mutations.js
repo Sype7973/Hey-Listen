@@ -207,30 +207,18 @@ export const UPDATE_COMMISSION = gql`
 
 export const ACCEPT_POST = gql`
   mutation AcceptPost($commissions: CommissionInput) {
-    acceptPost(commissions: $commissions) {
-      _id
-      bio
-      email
-      musicLinks
-      password
-      profilePicture
-      userType
-      username
-      commissions {
-        _id
-        budget
-        collaboratorId
-        commissionDescription
-        commissionTitle
-        commissionType
-        completionDate
-        creatorId
-        rating
-        status
-        review
-        deadline
-        createdAt
-      }
-    }
+  acceptPost(commissions: $commissions) {
+    username
+    deadline
+    creatorId
+    createdAt
+    completionDate
+    commissionType
+    commissionTitle
+    collaboratorId
+    commissionDescription
+    _id
+    budget
   }
+}
 `;

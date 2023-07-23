@@ -39,8 +39,7 @@ const userSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'Post',
     }],
-    commissions: [commissionSchema],
-  },
+    commissionIds: [{ type: Schema.Types.ObjectId, ref: 'Commission' }],  },
   // set this to use virtual below
   {
     toJSON: {
