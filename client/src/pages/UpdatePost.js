@@ -21,27 +21,37 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { UPDATE_POST } from "../utils/mutations";
 import { useParams } from "react-router-dom";
-import { QUERY_POST } from "../utils/queries";
+import { GET_ME } from "../utils/queries";
+
 
 const UpdatePost = () => {
     const [formData, setFormData] = useState({
-        postTitle: "",
-        postType: "",
-        postDescription: "",
-        budget: 0, // Default value for the slider
-        deadline: "",
+      postTitle: "",
+      postType: "",
+      postDescription: "",
+      budget: 0, // Default value for the slider
+      deadline: "",
     });
+  
     const { id: postId } = useParams();
     const [updatePost, { error }] = useMutation(UPDATE_POST);
-    const { data } = useQuery(QUERY_POST, {
-        variables: { postId },
-      });
+    const { data } = useQuery(GET_ME);
     const [user, setUser] = useState(null);
-
+  
     useEffect(() => {
-        if (data) {
-            setUser(data.me);
+      if (data) {
+        setUser(data.me);
+        // Populate the form data with the existing post data from the user
+        if (data.me && data.me.post) {
+          setFormData({
+            postTitle: data.me.post.postTitle,
+            postType: data.me.post.postType,
+            postDescription: data.me.post.postDescription,
+            budget: data.me.post.budget,
+            deadline: data.me.post.deadline,
+          });
         }
+      }
     }, [data]);
 
     const [username, setUsername] = useState("");
