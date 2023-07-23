@@ -76,6 +76,7 @@ const MyPosts = () => {
                     <Button colorScheme="red" mt={2} onClick={() => handleRemovePost(post._id)}>
                       Remove Post
                     </Button>
+                  // update post button
                   )}
                 </CardBody>
               </Card>
