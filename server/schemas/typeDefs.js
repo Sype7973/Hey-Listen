@@ -29,6 +29,7 @@ const typeDefs = gql`
         rating: Int
         review: String
         username: String
+        createdAt: String
     }
 
     input CommissionInput {
@@ -45,6 +46,7 @@ const typeDefs = gql`
         rating: Int
         review: String
         username: String
+        createdAt: String
     }
 
 

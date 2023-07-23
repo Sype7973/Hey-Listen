@@ -86,6 +86,7 @@ const MyProfile = () => {
           rating: commission.rating,
           review: commission.review,
           deadline: formatDate(commission.deadline),
+          createdAt: formatDate(commission.createdAt),
         })),
       },
     });

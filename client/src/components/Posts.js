@@ -61,6 +61,7 @@ const Posts = () => {
       deadline: updatedDeadline,
       status: true,
       username: postData[0].username,
+      createdAt: postData[0].createdAt,
     };
 
     console.log("ACCEPTED COMMISSION");

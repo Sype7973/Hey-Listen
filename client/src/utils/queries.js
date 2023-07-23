@@ -23,6 +23,7 @@ export const GET_ME = gql`
         collaboratorId
         deadline
         username
+        createdAt
       }
       musicLinks
       bio

@@ -229,6 +229,7 @@ export const ACCEPT_POST = gql`
         status
         review
         deadline
+        createdAt
       }
     }
   }

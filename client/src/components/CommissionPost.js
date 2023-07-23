@@ -8,20 +8,7 @@ const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
   const [updatedDescription, setUpdatedDescription] = useState(
     commission.commissionDescription
   );
-  
-  const { loading, error, data } = useQuery(GET_USER, {
-    variables: { _id: commission.collaboratorId },
-  });
 
-  useEffect(() => {
-    if (loading) {
-      console.log("Loading...");
-    } else if (error) {
-      console.error("Error fetching collaborator data:", error);
-    } else {
-      console.log("Collaborator data:", data);
-    }
-  }, [loading, error, data]);
 
 
   const handleUpdateCommission = () => {
@@ -45,6 +32,7 @@ const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
     return "Invalid Date";
   };
   const updatedDeadline = formatDate(commission.deadline)
+  const updatedCreatedAt = formatDate(commission.createdAt)
 
 
   return (
@@ -71,13 +59,13 @@ const CommissionPost = ({ commission, onUpdateCommission, closeModal }) => {
       <h2>Deadline:</h2>
       <p>{`${updatedDeadline}`}</p>
       <h2>Created At:</h2>
-      <p>{`${commission.createdAt}`}</p>
+      <p>{`${updatedCreatedAt}`}</p>
       <ModalFooter>
         <Button colorScheme="blue" mr={3} onClick={closeModal}>
           Close
         </Button>
         <Button variant="ghost" onClick={handleUpdateCommission}>
-          Update User
+          Update Commission
         </Button>
       </ModalFooter>
     </Box>
