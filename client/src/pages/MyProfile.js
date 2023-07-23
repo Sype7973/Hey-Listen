@@ -24,7 +24,14 @@ const MyProfile = () => {
   const [activeCommissions, setActiveCommissions] = useState([]);
   const [completedCommissions, setCompletedCommissions] = useState([]);
 
- 
+ const handlePageRefetch = async () => {
+    await refetch();
+  };
+
+  useEffect(() => {
+    handlePageRefetch();
+  }, []);
+
 
   useEffect(() => {
     // Check if commissionData and getCommissions are available
