@@ -19,7 +19,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        if (data.me) {
+        if (data.me && data.me !== null) {
           setUser(data.me);
         }
       } catch (error) {

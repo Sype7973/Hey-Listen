@@ -28,9 +28,12 @@ const commissionSchema = new Schema(
             type: Number,
             required: true,
         },
-        completionDate: {
+        deadline: {
             type: Date,
             required: true,
+        },
+        completionDate: {
+            type: Date,
         },
         status: {
             type: Boolean,
@@ -43,6 +46,10 @@ const commissionSchema = new Schema(
         review: {
             type: String,
         },
+        username: {
+            type: String,
+            required: true,
+        }
     },
     {
         toJSON: {

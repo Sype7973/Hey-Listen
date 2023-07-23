@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Box, Flex, Button } from "@chakra-ui/react";
-import { QUERY_POSTS } from "../utils/queries";
-import { REMOVE_POST } from "../utils/mutations";
+import { QUERY_POSTS, QUERY_POST, GET_ME } from "../utils/queries";
+import { REMOVE_POST, ACCEPT_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
 
 const Posts = () => {
   const { loading, data, refetch } = useQuery(QUERY_POSTS);
+  const { data: myUserData } = useQuery(GET_ME);
   const [posts, setPosts] = useState([]);
-  const [removePost, { error }] = useMutation(REMOVE_POST);
-
+  const [postId, setPostId] = useState(null);
+  const [removePost, { error: removePostError }] = useMutation(REMOVE_POST);
+  const [
+    acceptPost,
+    {
+      loading: acceptPostLoading,
+      error: acceptPostError,
+      data: acceptedPostData,
+    },
+  ] = useMutation(ACCEPT_POST);
   useEffect(() => {
     if (data) {
       setPosts(data.getPosts);
-      refetch();
     }
   }, [data]);
 
@@ -21,18 +29,59 @@ const Posts = () => {
     return <div>Loading...</div>;
   }
 
-  const loggedInUsername = Auth.loggedIn() ? Auth.getProfile().data.username : null;
+  const loggedInUsername = Auth.loggedIn()
+    ? Auth.getProfile().data.username
+    : null;
 
   // still need to implement these functions correctly, coming up as undefined
   const handleContactPoster = (postId, email, postTitle, username) => {
     const subject = `I'm interested in your post with ID: ${postTitle}`;
     const body = `Hi ${username},\n\nI'm interested in your post with ID: ${postTitle}.\n\nPlease let me know if it's still available.\n\nThanks!`;
-    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoLink;
     console.log(`Contacting the poster for post with ID: ${postId}`);
   };
   // accepts posts and moves them to the user's accepted posts
-  const handleAcceptPost = (postId) => {
+  const handleAcceptPost = async (postId) => {
+    setPostId(postId);
+    const postData = data.getPosts.filter((post) => post._id === postId);
+   console.log(postData[0].username)
+    const updatedDeadline = formatDate(postData[0].deadline);
+
+
+    
+    console.log(updatedDeadline)
+    const acceptedCommission = {
+      commissionTitle: postData[0].postTitle,
+      commissionType: postData[0].postType,
+      commissionDescription: postData[0].postDescription,
+      creatorId: postData[0].userId,
+      collaboratorId: myUserData.me._id,
+      budget: postData[0].budget,
+      deadline: updatedDeadline,
+      status: true,
+      username: postData[0].username,
+    };
+
+    console.log("ACCEPTED COMMISSION");
+    console.log(acceptedCommission);
+
+    try {
+      const { data: acceptedPostData, error: acceptError } = await acceptPost({
+        variables: { commissions: acceptedCommission,
+      }});
+
+      if (acceptError) {
+        console.error("Error accepting the post:", acceptError);
+      }
+      console.log("Accepted Post Data");
+      console.log(acceptedPostData);
+    } catch (err) {
+      console.error(`ERRRRRRRRRRR: ${err}`);
+    }
+
     console.log(`Accepting the post with ID: ${postId}`);
   };
 
@@ -43,7 +92,9 @@ const Posts = () => {
       update: (cache, { data }) => {
         const { removePost } = data;
         const existingPosts = cache.readQuery({ query: QUERY_POSTS });
-        const updatedPosts = existingPosts.getPosts.filter((post) => post._id !== removePost._id);
+        const updatedPosts = existingPosts.getPosts.filter(
+          (post) => post._id !== removePost._id
+        );
         cache.writeQuery({
           query: QUERY_POSTS,
           data: { getPosts: updatedPosts },
@@ -51,8 +102,6 @@ const Posts = () => {
       },
     });
   };
-
-
 
   const formatDate = (timestamp) => {
     if (timestamp) {
@@ -64,6 +113,7 @@ const Posts = () => {
     }
     return "Invalid Date";
   };
+
   return (
     <Box>
       {posts &&
@@ -95,17 +145,36 @@ const Posts = () => {
               {/* Check if the logged-in user is the same as the post's creator */}
               {loggedInUsername === post.username && (
                 <>
-                  <Button colorScheme="red" mt={2} onClick={() => handleRemovePost(post._id)}>
+                  <Button
+                    colorScheme="red"
+                    mt={2}
+                    onClick={() => handleRemovePost(post._id)}
+                  >
                     Remove Post
                   </Button>
                 </>
               )}
               {loggedInUsername !== post.username && (
                 <>
-                  <Button colorScheme="teal" mt={2} onClick={() => handleContactPoster(post._id, post.email, post.postTitle, post.username )}>
+                  <Button
+                    colorScheme="teal"
+                    mt={2}
+                    onClick={() =>
+                      handleContactPoster(
+                        post._id,
+                        post.email,
+                        post.postTitle,
+                        post.username
+                      )
+                    }
+                  >
                     Contact Poster
                   </Button>
-                  <Button colorScheme="blue" mt={2} onClick={() => handleAcceptPost(post._id)}>
+                  <Button
+                    colorScheme="blue"
+                    mt={2}
+                    onClick={() => handleAcceptPost(post._id)}
+                  >
                     Accept Post
                   </Button>
                 </>

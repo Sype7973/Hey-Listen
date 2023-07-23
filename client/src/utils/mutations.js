@@ -187,6 +187,7 @@ export const ADD_COMMISSION = gql`
       commissionType
       username
       budget
+      deadline
       completionDate
       status
       rating
@@ -197,9 +198,38 @@ export const ADD_COMMISSION = gql`
 //  update commission
 export const UPDATE_COMMISSION = gql`
   mutation UpdateCommission($commissions: [CommissionInput]) {
-  updateCommission(commissions: $commissions) {
-    username
-    email
+    updateCommission(commissions: $commissions) {
+      username
+      email
+    }
   }
-}
+`;
+
+export const ACCEPT_POST = gql`
+  mutation AcceptPost($commissions: CommissionInput) {
+    acceptPost(commissions: $commissions) {
+      _id
+      bio
+      email
+      musicLinks
+      password
+      profilePicture
+      userType
+      username
+      commissions {
+        _id
+        budget
+        collaboratorId
+        commissionDescription
+        commissionTitle
+        commissionType
+        completionDate
+        creatorId
+        rating
+        status
+        review
+        deadline
+      }
+    }
+  }
 `;

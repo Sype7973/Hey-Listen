@@ -34,7 +34,7 @@ export default function Sidebar() {
   const [navSize] = useState("large");
   const [user, setUser] = useState(null);
   const [whiteBurgerColor, setBurgerColor] = useState(true);
-  const { data } = useQuery(GET_ME);
+  const { loading, data } = useQuery(GET_ME);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -44,7 +44,7 @@ export default function Sidebar() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        if (data.me) {
+        if (data.me && data.me !== null) {
           setUser(data.me);
         }
       } catch (error) {
@@ -64,6 +64,10 @@ export default function Sidebar() {
       console.log(whiteBurgerColor);
     }
   }, [location.pathname]);
+
+  if(loading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <Box>
