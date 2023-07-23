@@ -23,10 +23,12 @@ const typeDefs = gql`
         creatorId: String
         collaboratorId: String
         budget: Int
+        deadline: String
         completionDate: String
         status: Boolean
         rating: Int
         review: String
+        username: String
     }
 
     input CommissionInput {
@@ -37,10 +39,12 @@ const typeDefs = gql`
         creatorId: String
         collaboratorId: String
         budget: Int
+        deadline: String
         completionDate: String
         status: Boolean
         rating: Int
         review: String
+        username: String
     }
 
 
@@ -84,6 +88,7 @@ const typeDefs = gql`
         updateCommission(commissions: [CommissionInput]): User
         addCommission(commissions: CommissionInput): User
         getCommission(_id: ID!): Commission
+        acceptPost(commissions: CommissionInput): User  
     }
 `;
 

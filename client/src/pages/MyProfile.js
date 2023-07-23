@@ -20,6 +20,10 @@ const MyProfile = () => {
   const [completedCommissions, setCompletedCommissions] = useState([]);
 
   useEffect(() => {
+    refetch()
+  }, [])
+
+  useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
@@ -81,12 +85,26 @@ const MyProfile = () => {
           status: commission.status,
           rating: commission.rating,
           review: commission.review,
+          deadline: formatDate(commission.deadline),
         })),
       },
     });
     console.log(data);
     refetch();
   };
+
+  const formatDate = (timestamp) => {
+    if (timestamp) {
+      const date = new Date(parseInt(timestamp));
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = String(date.getFullYear()).slice(-2);
+      return `${day}/${month}/${year}`;
+    }
+    return "Invalid Date";
+  };
+
+  console.log(commissions);
 
   if (isLoading || loading) {
     return (

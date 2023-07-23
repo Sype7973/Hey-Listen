@@ -137,6 +137,37 @@ const resolvers = {
       }
     },
 
+    acceptPost: async (parent, args, context) => {
+      console.log(args.commissions.deadline)
+
+
+      if (context.user) {
+        try {
+
+          const updateCreator = await User.findByIdAndUpdate(
+            { _id: args.commissions.creatorId },
+            { $push: { commissions: args.commissions } },
+            { new: true }
+          );
+
+          const updateCollaborator = await User.findByIdAndUpdate(
+            { _id: args.commissions.collaboratorId },
+            { $push: { commissions: args.commissions } },
+            { new: true }
+          );
+            console.log(updateCreator.commissions)
+            
+
+          return updateCollaborator;
+        } catch (err) {
+          console.log(err);
+          throw new Error(err);
+        }
+      }
+    },
+
+       
+
     removePost: async (parent, args, context) => {
       if (context.user) {
         try {

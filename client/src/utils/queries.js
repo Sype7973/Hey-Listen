@@ -21,6 +21,8 @@ export const GET_ME = gql`
         status
         creatorId
         collaboratorId
+        deadline
+        username
       }
       musicLinks
       bio
@@ -42,11 +44,11 @@ export const GET_ME = gql`
 // get all users
 export const GET_USERS = gql`
   query getUsers {
-    users {
+    getUsers {
       _id
       username
       email
-      Post {
+      posts {
         _id
         postTitle
         postDescription
@@ -55,7 +57,7 @@ export const GET_USERS = gql`
         budget
         deadline
       }
-      Commission {
+      commissions {
         _id
         commissionTitle
         commissionType
@@ -72,11 +74,11 @@ export const GET_USERS = gql`
 // get a single user by username
 export const GET_USER = gql`
   query getUser($username: String!) {
-    user(username: $username) {
+    getUser(username: $username) {
       _id
       username
       email
-      Post {
+      posts {
         _id
         postTitle
         postDescription
@@ -85,7 +87,7 @@ export const GET_USER = gql`
         budget
         deadline
       }
-      Commission {
+      commissions {
         _id
         commissionTitle
         commissionType
