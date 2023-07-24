@@ -15,10 +15,9 @@ import {
 import CommissionPost from "../components/CommissionPost";
 
 import greenLight from "../assets/images/greenlight.png";
-import redLight from "../assets/images/redlight.png";
 import orangeLight from "../assets/images/orangelight.png";
 
-const Commissions = ({ onHandleUpdateCommission, commissions, user }) => {
+const Commissions = ({ onHandleUpdateCommission, commissions, user, onHandleDeleteCommission }) => {
   const [activeCommissionIndex, setActiveCommissionIndex] = useState(null);
 
 
@@ -35,6 +34,11 @@ const Commissions = ({ onHandleUpdateCommission, commissions, user }) => {
 
   const handleUpdateCommission = async (updatedCommission) => {
     onHandleUpdateCommission(updatedCommission);
+    closeModal();
+  };
+
+  const handleDeleteCommission = async (commissionId) => {
+    onHandleDeleteCommission(commissionId);
     closeModal();
   };
 
@@ -100,6 +104,7 @@ const Commissions = ({ onHandleUpdateCommission, commissions, user }) => {
                 commission={commissions[activeCommissionIndex]}
                 onUpdateCommission={handleUpdateCommission}
                 closeModal={closeModal}
+                onDeleteCommission={handleDeleteCommission}
               />
             </ModalBody>
           </ModalContent>

@@ -243,6 +243,20 @@ const resolvers = {
           }
         }
     },
+    deleteCommission: async (parent, args, context) => {
+
+      if (context.user) {
+        try {
+          const commissionData = await Commission.findByIdAndDelete({
+            _id: args._id,
+          });
+          return commissionData;
+        } catch (err) {
+          console.log(err);
+          throw new Error(err);
+        }
+      }
+    }
   },
 };
 
