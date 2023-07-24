@@ -128,7 +128,7 @@ const resolvers = {
       if (context.user) {
         try {
           const post = await Post.findByIdAndUpdate(
-            { _id: args._id },
+            { _id: args.postId },
             { $set: { ...args } },
             { new: true }
           );

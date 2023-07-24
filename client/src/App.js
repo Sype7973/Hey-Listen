@@ -19,7 +19,6 @@ import MyProfile from "./pages/MyProfile";
 import CreatePost from "./pages/CreatePost";
 import MyPosts from "./pages/MyPosts";
 import SearchBar from "./components/SearchBar";
-import UpdatePost from "./pages/UpdatePost";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -65,7 +64,6 @@ function App() {
               {location.pathname === "/signup" && <Signup />}
               {location.pathname === "/my-posts" && <MyPosts />}
               {location.pathname === "/create-post" && <CreatePost />}
-              {location.pathname === "/update-post/:postId" && <UpdatePost />}
               <Footer />
             </Box>
           </Flex>

@@ -107,13 +107,13 @@ const typeDefs = gql`
       deadline: String!
     ): Post
     updatePost(
+      postId: ID!
       postTitle: String
       postDescription: String
       postType: String
       username: String
       budget: Int
       deadline: String
-      createdAt: String
     ): Post
     removePost(postId: ID!): Post
     deleteUser: User

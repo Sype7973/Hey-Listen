@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { Box, Grid, Flex, Card, CardBody, Heading, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  Flex,
+  Card,
+  CardBody,
+  Heading,
+  Button,
+} from "@chakra-ui/react";
 import { GET_ME, QUERY_POSTS } from "../utils/queries";
-import { REMOVE_POST } from "../utils/mutations";
+import { REMOVE_POST, UPDATE_POST } from "../utils/mutations";
 import spinner from "../assets/images/spinner.gif";
 import Auth from "../utils/auth";
-import { Link } from "react-router-dom";
+import UpdatePostModal from "../components/UpdatePostModal";
 
 const formatDate = (timestamp) => {
   if (timestamp) {
@@ -20,11 +28,20 @@ const formatDate = (timestamp) => {
 
 const MyPosts = () => {
   const { loading: meLoading, data: meData } = useQuery(GET_ME);
-  // const { loading: postsLoading, data: postsData, refetch: refetchPosts } = useQuery(QUERY_POSTS);
   const user = meData?.me || {};
   const loggedInUsername = Auth.loggedIn() ? Auth.getProfile().data.username : null;
   const [removePost] = useMutation(REMOVE_POST);
+  const [updatePost] = useMutation(UPDATE_POST);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPostData, setSelectedPostData] = useState({
+    postTitle: "",
+    postDescription: "",
+    postType: "",
+    budget: 0,
+    deadline: new Date(),
+  });
+  const [activePostIndex, setActivePostIndex] = useState(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -32,13 +49,7 @@ const MyPosts = () => {
     }, 1000);
   }, [meData]);
 
-  console.log("User Data:", user);
-  console.log("Logged In Username:", loggedInUsername);
-
-  // Filter the user's posts into "My Posts" (Posts belonging to the logged-in user)
   const myPosts = user.posts ? user.posts.filter((post) => post.username === loggedInUsername) : [];
-
-  console.log("My Posts:", myPosts);
 
   const handleRemovePost = (postId) => {
     console.log(`Removing the post with ID: ${postId}`);
@@ -54,19 +65,51 @@ const MyPosts = () => {
       },
     });
   };
+  
+  const handleOpenModal = (post) => {
+  
+    setSelectedPostData({
+      postTitle: post.postTitle,
+      postDescription: post.postDescription,
+      postType: post.postType,
+      budget: post.budget,
+      deadline: "",
+    });
+    setActivePostIndex(post._id);
+    setIsModalOpen(true);
+  };
 
-  if (isLoading || meLoading ) {
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setActivePostIndex(null);
+  };
+
+  const handleModalFormSubmit = async () => {
+    console.log("Updating Post:", selectedPostData);
+    try {
+      const { data } = await updatePost({
+        variables: {
+          postId: activePostIndex,
+          postTitle: selectedPostData.postTitle,
+          postDescription: selectedPostData.postDescription,
+          postType: selectedPostData.postType,
+          budget: selectedPostData.budget,
+        },
+      });
+      console.log("Updated Post Data:", data);
+      // refetchPosts();
+      handleCloseModal(); // Close the modal after updating the post
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (isLoading || meLoading) {
     return (
-      <Flex
-        minHeight="100vh"
-        alignItems="center"
-        bg="teal.500"
-        direction="column"
-        justifyContent="center"
-      >
+      <Flex minHeight="100vh" alignItems="center" bg="teal.500" direction="column" justifyContent="center">
         <Card m="auto" width="20vw" h="20vw">
           <CardBody display="flex" alignItems="center" justifyContent="center">
-            <img src={spinner} alt="loading"></img>{" "}
+            <img src={spinner} alt="loading" />
           </CardBody>
         </Card>
       </Flex>
@@ -82,7 +125,16 @@ const MyPosts = () => {
           </Heading>
           <Grid templateColumns="repeat(auto-fill, minmax(350px, 1fr))" gap={4} w="100%">
             {myPosts.map((post) => (
-              <Card key={post._id} p="4" border="1px" borderColor="gray.200" borderRadius="lg" boxShadow="lg" bg="gray.50" w="100%">
+              <Card
+                key={post._id}
+                p="4"
+                border="1px"
+                borderColor="gray.200"
+                borderRadius="lg"
+                boxShadow="lg"
+                bg="gray.50"
+                w="100%"
+              >
                 <CardBody>
                   <Heading as="h2" fontSize="2xl">
                     {post.postTitle}
@@ -96,14 +148,12 @@ const MyPosts = () => {
                   <p>Created At: {formatDate(post.createdAt)}</p>
                   {loggedInUsername === post.username && (
                     <>
-                    <Button colorScheme="red" mt={2} onClick={() => handleRemovePost(post._id)}>
-                      Remove Post
-                    </Button>
-                 <Link to={`/update-post/${post._id}`}>
-                    <Button colorScheme="teal" mt={2} ml={2}>
-                      Update Post
-                    </Button>
-                  </Link>
+                      <Button colorScheme="red" mt={2} onClick={() => handleRemovePost(post._id)}>
+                        Remove Post
+                      </Button>
+                      <Button colorScheme="teal" mt={2} ml={2} onClick={() => handleOpenModal(post)}>
+                        Update Post
+                      </Button>
                     </>
                   )}
                 </CardBody>
@@ -112,11 +162,32 @@ const MyPosts = () => {
           </Grid>
         </Flex>
       ) : (
-        <Flex p={5} shadow="md" borderWidth="1px" flex="1" borderRadius="md" flexDirection="column" alignItems="center" justifyContent="center" textAlign="center" bg="gray.50" m={5}>
+        <Flex
+          p={5}
+          shadow="md"
+          borderWidth="1px"
+          flex="1"
+          borderRadius="md"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          bg="gray.50"
+          m={5}
+        >
           <Heading as="h2" mb={4}>
             No Posts Found
           </Heading>
         </Flex>
+      )}
+      {activePostIndex !== null && (
+        <UpdatePostModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          selectedPostData={selectedPostData}
+          setSelectedPostData={setSelectedPostData}
+          handleModalFormSubmit={handleModalFormSubmit}
+        />
       )}
     </Box>
   );
