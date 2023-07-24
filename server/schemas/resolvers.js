@@ -13,7 +13,7 @@ const resolvers = {
         );
         return userData;
       }
-      throw new AuthenticationError("You need to be logged in!");
+      return null;
     },
     getUsers: async (parent, args, context) => {
       return User.find().select("-__v").populate("posts");

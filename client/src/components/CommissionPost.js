@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   ModalFooter,
@@ -30,6 +30,7 @@ const CommissionPost = ({
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+
   const handleOpenDeleteModal = () => {
     setIsDeleteModalOpen(true);
   };
@@ -47,10 +48,16 @@ const CommissionPost = ({
     onUpdateCommission(updatedCommission);
   };
 
+
+  const [date, setDate] = useState(new Date());
+  const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  
   const handleCompleteCommission = () => {
+    
+    console.log(formattedDate)
     const updatedCommission = {
       ...commission,
-      //completionDate: date,
+      completionDate: formattedDate,
       status: false,
     };
     onUpdateCommission(updatedCommission);
