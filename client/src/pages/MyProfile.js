@@ -185,6 +185,7 @@ const MyProfile = () => {
                           commissions={activeCommissions}
                           user={user}
                           onHandleUpdateCommission={handleUpdateCommission}
+                          onHandleDeleteCommission={handleDeleteCommission}
                         />
                       </CardBody>
                     </Card>
