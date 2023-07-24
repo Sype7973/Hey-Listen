@@ -10,10 +10,13 @@ const resolvers = {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id }).select(
           "-__v -password"
-        );
+        ).populate("posts");
+        console.log("User Data");
+        console.log(userData);
         return userData;
       }
       return null;
+      
     },
     getUsers: async (parent, args, context) => {
       return User.find().select("-__v").populate("posts");
