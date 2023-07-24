@@ -7,20 +7,18 @@ const resolvers = {
     /*------------User------------*/
 
     me: async (parent, args, context) => {
-   
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id })
-          .select("-__v -password")
+        const userData = await User.findOne({ _id: context.user._id }).select(
+          "-__v -password"
+        );
         return userData;
       }
       throw new AuthenticationError("You need to be logged in!");
     },
     getUsers: async (parent, args, context) => {
-
       return User.find().select("-__v").populate("commissions posts");
     },
     getUser: async (parent, args, context) => {
-
       return User.findOne({ _id: args._id })
         .select("-__v -password")
         .populate("commissions posts");
@@ -37,11 +35,9 @@ const resolvers = {
 
     getCommissions: async () => {
       return Commission.find().select("-__v");
-
     },
   },
 
-  
   Mutation: {
     /*------------User------------*/
 
@@ -58,7 +54,7 @@ const resolvers = {
         try {
           const user = await User.findByIdAndUpdate(
             { _id: args._id },
-            { $set: { ...args }},
+            { $set: { ...args } },
             { new: true }
           );
           return user;
@@ -103,10 +99,7 @@ const resolvers = {
       return { token, user };
     },
 
-
     /*------------Commission------------*/
-
-  
 
     /*------------Post------------*/
 
@@ -118,7 +111,6 @@ const resolvers = {
             ...args,
             username: context.user.username,
             email: context.user.email,
-            
           });
 
           const updateUser = await User.findByIdAndUpdate(
@@ -151,10 +143,9 @@ const resolvers = {
     },
 
     acceptPost: async (parent, args, context) => {
-      console.log(args.commissions)
-      console.log(args.commissions.creatorId)
-      console.log(args.commissions.collaboratorId)
-      
+      console.log(args.commissions);
+      console.log(args.commissions.creatorId);
+      console.log(args.commissions.collaboratorId);
 
       if (context.user) {
         try {
@@ -181,8 +172,6 @@ const resolvers = {
         }
       }
     },
-
-       
 
     removePost: async (parent, args, context) => {
       if (context.user) {
@@ -213,46 +202,47 @@ const resolvers = {
 
     addCommission: async (parent, args, context) => {
       // if (context.user) {
-        const creator = true;
-        try {
-          const creator = await User.findByIdAndUpdate(
-            { _id: args.commissions.creatorId },
-            { $push: {commissions: [args.commissions]}},
-            { new: true }
-          );
+      const creator = true;
+      try {
+        const creator = await User.findByIdAndUpdate(
+          { _id: args.commissions.creatorId },
+          { $push: { commissions: [args.commissions] } },
+          { new: true }
+        );
 
-          const collaborator = await User.findByIdAndUpdate(
-            { _id: args.commissions.collaboratorId },
-            { $push: {commissions: [args.commissions]}},
-            { new: true }
-          );
+        const collaborator = await User.findByIdAndUpdate(
+          { _id: args.commissions.collaboratorId },
+          { $push: { commissions: [args.commissions] } },
+          { new: true }
+        );
 
-          return creator;
-        } catch (err) {
-          console.log(err);
-          throw new Error(err);
-        }
+        return creator;
+      } catch (err) {
+        console.log(err);
+        throw new Error(err);
+      }
       // }
     },
 
     updateCommission: async (parent, args, context) => {
-      if (context.user) {
-        try {
-          const creatorData = await User.findByIdAndUpdate(
-            { _id: context.user._id },
-            { $set: { commissions: args.commissions } },
-            { new: true }
-          );
+      console.log(args);
+      console.log(args.commission._id);
+      
+        if (context.user) {
+          try {
+            const commissionData = await Commission.findByIdAndUpdate(
+              { _id: args.commission._id },
+              { $set: { ...args.commission } },
+              { new: true }
+            );
+            return commissionData;
 
-          return creatorData;
-        } catch (err) {
-          console.log(err);
-          throw new Error(err);
+          } catch (err) {
+            console.log(err);
+            throw new Error(err);
+          }
         }
-      }
     },
-
-    
   },
 };
 

@@ -197,12 +197,11 @@ export const ADD_COMMISSION = gql`
 `;
 //  update commission
 export const UPDATE_COMMISSION = gql`
-  mutation UpdateCommission($commissions: [CommissionInput]) {
-    updateCommission(commissions: $commissions) {
-      username
-      email
-    }
+  mutation UpdateCommission($commission: CommissionInput) {
+  updateCommission(commission: $commission) {
+    username
   }
+}
 `;
 
 export const ACCEPT_POST = gql`

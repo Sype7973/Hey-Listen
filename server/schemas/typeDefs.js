@@ -114,12 +114,11 @@ const typeDefs = gql`
     ): Post
     removePost(postId: ID!): Post
     deleteUser: User
-    updateCommission(commissions: [CommissionInput]): User
+    updateCommission(commission: CommissionInput): Commission
     addCommission(commissions: CommissionInput): User
     getCommission(_id: ID!): Commission
     acceptPost(commissions: CommissionInput): Commission
     createCommission(commissionInput: CommissionInput): Commission
-
   }
 `;
 

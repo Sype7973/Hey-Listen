@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, ModalFooter, Button, Input, Divider } from "@chakra-ui/react";
+import {
+  Box,
+  ModalFooter,
+  Button,
+  Input,
+  Divider,
+  Flex,
+} from "@chakra-ui/react";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../utils/queries";
 
@@ -14,14 +21,11 @@ const CommissionPost = ({
     commission.commissionDescription
   );
 
+  console.log("commission");
+
   console.log(commission);
 
-
   const [date] = useState(Date.now());
-
-
-  
-
 
   const handleUpdateCommission = () => {
     const updatedCommission = {
@@ -35,7 +39,7 @@ const CommissionPost = ({
   const handleCompleteCommission = () => {
     const updatedCommission = {
       ...commission,
-      // completionDate: date,
+      //completionDate: date,
       status: false,
     };
     onUpdateCommission(updatedCommission);
@@ -82,24 +86,26 @@ const CommissionPost = ({
       <h2>Created At:</h2>
       <p>{`${updatedCreatedAt}`}</p>
       <ModalFooter>
-        {commission.status === true ? (
-          <>
-            <Button colorScheme="green" onClick={handleCompleteCommission}>
-              Complete Commission
-            </Button>
-            <Button colorScheme="red" onClick={handleDeleteCommission}>
-              Delete Commission
-            </Button>
-          </>
-        ) : (
-          <></>
-        )}
-        <Button variant="ghost" onClick={handleUpdateCommission}>
-          Update Commission
-        </Button>
-        <Button colorScheme="blue" mr={3} onClick={closeModal}>
-          Close
-        </Button>
+        <Flex direction="row" gap="1">
+          {commission.status === true ? (
+            <>
+              <Button colorScheme="green" onClick={handleCompleteCommission}>
+                Complete Commission
+              </Button>
+              <Button colorScheme="red" onClick={handleDeleteCommission}>
+                Delete Commission
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
+          <Button variant="ghost" onClick={handleUpdateCommission}>
+            Update Commission
+          </Button>
+          <Button colorScheme="blue" mr={3} onClick={closeModal}>
+            Close
+          </Button>
+        </Flex>
       </ModalFooter>
     </Box>
   );
