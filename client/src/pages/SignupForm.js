@@ -31,24 +31,6 @@ function Signup() {
     bio: "",
   });
 
-  // function ToastExample() {
-  //   const toast = useToast();
-  //   const handleToast = () => {
-  //     toast({
-  //       title: 'Account created.',
-  //       description: "We've created your account for you.",
-  //       status: 'success',
-  //       duration: 9000,
-  //       isClosable: true,
-  //     });
-  //   };
-
-  //   return (
-  //     <Button colorScheme="teal" type="submit" onClick={handleToast}>
-  //       Sign Up
-  //     </Button>
-  //   );
-  // }
   const toast = useToast();
 
   const [loggingIn, setLoggingIn] = useState(false);
