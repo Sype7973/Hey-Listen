@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
-import { Box, Flex, Button, Text } from "@chakra-ui/react";
+import { Box, Flex, Button, Text, Card, CardBody, Heading } from "@chakra-ui/react";
 import { QUERY_POSTS, GET_ME } from "../utils/queries";
 import { REMOVE_POST, ACCEPT_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
@@ -130,7 +130,7 @@ const Posts = () => {
 
   return (
     <Box>
-      {posts &&
+      {posts.length ? (
         posts.map((post) => (
           <Flex
             key={post._id}
@@ -198,7 +198,14 @@ const Posts = () => {
               )}
             </Box>
           </Flex>
-        ))}
+        ))
+      ) : (
+        <Card>
+          <CardBody>
+            <Heading>No Posts Yet</Heading>
+          </CardBody>
+        </Card>
+      )}
     </Box>
   );
 };
