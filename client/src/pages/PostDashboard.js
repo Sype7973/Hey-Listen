@@ -7,7 +7,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ME } from "../utils/queries";
 
 const PostDashboard = () => {
-  const { loading, data, refetch} = useQuery(GET_ME);
+  const { loading, data} = useQuery(GET_ME);
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,6 +26,7 @@ const PostDashboard = () => {
     return (
       <Flex
         minHeight="100vh"
+        width="100%"
         alignItems="center"
         bg="teal.500"
         direction="column"

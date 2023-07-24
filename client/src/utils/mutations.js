@@ -95,6 +95,7 @@ export const ADD_POST = gql`
     $userId: ID!
     $deadline: String!
     $budget: Int
+    $email: String!
   ) {
     addPost(
       postTitle: $postTitle
@@ -103,6 +104,7 @@ export const ADD_POST = gql`
       userId: $userId
       deadline: $deadline
       budget: $budget
+      email: $email
     ) {
       _id
       budget

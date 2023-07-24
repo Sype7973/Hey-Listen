@@ -50,28 +50,28 @@ export const GET_USERS = gql`
 // get a single user by username
 export const GET_USER = gql`
   query SingleUser($id: ID!) {
-  getUser(_id: $id) {
-    _id
-    bio
-    commissionIds
-    email
-    musicLinks
-    password
-    posts {
+    getUser(_id: $id) {
       _id
-      budget
-      createdAt
-      deadline
-      postDescription
-      postTitle
-      postType
+      bio
+      commissionIds
+      email
+      musicLinks
+      password
+      posts {
+        _id
+        budget
+        createdAt
+        deadline
+        postDescription
+        postTitle
+        postType
+        username
+      }
+      profilePicture
+      userType
       username
     }
-    profilePicture
-    userType
-    username
   }
-}
 `;
 //  get all posts
 export const QUERY_POSTS = gql`
@@ -106,23 +106,38 @@ export const QUERY_POST = gql`
   }
 `;
 
-
 export const GET_COMMISSIONS = gql`
-query GetCommissions {
-  getCommissions {
-    creatorUsername
-    collaboratorUsername
-    deadline
-    creatorId
-    createdAt
-    completionDate
-    commissionType
-    commissionTitle
-    commissionDescription
-    collaboratorId
-    budget
-    _id
-    status
+  query GetCommissions {
+    getCommissions {
+      creatorUsername
+      collaboratorUsername
+      deadline
+      creatorId
+      createdAt
+      completionDate
+      commissionType
+      commissionTitle
+      commissionDescription
+      collaboratorId
+      budget
+      _id
+      status
+    }
   }
-}
+`;
+
+export const GET_PROFILE = gql`
+  query Query($username: String!) {
+    getProfile(username: $username) {
+      username
+      userType
+      profilePicture
+      password
+      musicLinks
+      email
+      commissionIds
+      bio
+      _id
+    }
+  }
 `;

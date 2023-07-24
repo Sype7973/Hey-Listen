@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { Box, Flex, Button, Card, CardBody } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import { Box, Flex, Button, Text } from "@chakra-ui/react";
 import { QUERY_POSTS, GET_ME } from "../utils/queries";
 import { REMOVE_POST, ACCEPT_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
-import spinner from "../assets/images/spinner.gif";
-
 
 const Posts = () => {
-  const { loading, data, refetch } = useQuery(QUERY_POSTS);
+  const { data, refetch } = useQuery(QUERY_POSTS);
   const { data: myUserData } = useQuery(GET_ME);
   const [posts, setPosts] = useState([]);
-  const [postId, setPostId] = useState(null);
+  // const [postId, setPostId] = useState(null);
+  const [user, setUser] = useState(null);
   const [removePost] = useMutation(REMOVE_POST);
   const [acceptPost] = useMutation(ACCEPT_POST);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     refetch();
@@ -22,15 +21,11 @@ const Posts = () => {
   }, [posts]);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
     if (data) {
       setPosts(data.getPosts);
+      setUser(myUserData.me);
     }
-  }, [data]);
-
-  
+  }, [data, myUserData]);
 
   const loggedInUsername = Auth.loggedIn()
     ? Auth.getProfile().data.username
@@ -39,16 +34,16 @@ const Posts = () => {
   // still need to implement these functions correctly, coming up as undefined
   const handleContactPoster = (postId, email, postTitle, username) => {
     const subject = `I'm interested in your post: ${postTitle}`;
-    const body = `Hi ${username},\n\nI'm interested in: ${postTitle}.\n\nPlease let me know if it's still available.\n\nThanks!`;
+    const body = `Hi ${username},\n\nI'm interested in: ${postTitle}.\n\nPlease let me know if it's still available.\n\nThanks,\n\n${user.username}`;
     const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoLink;
+    window.open(mailtoLink, "_blank");
     console.log(`Contacting the poster for post with ID: ${postId}`);
   };
   // accepts posts and moves them to the user's accepted posts
   const handleAcceptPost = async (postId) => {
-    setPostId(postId);
+    // setPostId(postId);
     if (!data || !data.getPosts) {
       console.error("No posts found!");
       return;
@@ -68,12 +63,6 @@ const Posts = () => {
     }
 
     console.log(postData[0].deadline);
-    // const updatedDeadline = formatDateForm(postData[0].deadline);
-
-    // const updatedCreatedAt = formatDateForm(postData[0].createdAt);
-
-    // console.log("Updated deadline");
-    // console.log(updatedDeadline);
 
     const acceptedCommission = {
       commissionTitle: postData[0].postTitle,
@@ -139,25 +128,6 @@ const Posts = () => {
     return "Invalid Date";
   };
 
-
-  if (isLoading || loading) {
-    return (
-      <Flex
-        minHeight="100vh"
-        alignItems="center"
-        bg="teal.500"
-        direction="column"
-        justifyContent="center"
-      >
-        <Card m="auto" width="20vw" h="20vw">
-          <CardBody display="flex" alignItems="center" justifyContent="center">
-            <img src={spinner} alt="loading"></img>{" "}
-          </CardBody>
-        </Card>
-      </Flex>
-    );
-  }
-
   return (
     <Box>
       {posts &&
@@ -178,7 +148,11 @@ const Posts = () => {
           >
             <Box>
               <h2>Title: {post.postTitle}</h2>
-              <p style={{ fontStyle: "italic" }}>{post.username}</p>
+              <Link to={`/profile/${post.username}`}>
+                <Text color="teal.500" fontStyle="bold" fontWeight="bold">
+                  {post.username}
+                </Text>
+              </Link>
               <p>Description: {post.postDescription}</p>
               <p>Post Type: {post.postType}</p>
               <p>Budget: ${post.budget}</p>

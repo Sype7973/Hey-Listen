@@ -23,6 +23,11 @@ const resolvers = {
         .select("-__v -password")
         .populate("commissions posts");
     },
+    getProfile: async (parent, args, context) => {
+      return User.findOne({ username: args.username })
+        .select("-__v -password")
+        .populate("commissions posts");
+    },
 
     /*------------Post------------*/
 
