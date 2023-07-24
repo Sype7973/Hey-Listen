@@ -51,6 +51,7 @@ const MyPosts = () => {
 
   const myPosts = user.posts ? user.posts.filter((post) => post.username === loggedInUsername) : [];
 
+
   const handleRemovePost = (postId) => {
     console.log(`Removing the post with ID: ${postId}`);
     removePost({
