@@ -21,7 +21,7 @@ import { UPDATE_COMMISSION } from "../utils/mutations";
 const MyProfile = () => {
   const { loading, data, refetch } = useQuery(GET_ME);
 
-  const { loading: commissionLoading, data: commissionData } =
+  const { loading: commissionLoading, data: commissionData, refetch: refetchData } =
     useQuery(GET_COMMISSIONS);
 
   const [user, setUser] = useState(null);
@@ -79,7 +79,7 @@ const MyProfile = () => {
 
   useEffect(() => {
     handleInitialRefetch();
-  });
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -92,96 +92,34 @@ const MyProfile = () => {
   }, [data]);
   console.log(commissions);
 
+
+
+
+
+
   const handleUpdateCommission = async (updatedCommission) => {
-    // setUpdatedCommission(updatedCommission);
-    // console.log("CREATOR DATA");
-    // console.log(creatorData);
-    // console.log("COLLABORATOR DATA");
-    // console.log(collaboratorData);
-    // if (!collaboratorData || !creatorData || !updatedCommission) {
-    //   console.log("Data not available yet. Waiting...");
-    //   return;
-    // }
-    // const collaboratorIndex = collaboratorData.commissions.findIndex(
-    //   (commission) => commission._id === updatedCommission._id
-    // );
-    // console.log("COLLABORATOR INDEX");
-    // console.log(collaboratorData.commissions);
-    // console.log(collaboratorIndex);
-    // const creatorIndex = creatorData.commissions.findIndex(
-    //   (commission) => commission._id === updatedCommission._id
-    // );
-    // if (collaboratorIndex === -1) {
-    //   console.error("Collaborator Commission not found!");
-    //   return;
-    // }
-    // if (creatorIndex === -1) {
-    //   console.error("Creator Commission not found!");
-    //   return;
-    // }
-    // const updatedCreatorCommissions = [
-    //   ...creatorData.commissions.slice(0, creatorIndex),
-    //   updatedCommission,
-    //   ...creatorData.commissions.slice(creatorIndex + 1),
-    // ];
-    // const updatedCollaboratorCommissions = [
-    //   ...collaboratorData.commissions.slice(0, collaboratorIndex),
-    //   updatedCommission,
-    //   ...collaboratorData.commissions.slice(collaboratorIndex + 1),
-    // ];
-    // const updatedCreator = {
-    //   ...creatorData,
-    //   commissions: updatedCreatorCommissions,
-    // };
-    // const updatedCollaborator = {
-    //   ...collaboratorData,
-    //   commissions: updatedCollaboratorCommissions,
-    // };
-    // console.log("Updated User COmmissions");
-    // const newCreatorData = await updateCommission({
-    //   variables: {
-    //     // The ID of the user you want to update
-    //     commissions: updatedCreator.commissions.map((commission) => ({
-    //       _id: commission._id,
-    //       commissionTitle: commission.commissionTitle,
-    //       commissionType: commission.commissionType,
-    //       commissionDescription: commission.commissionDescription,
-    //       username: commission.username,
-    //       collaboratorId: commission.collaboratorId,
-    //       creatorId: commission.creatorId,
-    //       budget: commission.budget,
-    //       deadline: commission.deadline,
-    //       completionDate: commission.completionDate,
-    //       status: commission.status,
-    //       rating: commission.rating,
-    //       review: commission.review,
-    //       createdAt: commission.createdAt,
-    //     })),
-    //   },
-    // });
-    // const newCollaboratorData = await updateCommission({
-    //   variables: {
-    //     // The ID of the user you want to update
-    //     commissions: updatedCollaborator.commissions.map((commission) => ({
-    //       _id: commission._id,
-    //       commissionTitle: commission.commissionTitle,
-    //       commissionType: commission.commissionType,
-    //       commissionDescription: commission.commissionDescription,
-    //       username: commission.username,
-    //       collaboratorId: commission.collaboratorId,
-    //       creatorId: commission.creatorId,
-    //       budget: commission.budget,
-    //       deadline: commission.deadline,
-    //       completionDate: commission.completionDate,
-    //       status: commission.status,
-    //       rating: commission.rating,
-    //       review: commission.review,
-    //       createdAt: commission.createdAt,
-    //     })),
-    //   },
-    // });
-    // refetch();
+    console.log("UPDATED COMMISSION");
+    console.log(updatedCommission);
+  
+    delete updatedCommission.__typename;
+
+    try {
+      await updateCommission({
+        variables: { commission: updatedCommission },
+      });
+      await refetch();
+      await refetchData();
+    } catch (error) {
+      console.error(error);
+    }
+    
   };
+
+
+
+
+
+
 
   if (isLoading || loading) {
     return (
@@ -202,11 +140,11 @@ const MyProfile = () => {
   }
 
   return (
-    <Box background="teal.500" >
+    <Box background="teal.500">
       {user ? (
-        <Flex direction="column" justify="center" alignItems="center" >
+        <Flex direction="column" justify="center" alignItems="center">
           <Flex
-          my="20px"
+            my="20px"
             width="80%"
             direction="column"
             justify="center"

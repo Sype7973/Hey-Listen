@@ -50,6 +50,7 @@ function Signup() {
       console.error(e);
     }
   };
+  
 
   const handleChange = (event) => {
     const { name, value } = event.target;

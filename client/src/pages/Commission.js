@@ -90,9 +90,9 @@ const Commissions = ({ onHandleUpdateCommission, commissions, user }) => {
       )}
 
       {activeCommissionIndex !== null && (
-        <Modal isOpen={true} onClose={closeModal}>
+        <Modal isOpen={true} onClose={closeModal} size="3xl">
           <ModalOverlay />
-          <ModalContent>
+          <ModalContent >
             <ModalHeader>Commissions</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
