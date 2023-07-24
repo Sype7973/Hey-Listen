@@ -67,6 +67,10 @@ const MyPosts = () => {
     });
   };
   
+
+
+
+  
   const handleOpenModal = (post) => {
   
     setSelectedPostData({
@@ -116,6 +120,10 @@ const MyPosts = () => {
       </Flex>
     );
   }
+
+  console.log("MY POSTS")
+  console.log(myPosts)
+
 
   return (
     <Box>

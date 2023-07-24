@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   ModalFooter,
@@ -49,15 +49,12 @@ const CommissionPost = ({
   };
 
 
-  const [date, setDate] = useState(new Date());
-  const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  const [date] = useState(new Date());
   
   const handleCompleteCommission = () => {
-    
-    console.log(formattedDate)
     const updatedCommission = {
       ...commission,
-      completionDate: formattedDate,
+      completionDate: date,
       status: false,
     };
     onUpdateCommission(updatedCommission);
@@ -127,6 +124,10 @@ const CommissionPost = ({
             <Td>Created At:</Td>
             <Td>{`${updatedCreatedAt}`}</Td>
           </Tr>
+          {commission.status ?  null : <Tr>
+            <Td>Completion Date:</Td>
+            <Td>{`${formatDate(commission.completionDate)}`}</Td>
+          </Tr>}
         </Tbody>
       </Table>
       <ModalFooter>

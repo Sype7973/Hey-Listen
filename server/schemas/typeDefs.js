@@ -77,6 +77,7 @@ const typeDefs = gql`
     getPost(_id: ID!): Post
     getCommission(_id: ID!): Commission
     getCommissions: [Commission]
+    getProfile(username: String!): User
   }
 
   type Mutation {
@@ -105,6 +106,7 @@ const typeDefs = gql`
       userId: ID!
       budget: Int
       deadline: String!
+      email: String!
     ): Post
     updatePost(
       postId: ID!

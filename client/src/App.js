@@ -1,7 +1,7 @@
 // This is the main file for the portfolio website. It is the first file that is run when the website is loaded.
 import React, { useEffect } from "react";
 import { ChakraProvider, Box, Flex } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Route, Routes } from "react-router-dom";
 import {
   ApolloProvider,
   ApolloClient,
@@ -19,6 +19,7 @@ import MyProfile from "./pages/MyProfile";
 import CreatePost from "./pages/CreatePost";
 import MyPosts from "./pages/MyPosts";
 import SearchBar from "./components/SearchBar";
+import Profile from "./pages/Profile";
 import SearchPage from "./pages/SearchPage";
 
 const httpLink = createHttpLink({
@@ -65,6 +66,12 @@ function App() {
               {location.pathname === "/signup" && <Signup />}
               {location.pathname === "/my-posts" && <MyPosts />}
               {location.pathname === "/create-post" && <CreatePost />}
+              {/* {location.pathname === "/profile" && <Profile />} */}
+              
+              <Routes>
+                <Route path="/profile/:username" element={<Profile />} />
+                {/* <Route path="/profile" element={<Profile />} /> */}
+              </Routes>
               {location.pathname === "/search" && <SearchPage />}
               <Footer />
             </Box>
