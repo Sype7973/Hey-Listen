@@ -21,37 +21,28 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { UPDATE_POST } from "../utils/mutations";
 import { useParams } from "react-router-dom";
-import { GET_ME } from "../utils/queries";
+import { QUERY_POST } from "../utils/queries";
 
-
+// takes the post id from the url
+// prefills the form with the post data
+// allows user to update the post
 const UpdatePost = () => {
     const [formData, setFormData] = useState({
-      postTitle: "",
-      postType: "",
-      postDescription: "",
-      budget: 0, // Default value for the slider
-      deadline: "",
+        postTitle: "",
+        postType: "",
+        postDescription: "",
+        budget: 0, // Default value for the slider
+        deadline: "",
     });
-  
-    const { id: postId } = useParams();
+
     const [updatePost, { error }] = useMutation(UPDATE_POST);
-    const { data } = useQuery(GET_ME);
+    const { data } = useQuery(QUERY_POST);
     const [user, setUser] = useState(null);
-  
+
     useEffect(() => {
-      if (data) {
-        setUser(data.me);
-        // Populate the form data with the existing post data from the user
-        if (data.me && data.me.post) {
-          setFormData({
-            postTitle: data.me.post.postTitle,
-            postType: data.me.post.postType,
-            postDescription: data.me.post.postDescription,
-            budget: data.me.post.budget,
-            deadline: data.me.post.deadline,
-          });
+        if (data) {
+            setUser(data.me);
         }
-      }
     }, [data]);
 
     const [username, setUsername] = useState("");
@@ -64,179 +55,150 @@ const UpdatePost = () => {
     }, [user]);
 
     const postTypeOptions = [
-        "Need Artist",
-        "Need Producer",
-        "Need Sample",
-        "Need Mixing",
-        "Need Mastering",
-        "Need Vocals",
-        "Need Guitarist",
-        "Need Bassist",
-        "Need Drummer",
-        "Need Pianist",
-        "Need Synth",
-        "Need Other",
-      ];
+      "Need Artist",
+      "Need Producer",
+      "Need Sample",
+      "Need Mixing",
+      "Need Mastering",
+      "Need Vocals",
+      "Need Guitarist",
+      "Need Bassist",
+      "Need Drummer",
+      "Need Pianist",
+      "Need Synth",
+      "Need Other",
+    ];
 
-   
+    const [selectedPostType, setSelectedPostType] = useState("");
 
-    console.log(`Post ID: ${postId}`);
+    const [selectedDeadline, setSelectedDeadline] = useState(new Date());
 
-    const [selectedPostType, setSelectedPostType] = useState(postTypeOptions[0]);
+    const [selectedBudget, setSelectedBudget] = useState(0);
 
-    const handlePostTypeChange = (e) => {
-        setSelectedPostType(e.target.value);
-      };
-    
-      const handleAddCustomPostType = () => {
-        setShowCustomPostTypeInput(true);
-      };
-    
-      const [showCustomPostTypeInput, setShowCustomPostTypeInput] = useState(false);
-      const [customPostType, setCustomPostType] = useState("");
-    
-      const handleCustomPostTypeChange = (e) => {
-        setCustomPostType(e.target.value);
-      };
-    
-      const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-      };
-    
-      const handleSliderChange = (value) => {
-        setFormData({ ...formData, budget: value });
-      };
-    
-      const handleDateChange = (date) => {
-        setFormData({ ...formData, deadline: date });
-      };
+    const [selectedPostTitle, setSelectedPostTitle] = useState("");
 
-      const handleFormSubmit = async (e) => {
-        e.preventDefault();
-      
-        try {
-          const { data } = await updatePost({
-            variables: { ...formData, postId }, // Make sure postId is included in the variables
-          });
-      
-          console.log("Data after update:", data);
-        } catch (err) {
-          console.error(err);
+    const [selectedPostDescription, setSelectedPostDescription] = useState("");
+
+    const [selectedPostId, setSelectedPostId] = useState("");
+
+    const { postId } = useParams();
+
+    useEffect(() => {
+        if (data) {
+            setSelectedPostId(data.postId);
+            setSelectedPostTitle(data.postTitle);
+            setSelectedPostDescription(data.postDescription);
+            setSelectedPostType(data.postType);
+            setSelectedBudget(data.budget);
+            setSelectedDeadline(data.deadline);
         }
-      };
-        return (
-            <>
-            {user ? (
-            <Flex justifyContent="center" alignItems="center" height="100vh">
-              <Box p={5} shadow="md" borderWidth="1px" borderRadius="md" bg="gray.50" w="1000px">
-                <Box>
-                  <h2>Create a Post</h2>
-                  <form onSubmit={handleFormSubmit}>
-                    <FormControl id="postTitle" marginBottom="1rem">
-                      <FormLabel>Post Title</FormLabel>
-                      <Input
-                        type="text"
-                        name="postTitle"
-                        placeholder="Post Title"
-                        value={formData.postTitle}
-                        onChange={handleInputChange}
-                      />
-                    </FormControl>
-                    <FormControl id="postType" marginBottom="1rem">
-                      <FormLabel>Post Type</FormLabel>
-                      <Select
-                        name="postType"
-                        placeholder="Post Type"
-                        value={selectedPostType}
-                        onChange={handlePostTypeChange}
-                      >
-                        {postTypeOptions.map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </Select>
-                      <Button colorScheme="teal" size="sm" onClick={handleAddCustomPostType} ml={2}>
-                        Add Custom
-                      </Button>
-                      {showCustomPostTypeInput && (
-                        <Input
-                          type="text"
-                          name="customPostType"
-                          placeholder="Enter Custom Post Type"
-                          value={customPostType}
-                          onChange={handleCustomPostTypeChange}
-                          mt={2}
-                        />
-                      )}
-                    </FormControl>
-                    <FormControl id="postDescription" marginBottom="1rem">
-                      <FormLabel>Post Description</FormLabel>
-                      <Input
-                        type="text"
-                        name="postDescription"
-                        placeholder="Post Description"
-                        value={formData.postDescription}
-                        onChange={handleInputChange}
-                      />
-                    </FormControl>
-                    <FormControl id="budget" marginBottom="1rem">
-                      <FormLabel>Budget</FormLabel>
-                      <Slider
-                        value={formData.budget}
-                        min={0}
-                        max={1000}
-                        step={1}
-                        focusThumbOnChange={false}
-                        onChange={handleSliderChange}
-                        colorScheme="pink"
-                      >
-                        <SliderTrack>
-                          <SliderFilledTrack />
-                        </SliderTrack>
-                        <SliderThumb />
-                      </Slider>
-                      <Input
-                        type="number"
-                        name="budget"
-                        value={formData.budget}
-                        onChange={handleInputChange}
-                      />
-                    </FormControl>
-                    <FormControl id="deadline" marginBottom="1rem">
-                      <FormLabel>Deadline</FormLabel>
-                      <DatePicker
-                        selected={formData.deadline}
-                        onChange={handleDateChange}
-                        dateFormat="dd/MM/yy"
-                        placeholderText="Select a deadline"
-                        minDate={new Date()} // Optional: To set the minimum date available for selection
-                      />
-                    </FormControl>
-                    <Button colorScheme="teal" type="submit" mt={4}>
-                      Submit
-                    </Button>
-                  </form>
-                  {error && (
-                    <Box mt={4} color="red.500">
-                      Something went wrong...
-                    </Box>
-                  )}
+    }, [data]);
+
+    const handleFormSubmit = async (event) => {
+        event.preventDefault();
+
+        try {
+            const { data } = await updatePost({
+                variables: {
+                    postId: selectedPostId,
+                    postTitle: selectedPostTitle,
+                    postDescription: selectedPostDescription,
+                    postType: selectedPostType,
+                    budget: selectedBudget,
+                    deadline: selectedDeadline,
+                },
+            });
+            console.log(data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    return (
+        <Flex justifyContent="center" alignItems="center" height="100vh">
+            <Box
+                p={8}
+                maxWidth="500px"
+                borderWidth={1}
+                borderRadius={8}
+                boxShadow="lg"
+            >
+                <Box textAlign="center">
+                    <Heading>Update Post</Heading>
                 </Box>
-              </Box>
-            </Flex>
-            ) : (
-              <Flex minHeight="100vh" alignItems="center" bg="teal.500" direction="column">
-                <Card my="auto" width="auto" h="auto">
-                  <CardBody textAlign="center">
-                    <Heading>Not Logged In!</Heading>
-                  </CardBody>
-                </Card>
-              </Flex>
-            )}
-          </>
-        );
-        };
+                <Box my={4} textAlign="left">
+                    <form onSubmit={handleFormSubmit}>
+                        <FormControl>
+                            <FormLabel>Post Title</FormLabel>
+                            <Input
+                                placeholder="Post Title"
+                                value={selectedPostTitle}
+                                onChange={(e) => setSelectedPostTitle(e.target.value)}
+                            />
+                        </FormControl>
+
+                        <FormControl mt={4}>
+                            <FormLabel>Post Description</FormLabel>
+                            <Input
+                                placeholder="Post Description"
+                                value={selectedPostDescription}
+                                onChange={(e) =>
+                                    setSelectedPostDescription(e.target.value)
+                                }
+                            />
+                        </FormControl>
+
+                        <FormControl mt={4}>
+                            <FormLabel>Post Type</FormLabel>
+                            <Select
+                                placeholder="Select Post Type"
+                                value={selectedPostType}
+                                onChange={(e) => setSelectedPostType(e.target.value)}
+                            >
+                                {postTypeOptions.map((postType) => (
+                                    <option key={postType} value={postType}>
+                                        {postType}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <FormControl mt={4}>
+                            <FormLabel>Budget</FormLabel>
+                            <Slider
+                                aria-label="slider-ex-1"
+                                defaultValue={selectedBudget}
+                                onChange={(value) => setSelectedBudget(value)}
+                            >
+                                <SliderTrack>
+                                    <SliderFilledTrack />
+                                </SliderTrack>
+                                <SliderThumb />
+                            </Slider>
+                        </FormControl>
+
+                        <FormControl mt={4}>
+                            <FormLabel>Deadline</FormLabel>
+                            <DatePicker
+                                selected={selectedDeadline}
+                                onChange={(date) => setSelectedDeadline(date)}
+                            />
+                        </FormControl>
+
+                        <Button
+                            width="full"
+                            mt={4}
+                            type="submit"
+                            colorScheme="teal"
+                            isLoading={false}
+                        >
+                            Update Post
+                        </Button>
+                    </form>
+                </Box>
+            </Box>
+        </Flex>
+    );
+};
 
 export default UpdatePost;
