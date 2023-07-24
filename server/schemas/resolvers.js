@@ -100,8 +100,6 @@ const resolvers = {
       return { token, user };
     },
 
-    /*------------Commission------------*/
-
     /*------------Post------------*/
 
     addPost: async (parent, args, context) => {
@@ -201,7 +199,7 @@ const resolvers = {
     },
 
     addCommission: async (parent, args, context) => {
-      // if (context.user) {
+      if (context.user) {
       const creator = true;
       try {
         const creator = await User.findByIdAndUpdate(
@@ -221,7 +219,7 @@ const resolvers = {
         console.log(err);
         throw new Error(err);
       }
-      // }
+      }
     },
 
     updateCommission: async (parent, args, context) => {

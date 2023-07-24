@@ -16,6 +16,8 @@ import {
   Select,
   InputRightElement,
   InputGroup,
+  useToast,
+  Spinner,
 } from "@chakra-ui/react";
 
 function Signup() {
@@ -28,10 +30,43 @@ function Signup() {
     profilePicture: "",
     bio: "",
   });
+
+  // function ToastExample() {
+  //   const toast = useToast();
+  //   const handleToast = () => {
+  //     toast({
+  //       title: 'Account created.',
+  //       description: "We've created your account for you.",
+  //       status: 'success',
+  //       duration: 9000,
+  //       isClosable: true,
+  //     });
+  //   };
+
+  //   return (
+  //     <Button colorScheme="teal" type="submit" onClick={handleToast}>
+  //       Sign Up
+  //     </Button>
+  //   );
+  // }
+  const toast = useToast();
+
+  const [loggingIn, setLoggingIn] = useState(false);
   const [addUser, { error }] = useMutation(ADD_USER);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    const handleToast = () => {
+      toast({
+        title: "Account created.",
+        description: "Logging you in...",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+        position: "top",
+      });
+    };
+    setLoggingIn(true);
     try {
       const { data } = await addUser({
         variables: {
@@ -45,12 +80,14 @@ function Signup() {
           bio: formState.bio,
         },
       });
-      Auth.login(data.addUser.token);
+      handleToast();
+      setTimeout(() => {
+        Auth.login(data.addUser.token);
+      }, 3000);
     } catch (e) {
       console.error(e);
     }
   };
-  
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -196,6 +233,11 @@ function Signup() {
               onChange={handleChange}
             />
           </FormControl>
+          {loggingIn ? (
+            <Flex justifyContent="center" alignItems="center ">
+              <Spinner color="teal.500" size="xl" />
+            </Flex>
+          ) : null}
           <Button colorScheme="teal" type="submit" onClick={handleFormSubmit}>
             Sign Up
           </Button>
