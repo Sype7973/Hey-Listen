@@ -127,7 +127,6 @@ export const UPDATE_POST = gql`
     $username: String
     $budget: Int
     $deadline: String
-    $createdAt: Date
   ) {
     updatePost(
       postId: $postId
@@ -145,7 +144,6 @@ export const UPDATE_POST = gql`
       username
       budget
       deadline
-      createdAt
     }
   }
 `;
