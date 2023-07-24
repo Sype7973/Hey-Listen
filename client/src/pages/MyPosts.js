@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { Box, Grid, Flex, Card, CardBody, Heading, Button, Center } from "@chakra-ui/react";
+import { Box, Grid, Flex, Card, CardBody, Heading, Button } from "@chakra-ui/react";
 import { GET_ME, QUERY_POSTS } from "../utils/queries";
 import { REMOVE_POST } from "../utils/mutations";
 import spinner from "../assets/images/spinner.gif";
@@ -20,14 +20,17 @@ const formatDate = (timestamp) => {
 
 const MyPosts = () => {
   const { loading: meLoading, data: meData } = useQuery(GET_ME);
-  const { loading: postsLoading, data: postsData, refetch: refetchPosts } = useQuery(QUERY_POSTS);
+  // const { loading: postsLoading, data: postsData, refetch: refetchPosts } = useQuery(QUERY_POSTS);
   const user = meData?.me || {};
   const loggedInUsername = Auth.loggedIn() ? Auth.getProfile().data.username : null;
-  const [removePost, { error }] = useMutation(REMOVE_POST);
+  const [removePost] = useMutation(REMOVE_POST);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (meLoading || postsLoading) {
-    return <img src={spinner} alt="loading" />;
-  }
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, [meData]);
 
   console.log("User Data:", user);
   console.log("Logged In Username:", loggedInUsername);
@@ -51,6 +54,24 @@ const MyPosts = () => {
       },
     });
   };
+
+  if (isLoading || meLoading ) {
+    return (
+      <Flex
+        minHeight="100vh"
+        alignItems="center"
+        bg="teal.500"
+        direction="column"
+        justifyContent="center"
+      >
+        <Card m="auto" width="20vw" h="20vw">
+          <CardBody display="flex" alignItems="center" justifyContent="center">
+            <img src={spinner} alt="loading"></img>{" "}
+          </CardBody>
+        </Card>
+      </Flex>
+    );
+  }
 
   return (
     <Box>

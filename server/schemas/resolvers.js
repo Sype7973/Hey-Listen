@@ -16,7 +16,7 @@ const resolvers = {
       throw new AuthenticationError("You need to be logged in!");
     },
     getUsers: async (parent, args, context) => {
-      return User.find().select("-__v").populate("commissions posts");
+      return User.find().select("-__v").populate("posts");
     },
     getUser: async (parent, args, context) => {
       return User.findOne({ _id: args._id })
@@ -66,6 +66,7 @@ const resolvers = {
     },
 
     deleteUser: async (parent, args, context) => {
+      console.log(args);
       if (context.user) {
         try {
           const user = await User.findByIdAndDelete({
@@ -106,7 +107,6 @@ const resolvers = {
     addPost: async (parent, args, context) => {
       if (context.user) {
         try {
-          console.log(args);
           const post = await Post.create({
             ...args,
             username: context.user.username,
@@ -227,24 +227,23 @@ const resolvers = {
     updateCommission: async (parent, args, context) => {
       console.log(args);
       console.log(args.commission._id);
-      
-        if (context.user) {
-          try {
-            const commissionData = await Commission.findByIdAndUpdate(
-              { _id: args.commission._id },
-              { $set: { ...args.commission } },
-              { new: true }
-            );
-            return commissionData;
 
-          } catch (err) {
-            console.log(err);
-            throw new Error(err);
-          }
+      if (context.user) {
+        try {
+          const commissionData = await Commission.findByIdAndUpdate(
+            { _id: args.commission._id },
+            { $set: { ...args.commission } },
+            { new: true }
+          );
+          return commissionData;
+        } catch (err) {
+          console.log(err);
+          throw new Error(err);
         }
+      }
     },
     deleteCommission: async (parent, args, context) => {
-
+      console.log(args);
       if (context.user) {
         try {
           const commissionData = await Commission.findByIdAndDelete({
@@ -256,7 +255,7 @@ const resolvers = {
           throw new Error(err);
         }
       }
-    }
+    },
   },
 };
 

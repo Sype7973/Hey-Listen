@@ -110,7 +110,8 @@ export const QUERY_POST = gql`
 export const GET_COMMISSIONS = gql`
 query GetCommissions {
   getCommissions {
-    username
+    creatorUsername
+    collaboratorUsername
     deadline
     creatorId
     createdAt

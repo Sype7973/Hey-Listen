@@ -1,38 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { Box, Flex, Button } from "@chakra-ui/react";
-import { QUERY_POSTS, QUERY_POST, GET_ME } from "../utils/queries";
+import { Box, Flex, Button, Card, CardBody } from "@chakra-ui/react";
+import { QUERY_POSTS, GET_ME } from "../utils/queries";
 import { REMOVE_POST, ACCEPT_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
+import spinner from "../assets/images/spinner.gif";
+
 
 const Posts = () => {
   const { loading, data, refetch } = useQuery(QUERY_POSTS);
   const { data: myUserData } = useQuery(GET_ME);
   const [posts, setPosts] = useState([]);
   const [postId, setPostId] = useState(null);
-  const [removePost, { error: removePostError }] = useMutation(REMOVE_POST);
-  const [
-    acceptPost,
-    {
-      loading: acceptPostLoading,
-      error: acceptPostError,
-      data: acceptedPostData,
-    },
-  ] = useMutation(ACCEPT_POST);
+  const [removePost] = useMutation(REMOVE_POST);
+  const [acceptPost] = useMutation(ACCEPT_POST);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [posts]);
 
   useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
     if (data) {
       setPosts(data.getPosts);
     }
   }, [data]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  
 
   const loggedInUsername = Auth.loggedIn()
     ? Auth.getProfile().data.username
@@ -83,10 +81,11 @@ const Posts = () => {
       commissionDescription: postData[0].postDescription,
       creatorId: postData[0].userId,
       collaboratorId: myUserData.me._id,
+      collaboratorUsername: myUserData.me.username,
       budget: postData[0].budget,
       deadline: postData[0].deadline,
       status: true,
-      username: postData[0].username,
+      creatorUsername: postData[0].username,
       createdAt: postData[0].createdAt,
     };
 
@@ -95,7 +94,7 @@ const Posts = () => {
 
     try {
       const { data: acceptedPostData, error: acceptError } = await acceptPost({
-        variables: { commissions: acceptedCommission }
+        variables: { commissions: acceptedCommission },
       });
       handleRemovePost(postId);
       refetch();
@@ -139,18 +138,25 @@ const Posts = () => {
     }
     return "Invalid Date";
   };
-  const formatDate = (dateString) => {
-    if (dateString) {
-      // Convert the date string to a Date object
-      const dateParts = dateString.split("/");
-      const day = parseInt(dateParts[0], 10);
-      const month = parseInt(dateParts[1], 10) - 1;
-      const year = parseInt(dateParts[2], 10) + 2000;
 
-      return new Date(year, month, day);
-    }
-    return null;
-  };
+
+  if (isLoading || loading) {
+    return (
+      <Flex
+        minHeight="100vh"
+        alignItems="center"
+        bg="teal.500"
+        direction="column"
+        justifyContent="center"
+      >
+        <Card m="auto" width="20vw" h="20vw">
+          <CardBody display="flex" alignItems="center" justifyContent="center">
+            <img src={spinner} alt="loading"></img>{" "}
+          </CardBody>
+        </Card>
+      </Flex>
+    );
+  }
 
   return (
     <Box>

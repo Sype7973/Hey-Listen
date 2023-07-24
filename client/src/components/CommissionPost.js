@@ -4,8 +4,17 @@ import {
   ModalFooter,
   Button,
   Input,
-  Divider,
   Flex,
+  Table,
+  Tbody,
+  Tr,
+  Td,
+  ModalFooter as ModalFooter2,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
 } from "@chakra-ui/react";
 
 const CommissionPost = ({
@@ -18,6 +27,16 @@ const CommissionPost = ({
   const [updatedDescription, setUpdatedDescription] = useState(
     commission.commissionDescription
   );
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const handleOpenDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   const handleUpdateCommission = () => {
     const updatedCommission = {
@@ -51,35 +70,58 @@ const CommissionPost = ({
     }
     return "Invalid Date";
   };
-  
+
   const updatedDeadline = formatDate(commission.deadline);
   const updatedCreatedAt = formatDate(commission.createdAt);
 
   return (
     <Box>
-      <h2>Title:</h2>
-      <Input
-        defaultValue={`${updatedTitle}`}
-        onChange={(e) => setUpdatedTitle(e.target.value)}
-      ></Input>
-      <h2>Descrption:</h2>
-      <Input
-        defaultValue={`${updatedDescription}`}
-        onChange={(e) => setUpdatedDescription(e.target.value)}
-      ></Input>
-      <Divider />
-      <h2>Type:</h2>
-      <p>{`${commission.commissionType}`}</p>
-      <h2>Submitter:</h2>
-      <p>{`${commission.username}`}</p>
-      <h2>Collaborator:</h2>
-      <p>{`${commission.collaboratorId}`}</p>
-      <h2>Budget:</h2>
-      <p>{`${commission.budget}`}</p>
-      <h2>Deadline:</h2>
-      <p>{`${updatedDeadline}`}</p>
-      <h2>Created At:</h2>
-      <p>{`${updatedCreatedAt}`}</p>
+      <Table>
+        <Tbody>
+          <Tr>
+            <Td>Title:</Td>
+            <Td>
+              <Input
+                defaultValue={`${updatedTitle}`}
+                onChange={(e) => setUpdatedTitle(e.target.value)}
+              ></Input>
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>Descrption:</Td>
+            <Td>
+              <Input
+                defaultValue={`${updatedDescription}`}
+                onChange={(e) => setUpdatedDescription(e.target.value)}
+              ></Input>
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>Type:</Td>
+            <Td>{`${commission.commissionType}`}</Td>
+          </Tr>
+          <Tr>
+            <Td>Submitter:</Td>
+            <Td>{`${commission.creatorUsername}`}</Td>
+          </Tr>
+          <Tr>
+            <Td>Collaborator:</Td>
+            <Td>{`${commission.collaboratorUsername}`}</Td>
+          </Tr>
+          <Tr>
+            <Td>Budget:</Td>
+            <Td>{`${commission.budget}`}</Td>
+          </Tr>
+          <Tr>
+            <Td>Deadline:</Td>
+            <Td>{`${updatedDeadline}`}</Td>
+          </Tr>
+          <Tr>
+            <Td>Created At:</Td>
+            <Td>{`${updatedCreatedAt}`}</Td>
+          </Tr>
+        </Tbody>
+      </Table>
       <ModalFooter>
         <Flex direction="row" gap="1">
           {commission.status === true ? (
@@ -94,7 +136,7 @@ const CommissionPost = ({
           ) : (
             <></>
           )}
-          <Button colorScheme="red" onClick={handleDeleteCommission}>
+          <Button colorScheme="red" onClick={handleOpenDeleteModal}>
             Delete Commission
           </Button>
           <Button colorScheme="blue" mr={3} onClick={closeModal}>
@@ -102,6 +144,28 @@ const CommissionPost = ({
           </Button>
         </Flex>
       </ModalFooter>
+
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        size="sm"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Confirm Deletion</ModalHeader>
+          <ModalBody>
+            Are you sure you want to delete this commission?
+          </ModalBody>
+          <ModalFooter2>
+            <Button colorScheme="red" mr={3} onClick={handleDeleteCommission}>
+              Confirm
+            </Button>
+            <Button colorScheme="blue" onClick={handleCloseDeleteModal}>
+              Cancel
+            </Button>
+          </ModalFooter2>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

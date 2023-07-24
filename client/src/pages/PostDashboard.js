@@ -31,7 +31,7 @@ const PostDashboard = () => {
         direction="column"
         justifyContent="center"
       >
-        <Card m="auto" width="40vw" h="40vw">
+        <Card m="auto" width="20vw" h="20vw">
           <CardBody display="flex" alignItems="center" justifyContent="center">
             <img src={spinner} alt="loading"></img>{" "}
           </CardBody>

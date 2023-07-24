@@ -46,7 +46,11 @@ const commissionSchema = new Schema(
         review: {
             type: String,
         },
-        username: {
+        creatorUsername: {
+            type: String,
+            required: true,
+        },
+        collaboratorUsername: {
             type: String,
             required: true,
         },

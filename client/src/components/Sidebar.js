@@ -3,20 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import {
   Flex,
   Text,
-  IconButton,
   Divider,
   Avatar,
   Heading,
   Box,
   Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Button,
-  Input,
   Image,
 } from "@chakra-ui/react";
 import { FiMenu, FiHome, FiUser } from "react-icons/fi";
@@ -44,8 +38,10 @@ export default function Sidebar() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        if (data.me && data.me !== null) {
-          setUser(data.me);
+        if (data) {
+          if (data.me && data.me !== null) {
+            setUser(data.me);
+          }
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -63,10 +59,10 @@ export default function Sidebar() {
       setBurgerColor(false);
       console.log(whiteBurgerColor);
     }
-  }, [location.pathname]);
+  }, [location.pathname, whiteBurgerColor]);
 
-  if(loading) {
-    return <div>Loading...</div>
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -113,7 +109,7 @@ export default function Sidebar() {
               zIndex="2"
               // transition="0.3s ease-in-out"
             >
-              <DrawerCloseButton  m="10px"/>
+              <DrawerCloseButton m="10px" />
               <Flex
                 p="5%"
                 flexDir="column"
