@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   ModalFooter,
@@ -7,25 +7,17 @@ import {
   Divider,
   Flex,
 } from "@chakra-ui/react";
-import { useQuery } from "@apollo/client";
-import { GET_USER } from "../utils/queries";
 
 const CommissionPost = ({
   commission,
   onUpdateCommission,
   closeModal,
-  completeCommission,
+  onDeleteCommission,
 }) => {
   const [updatedTitle, setUpdatedTitle] = useState(commission.commissionTitle);
   const [updatedDescription, setUpdatedDescription] = useState(
     commission.commissionDescription
   );
-
-  console.log("commission");
-
-  console.log(commission);
-
-  const [date] = useState(Date.now());
 
   const handleUpdateCommission = () => {
     const updatedCommission = {
@@ -45,7 +37,9 @@ const CommissionPost = ({
     onUpdateCommission(updatedCommission);
   };
 
-  const handleDeleteCommission = () => {};
+  const handleDeleteCommission = () => {
+    onDeleteCommission(commission._id);
+  };
 
   const formatDate = (timestamp) => {
     if (timestamp) {
@@ -57,6 +51,7 @@ const CommissionPost = ({
     }
     return "Invalid Date";
   };
+  
   const updatedDeadline = formatDate(commission.deadline);
   const updatedCreatedAt = formatDate(commission.createdAt);
 
@@ -92,15 +87,15 @@ const CommissionPost = ({
               <Button colorScheme="green" onClick={handleCompleteCommission}>
                 Complete Commission
               </Button>
-              <Button colorScheme="red" onClick={handleDeleteCommission}>
-                Delete Commission
+              <Button colorScheme="yellow" onClick={handleUpdateCommission}>
+                Update Commission
               </Button>
             </>
           ) : (
             <></>
           )}
-          <Button variant="ghost" onClick={handleUpdateCommission}>
-            Update Commission
+          <Button colorScheme="red" onClick={handleDeleteCommission}>
+            Delete Commission
           </Button>
           <Button colorScheme="blue" mr={3} onClick={closeModal}>
             Close

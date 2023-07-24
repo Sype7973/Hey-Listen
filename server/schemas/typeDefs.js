@@ -119,6 +119,7 @@ const typeDefs = gql`
     getCommission(_id: ID!): Commission
     acceptPost(commissions: CommissionInput): Commission
     createCommission(commissionInput: CommissionInput): Commission
+    deleteCommission(_id: ID!): Commission
   }
 `;
 

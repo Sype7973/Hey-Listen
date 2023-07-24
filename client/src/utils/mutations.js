@@ -198,26 +198,47 @@ export const ADD_COMMISSION = gql`
 //  update commission
 export const UPDATE_COMMISSION = gql`
   mutation UpdateCommission($commission: CommissionInput) {
-  updateCommission(commission: $commission) {
-    username
+    updateCommission(commission: $commission) {
+      username
+    }
   }
-}
 `;
 
 export const ACCEPT_POST = gql`
   mutation AcceptPost($commissions: CommissionInput) {
-  acceptPost(commissions: $commissions) {
-    username
-    deadline
-    creatorId
-    createdAt
-    completionDate
-    commissionType
-    commissionTitle
-    collaboratorId
-    commissionDescription
-    _id
-    budget
+    acceptPost(commissions: $commissions) {
+      username
+      deadline
+      creatorId
+      createdAt
+      completionDate
+      commissionType
+      commissionTitle
+      collaboratorId
+      commissionDescription
+      _id
+      budget
+    }
   }
-}
+`;
+
+export const DELETE_COMMISSION = gql`
+  mutation Mutation($id: ID!) {
+    deleteCommission(_id: $id) {
+      username
+      status
+      review
+      rating
+      deadline
+      creatorId
+      createdAt
+      completionDate
+      commissionType
+      commissionTitle
+      collaboratorId
+      commissionDescription
+      budget
+      _id
+    }
+  }
 `;
