@@ -19,7 +19,8 @@ const typeDefs = gql`
     commissionTitle: String
     commissionType: String
     commissionDescription: String
-    username: String
+    creatorUsername: String
+    collaboratorUsername: String
     collaboratorId: String
     creatorId: String
     budget: Int
@@ -37,6 +38,8 @@ const typeDefs = gql`
     commissionType: String
     commissionDescription: String
     username: String
+    creatorUsername: String
+    collaboratorUsername: String
     collaboratorId: String
     creatorId: String
     budget: Int

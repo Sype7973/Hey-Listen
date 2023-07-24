@@ -1,26 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import {
-  Button,
-  Flex,
-  Heading,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Button, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import { GET_ME } from "../utils/queries";
-import { useQuery } from '@apollo/client';
+import { useQuery } from "@apollo/client";
 
 const HomePage = () => {
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
 
   const { data } = useQuery(GET_ME);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        if (data.me && data.me !== null) {
-          setUser(data.me);
+        if (data) {
+          if (data.me && data.me !== null) {
+            setUser(data.me);
+          }
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -42,22 +38,22 @@ const HomePage = () => {
           Hey Listen!
         </Heading>
         <Text fontSize="xl" color="white">
-          Make music with everyone{user ? `, ${user.username}` : ''}
+          Make music with everyone{user ? `, ${user.username}` : ""}
         </Text>
         <Link to={user ? "/my-profile" : "/signup"}>
-        <Button
-          colorScheme="teal"
-          size="lg"
-          // onClick={() => {
-          //   if (data) {
-          //     window.location.href = '/post';
-          //   } else {
-          //     window.location.href = '/signup';
-          //   }
-          // }}
-        >
-          Get Started
-        </Button>
+          <Button
+            colorScheme="teal"
+            size="lg"
+            // onClick={() => {
+            //   if (data) {
+            //     window.location.href = '/post';
+            //   } else {
+            //     window.location.href = '/signup';
+            //   }
+            // }}
+          >
+            Get Started
+          </Button>
         </Link>
       </VStack>
     </Flex>

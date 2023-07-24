@@ -1,7 +1,6 @@
 // component to render a commission into PostDashboard.js
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { Link } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -11,18 +10,22 @@ import {
   Text,
   Divider,
 } from "@chakra-ui/react";
-import { GET_ME, GET_USER, GET_COMMISSIONS } from "../utils/queries";
+import { GET_ME, GET_COMMISSIONS } from "../utils/queries";
 import Commissions from "./Commission";
 import spinner from "../assets/images/spinner.gif";
-import { UPDATE_COMMISSION } from "../utils/mutations";
+import { UPDATE_COMMISSION, DELETE_COMMISSION } from "../utils/mutations";
 // import MyPosts from "./MyPosts";
 
 // function that maps and renders commissions
 const MyProfile = () => {
   const { loading, data, refetch } = useQuery(GET_ME);
+  const [deleteCommission] = useMutation(DELETE_COMMISSION);
 
-  const { loading: commissionLoading, data: commissionData, refetch: refetchData } =
-    useQuery(GET_COMMISSIONS);
+  const {
+    loading: commissionLoading,
+    data: commissionData,
+    refetch: refetchData,
+  } = useQuery(GET_COMMISSIONS);
 
   const [user, setUser] = useState(null);
   const [commissions, setCommissions] = useState([]);
@@ -31,14 +34,6 @@ const MyProfile = () => {
 
   const [activeCommissions, setActiveCommissions] = useState([]);
   const [completedCommissions, setCompletedCommissions] = useState([]);
-
-  const handlePageRefetch = async () => {
-    await refetch();
-  };
-
-  useEffect(() => {
-    handlePageRefetch();
-  }, []);
 
   useEffect(() => {
     // Check if commissionData and getCommissions are available
@@ -73,12 +68,12 @@ const MyProfile = () => {
 
   console.log(user);
 
-  const handleInitialRefetch = async () => {
-    await refetch();
-  };
-
   useEffect(() => {
+    const handleInitialRefetch = async () => {
+      await refetch();
+    };
     handleInitialRefetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -90,17 +85,23 @@ const MyProfile = () => {
       setUser(data.me);
     }
   }, [data]);
-  console.log(commissions);
 
-
-
-
-
+  const handleDeleteCommission = async (commissionId) => {
+    try {
+      await deleteCommission({
+        variables: { id: commissionId },
+      });
+      await refetch();
+      await refetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleUpdateCommission = async (updatedCommission) => {
     console.log("UPDATED COMMISSION");
     console.log(updatedCommission);
-  
+
     delete updatedCommission.__typename;
 
     try {
@@ -112,16 +113,9 @@ const MyProfile = () => {
     } catch (error) {
       console.error(error);
     }
-    
   };
 
-
-
-
-
-
-
-  if (isLoading || loading) {
+  if (isLoading || loading || commissionLoading) {
     return (
       <Flex
         minHeight="100vh"
@@ -130,7 +124,7 @@ const MyProfile = () => {
         direction="column"
         justifyContent="center"
       >
-        <Card m="auto" width="40vw" h="40vw">
+        <Card m="auto" width="20vw" h="20vw">
           <CardBody display="flex" alignItems="center" justifyContent="center">
             <img src={spinner} alt="loading"></img>{" "}
           </CardBody>
@@ -201,6 +195,7 @@ const MyProfile = () => {
                           commissions={completedCommissions}
                           user={user}
                           onHandleUpdateCommission={handleUpdateCommission}
+                          onHandleDeleteCommission={handleDeleteCommission}
                         />
                       </CardBody>
                     </Card>

@@ -185,7 +185,7 @@ export const ADD_COMMISSION = gql`
       commissionTitle
       commissionDescription
       commissionType
-      username
+      creatorUsername
       budget
       deadline
       completionDate
@@ -199,7 +199,7 @@ export const ADD_COMMISSION = gql`
 export const UPDATE_COMMISSION = gql`
   mutation UpdateCommission($commission: CommissionInput) {
     updateCommission(commission: $commission) {
-      username
+      creatorUsername
     }
   }
 `;
@@ -207,7 +207,7 @@ export const UPDATE_COMMISSION = gql`
 export const ACCEPT_POST = gql`
   mutation AcceptPost($commissions: CommissionInput) {
     acceptPost(commissions: $commissions) {
-      username
+      creatorUsername
       deadline
       creatorId
       createdAt
@@ -223,22 +223,13 @@ export const ACCEPT_POST = gql`
 `;
 
 export const DELETE_COMMISSION = gql`
-  mutation Mutation($id: ID!) {
+  mutation DeleteCommission($id: ID!) {
     deleteCommission(_id: $id) {
-      username
-      status
-      review
-      rating
-      deadline
-      creatorId
-      createdAt
-      completionDate
       commissionType
       commissionTitle
-      collaboratorId
       commissionDescription
-      budget
-      _id
+      collaboratorUsername
+      collaboratorId
     }
   }
 `;
