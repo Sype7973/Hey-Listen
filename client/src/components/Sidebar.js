@@ -23,6 +23,7 @@ import { GET_ME } from "../utils/queries";
 import { useDisclosure } from "@chakra-ui/react";
 import burgerIconWhite from "../assets/images/burgericonwhite.png";
 import burgerIconGrey from "../assets/images/burgericongrey.png";
+import logoPng from "../assets/images/logo.png";
 
 export default function Sidebar() {
   const [navSize] = useState("large");
@@ -173,7 +174,7 @@ export default function Sidebar() {
                     mb="20px"
                     justifyContent="center"
                   >
-                    <Avatar size="sm" src="avatar-1.jpg" />
+                    <Avatar size={user ? "sm" : "xl"} src={user ? "avatar-1.jpg" : logoPng} />
                     <Flex
                       flexDir="column"
                       ml={4}
