@@ -70,8 +70,8 @@ function App() {
               {/* {location.pathname === "/profile" && <Profile />} */}
               <Route path="/profile/:username" element={<Profile />} />
               {/* <Route path="/profile" element={<Profile />} /> */}
+              <Route path="/search" element={<SearchPage />} />
               </Routes>
-              {location.pathname === "/search" && <SearchPage />}
             </Box>
             <Footer position="sticky" bottom={0}/>
           </Flex>
