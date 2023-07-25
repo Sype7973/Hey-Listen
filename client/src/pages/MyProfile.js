@@ -120,6 +120,7 @@ const MyProfile = () => {
   };
 
   if (isLoading || loading || commissionLoading) {
+    refetch();
     return (
       <Flex
         minHeight="100vh"
