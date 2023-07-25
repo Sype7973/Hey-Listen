@@ -52,7 +52,6 @@ function Signup() {
     try {
       const { data } = await addUser({
         variables: {
-          // Use "$" symbol before each variable name
           username: formState.username,
           email: formState.email,
           password: formState.password,

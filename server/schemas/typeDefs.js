@@ -78,6 +78,7 @@ const typeDefs = gql`
     getCommission(_id: ID!): Commission
     getCommissions: [Commission]
     getProfile(username: String!): User
+    filterPost(postType: String!): [Post]
   }
 
   type Mutation {

@@ -2,32 +2,37 @@ import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
 import { Box, Flex, Button, Text, Card, CardBody, Heading } from "@chakra-ui/react";
-import { QUERY_POSTS, GET_ME } from "../utils/queries";
+import { QUERY_POSTS, GET_ME, GET_FILTERED_POSTS } from "../utils/queries";
 import { REMOVE_POST, ACCEPT_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
 
-const Posts = ({ userTypeFilter, postTypeFilter }) => {
-  const { data, refetch } = useQuery(QUERY_POSTS, {
-    variables: { userType: userTypeFilter, postType: postTypeFilter },
-  });
+const Posts = ({ postTypeFilter }) => {
+  const { data, refetch } = useQuery(QUERY_POSTS);
   const { data: myUserData } = useQuery(GET_ME);
+  const { data: filteredData } = useQuery(GET_FILTERED_POSTS, {
+    variables: { postType: postTypeFilter },
+  });
   const [posts, setPosts] = useState([]);
-  // const [postId, setPostId] = useState(null);
   const [user, setUser] = useState(null);
   const [removePost] = useMutation(REMOVE_POST);
   const [acceptPost] = useMutation(ACCEPT_POST);
 
+  // renders filtered data if there is a filter, otherwise renders all posts
   useEffect(() => {
-    refetch({ userType: userTypeFilter, postType: postTypeFilter });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userTypeFilter, postTypeFilter, refetch]);
-
-  useEffect(() => {
-    if (data) {
-      setPosts(data.getPosts);
-      setUser(myUserData.me);
+    if (postTypeFilter === "all") {
+      // When the filter is set to "all", display all posts from the original data.
+      if (data) {
+        setPosts(data.getPosts);
+        setUser(myUserData.me);
+      }
+    } else {
+      // When the filter is set to a specific value, use the filtered data.
+      if (filteredData) {
+        setPosts(filteredData.filterPost);
+        setUser(myUserData.me);
+      }
     }
-  }, [data, myUserData]);
+  }, [data, filteredData, myUserData, postTypeFilter]);
 
   const loggedInUsername = Auth.loggedIn()
     ? Auth.getProfile().data.username

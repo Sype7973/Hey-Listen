@@ -12,13 +12,7 @@ const PostDashboard = () => {
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [userTypeFilter, setUserTypeFilter] = useState("all");
   const [postTypeFilter, setPostTypeFilter] = useState("all");
-
-  const handleFilterChange = (userType, postType) => {
-    setUserTypeFilter(userType);
-    setPostTypeFilter(postType);
-  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -51,9 +45,14 @@ const PostDashboard = () => {
 
   return (
     <Flex align="flex-start" justify="space-between">
-      <Box width="20%">
-        <PostFilter onFilterChange={handleFilterChange} />
-      </Box>
+      {user ? (
+        <>
+          <Box width="20%" ml={5} mt={5}>
+            <Heading>Filter</Heading>
+            <PostFilter onFilterChange={setPostTypeFilter} />
+          </Box>
+        </>
+      ) : null}
       <Flex
         p={5}
         shadow="md"
@@ -67,14 +66,19 @@ const PostDashboard = () => {
         bg="gray.50"
         m={5}
       >
-        <Posts userTypeFilter={userTypeFilter} postTypeFilter={postTypeFilter} />
-        <Box textAlign="center">
-          <Link to="/create-post">
-            <Button colorScheme="teal" mt={4}>
-              Create Post
-            </Button>
-          </Link>
-        </Box>
+        <Heading as="h1" size="xl" mb={5}>
+          Posts
+        </Heading>
+        <Posts postTypeFilter={postTypeFilter} />
+        {user ? (
+          <Box textAlign="center">
+            <Link to="/create-post">
+              <Button colorScheme="teal" mt={4}>
+                Create Post
+              </Button>
+            </Link>
+          </Box>
+        ) : null}
       </Flex>
     </Flex>
   );

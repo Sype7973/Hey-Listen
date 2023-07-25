@@ -46,6 +46,9 @@ const resolvers = {
     getCommissions: async () => {
       return Commission.find().select("-__v");
     },
+    filterPost: async (parent, args) => {
+      return Post.find({ postType: args.postType });
+    },
   },
 
   Mutation: {

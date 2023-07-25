@@ -59,21 +59,19 @@ function App() {
             <Sidebar />
             <Box flex="1" zIndex="1">
             <SearchBar />
+            <Routes>
               {/* <Header currentPath={currentPath} /> */}
-              {location.pathname === "/" && <Home />}
-              {location.pathname === "/my-profile" && <MyProfile />}
-              {location.pathname === "/post-dashboard" && <PostDashboard />}
-              {location.pathname === "/login" && <Login />}
-              {location.pathname === "/signup" && <Signup />}
-              {location.pathname === "/my-posts" && <MyPosts />}
-              {location.pathname === "/create-post" && <CreatePost />}
-              {/* {location.pathname === "/profile" && <Profile />} */}
-              
-              <Routes>
-                <Route path="/profile/:username" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
+              <Route path ="/" element={<Home />} />
+              <Route path ="/my-profile" element={<MyProfile />} />
+              <Route path ="/post-dashboard" element={<PostDashboard/>} />
+              <Route path ="/login" element={<Login />} />
+              <Route path ="/signup" element={<Signup />} />
+              <Route path ="/my-posts" element={<MyPosts />} />
+              <Route path ="/create-post" element={<CreatePost />} />              
+              <Route path="/profile/:username" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/search" element={<SearchPage />} />
               </Routes>
-              {location.pathname === "/search" && <SearchPage />}
             </Box>
             <Footer position="sticky" bottom={0}/>
           </Flex>
