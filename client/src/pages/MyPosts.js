@@ -14,6 +14,7 @@ import { REMOVE_POST, UPDATE_POST } from "../utils/mutations";
 import spinner from "../assets/images/spinner.gif";
 import Auth from "../utils/auth";
 import UpdatePostModal from "../components/UpdatePostModal";
+import { Link } from "react-router-dom";
 
 const formatDate = (timestamp) => {
   if (timestamp) {
@@ -168,7 +169,16 @@ const MyPosts = () => {
                 </CardBody>
               </Card>
             ))}
+
           </Grid>
+          <Box textAlign="center" mt={4}>
+          {/* Create Post button that links to CreatePost page */}
+          <Link to="/create-post">
+            <Button colorScheme="teal">
+              Create Post
+            </Button>
+          </Link>
+        </Box>
         </Flex>
       ) : (
         <Flex
