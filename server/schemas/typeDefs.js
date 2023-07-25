@@ -91,14 +91,19 @@ const typeDefs = gql`
       profilePicture: String
     ): Auth
     login(email: String!, password: String!): Auth
+
     updateUser(
+      _id: ID
       username: String
       email: String
+      commissionIds: [ID]
       password: String
-      musicLinks: [String]
+      userType: String
       bio: String
       profilePicture: String
+      musicLinks: [String]
     ): User
+
     addPost(
       postTitle: String!
       postDescription: String!
@@ -118,7 +123,7 @@ const typeDefs = gql`
       deadline: String
     ): Post
     removePost(postId: ID!): Post
-    deleteUser: User
+    deleteUser(_id: ID!): User
     updateCommission(commission: CommissionInput): Commission
     addCommission(commissions: CommissionInput): User
     getCommission(_id: ID!): Commission

@@ -20,12 +20,7 @@ import logoPng from "../assets/images/logo.png";
 const Profile = () => {
   const { username } = useParams();
   const navigate = useNavigate();
-  const {
-    loading: meLoading,
-    data: meData,
-    refetch: meRefetch,
-  } = useQuery(GET_ME);
-
+  
   const {
     loading: usernameLoading,
     data,
@@ -33,13 +28,20 @@ const Profile = () => {
   } = useQuery(GET_PROFILE, {
     variables: { username: username },
   });
-
+  const {
+    loading: meLoading,
+    data: meData,
+    refetch: meRefetch,
+  } = useQuery(GET_ME);
   const [user, setUser] = useState(null);
   const [me, setMe] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+
+
+
   useEffect(() => {
-    if (me && username) {
+    if (me && me.username && username) {
       if (me.username === username) {
         navigate("/my-profile");
       }
@@ -59,15 +61,23 @@ const Profile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleContactPoster = (postId, email, username) => {
-    console.log(postId, email, username);
-    const subject = `Hey, Listen! I'd like to get in touch!`;
-    const body = `Hi ${username},\n\nI saw your profile on 'Hey, Listen!', and I'm interested in getting in touch.\n\n\n\nThanks,\n\n${me.username}`;
-    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-    window.open(mailtoLink, "_blank");
-    console.log(`Contacting the poster for post with ID: ${postId}`);
+  const handleContactPoster = (postId, email) => {
+    if (me && me.username) {
+      const subject = `Hey! Listen! I'd like to get in touch!`;
+      const body = `Hi ${username},\n\nI saw your profile on 'Hey, Listen!', and I'm interested in getting in touch.\n\n\n\nThanks,\n\n${me.username}`;
+      const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
+      window.open(mailtoLink, "_blank");
+      console.log(`Contacting the poster for post with ID: ${postId}`);
+    } else {
+      const subject = `Hey! Listen! I'd like to get in touch!`;
+      const body = `Hi ${user.username},\n\nI saw your profile on 'Hey, Listen!', and I'm interested in getting in touch.\n\n\n\nThanks!`;
+      const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
+      window.open(mailtoLink, "_blank");
+    }
   };
 
   useEffect(() => {
@@ -75,11 +85,17 @@ const Profile = () => {
       setIsLoading(false);
     }, 1000);
 
-    if (data && data.getProfile !== null && meData && meData.me !== null) {
+    if (data && data.getProfile !== null) {
       setUser(data.getProfile);
+    }
+
+    if (meData && meData.me !== null) {
       setMe(meData.me);
     }
   }, [data, meData]);
+
+
+  console.log(user);
 
   if (isLoading || meLoading || usernameLoading) {
     return (
@@ -120,8 +136,19 @@ const Profile = () => {
           >
             <CardBody textAlign="center">
               <Flex direction="row" alignItems="center" justifyContent="center">
-                <Avatar width="20%" height="auto" size="2xl" src={user ? "avatar-1.jpg" : logoPng} />
-                <Flex width="60%" direction="column" textAlign="center" alignItems="center" justifyContent="center">
+                <Avatar
+                  width="20%"
+                  height="auto"
+                  size="2xl"
+                  src={user ? "avatar-1.jpg" : logoPng}
+                />
+                <Flex
+                  width="60%"
+                  direction="column"
+                  textAlign="center"
+                  alignItems="center"
+                  justifyContent="center"
+                >
                   <Heading color="teal.500" letterSpacing={10} size="4xl">
                     {user.username}
                   </Heading>
@@ -169,7 +196,7 @@ const Profile = () => {
             </Flex>
             <Flex w="100%">
               <Card w="100%" h="auto" borderRadius="none">
-                <CardBody >
+                <CardBody>
                   <Flex alignItems="center" justifyContent="center">
                     <Box w="70%" fontSize="25px">
                       <Heading fontSize="50px">Profile</Heading>
@@ -179,12 +206,7 @@ const Profile = () => {
                         <Button
                           variant="ghost"
                           onClick={() =>
-                            handleContactPoster(
-                              user._id,
-                              user.email,
-                              user.postTitle,
-                              user.username
-                            )
+                            handleContactPoster(user.email, user.postTitle)
                           }
                         >
                           {user.email}

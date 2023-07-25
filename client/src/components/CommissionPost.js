@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Box,
   ModalFooter,
@@ -15,6 +16,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
+  Text,
 } from "@chakra-ui/react";
 
 const CommissionPost = ({
@@ -29,7 +31,6 @@ const CommissionPost = ({
   );
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
 
   const handleOpenDeleteModal = () => {
     setIsDeleteModalOpen(true);
@@ -48,9 +49,8 @@ const CommissionPost = ({
     onUpdateCommission(updatedCommission);
   };
 
-
   const [date] = useState(new Date());
-  
+
   const handleCompleteCommission = () => {
     const updatedCommission = {
       ...commission,
@@ -106,11 +106,23 @@ const CommissionPost = ({
           </Tr>
           <Tr>
             <Td>Submitter:</Td>
-            <Td>{`${commission.creatorUsername}`}</Td>
+            <Td>
+              <Link to={`/profile/${commission.creatorUsername}`}>
+                <Text color="teal.500" fontStyle="bold" fontWeight="bold">
+                  {commission.creatorUsername}
+                </Text>
+              </Link>
+            </Td>
           </Tr>
           <Tr>
             <Td>Collaborator:</Td>
-            <Td>{`${commission.collaboratorUsername}`}</Td>
+            <Td>
+              <Link to={`/profile/${commission.collaboratorUsername}`}>
+                <Text color="teal.500" fontStyle="bold" fontWeight="bold">
+                  {commission.collaboratorUsername}
+                </Text>
+              </Link>
+            </Td>
           </Tr>
           <Tr>
             <Td>Budget:</Td>
@@ -124,10 +136,12 @@ const CommissionPost = ({
             <Td>Created At:</Td>
             <Td>{`${updatedCreatedAt}`}</Td>
           </Tr>
-          {commission.status ?  null : <Tr>
-            <Td>Completion Date:</Td>
-            <Td>{`${formatDate(commission.completionDate)}`}</Td>
-          </Tr>}
+          {commission.status ? null : (
+            <Tr>
+              <Td>Completion Date:</Td>
+              <Td>{`${formatDate(commission.completionDate)}`}</Td>
+            </Tr>
+          )}
         </Tbody>
       </Table>
       <ModalFooter>
