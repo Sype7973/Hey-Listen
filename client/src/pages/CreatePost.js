@@ -31,6 +31,22 @@ const CreatePost = () => {
     deadline: "",
   });
 
+  const postTypeOptions = [
+    "Need Artist",
+    "Need Producer",
+    "Need Sample",
+    "Need Mixing",
+    "Need Mastering",
+    "Need Vocals",
+    "Need Guitarist",
+    "Need Bassist",
+    "Need Drummer",
+    "Need Pianist",
+    "Need Synth",
+    "Need Other",
+  ];
+
+
   const [addPost, { error }] = useMutation(ADD_POST);
   const { data } = useQuery(GET_ME);
   const [user, setUser] = useState(null);
@@ -50,20 +66,6 @@ const CreatePost = () => {
     }
   }, [user]);
 
-  const postTypeOptions = [
-    "Need Artist",
-    "Need Producer",
-    "Need Sample",
-    "Need Mixing",
-    "Need Mastering",
-    "Need Vocals",
-    "Need Guitarist",
-    "Need Bassist",
-    "Need Drummer",
-    "Need Pianist",
-    "Need Synth",
-    "Need Other",
-  ];
 
   const [selectedPostType, setSelectedPostType] = useState("");
 

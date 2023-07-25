@@ -28,7 +28,7 @@ const formatDate = (timestamp) => {
 };
 
 const MyPosts = () => {
-  const { loading: meLoading, data: meData } = useQuery(GET_ME);
+  const { loading: meLoading, data: meData, refetch } = useQuery(GET_ME);
   const user = meData?.me || {};
   const loggedInUsername = Auth.loggedIn() ? Auth.getProfile().data.username : null;
   const [removePost] = useMutation(REMOVE_POST);
@@ -64,13 +64,11 @@ const MyPosts = () => {
           query: QUERY_POSTS,
           data: { getPosts: updatedPosts },
         });
+        refetch();
       },
     });
   };
   
-
-
-
   
   const handleOpenModal = (post) => {
   
@@ -194,9 +192,17 @@ const MyPosts = () => {
           bg="gray.50"
           m={5}
         >
-          <Heading as="h2" mb={4}>
+           <Heading as="h2" mb={4}>
             No Posts Found
           </Heading>
+          <Box textAlign="center" mt={4}>
+            {/* Create Post button that links to CreatePost page */}
+            <Link to="/create-post">
+              <Button colorScheme="teal">
+                Create Post
+              </Button>
+            </Link>
+          </Box>
         </Flex>
       )}
       {activePostIndex !== null && (
@@ -211,6 +217,7 @@ const MyPosts = () => {
     </Box>
   );
 };
+
 
 
 
