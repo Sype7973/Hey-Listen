@@ -5,8 +5,9 @@ const PostFilter = ({ onFilterChange }) => {
   const [postTypeFilter, setPostTypeFilter] = useState("all");
 
   const handlePostTypeFilterChange = (event) => {
-    setPostTypeFilter(event.target.value);
-    onFilterChange(event.target.value); // Pass only the postTypeFilter value
+    const selectedValue = event.target.value;
+    setPostTypeFilter(selectedValue);
+    onFilterChange(selectedValue); // Pass only the postTypeFilter value
   };
 
   console.log("postTypeFilter: ", postTypeFilter);
@@ -15,16 +16,16 @@ const PostFilter = ({ onFilterChange }) => {
     <div>
       <Select value={postTypeFilter} onChange={handlePostTypeFilterChange}>
         <option value="all">All Posts</option>
-        <option value="Samples">Looking for Samples</option>
-        <option value="Mixing">Looking for Mixing</option>
-        <option value="Mastering">Looking for Mastering</option>
-        <option value="Vocals">Looking for Vocals</option>
-        <option value="Guitarists">Looking for Guitarists</option>
-        <option value="Bassists">Looking for Bassists</option>
-        <option value="Drummers">Looking for Drummers</option>
-        <option value="Pianists">Looking for Pianists</option>
-        <option value="Synths">Looking for Synths</option>
-        <option value="Other">Looking for Other</option>
+        <option value="Need Sample">Looking for Samples</option>
+        <option value="Need Mixing">Looking for Mixing</option>
+        <option value="Need Mastering">Looking for Mastering</option>
+        <option value="Need Vocals">Looking for Vocals</option>
+        <option value="Need Guitarist">Looking for Guitarists</option>
+        <option value="Need Bassist">Looking for Bassists</option>
+        <option value="Need Drummer">Looking for Drummers</option>
+        <option value="Need Pianist">Looking for Pianists</option>
+        <option value="Need Synth">Looking for Synths</option>
+        <option value="Need Other">Looking for Other</option>
       </Select>
     </div>
   );

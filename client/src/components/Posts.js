@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
 import { Box, Flex, Button, Text, Card, CardBody, Heading } from "@chakra-ui/react";
-import { QUERY_POSTS, GET_ME } from "../utils/queries";
+import { QUERY_POSTS, GET_ME, GET_FILTERED_POSTS } from "../utils/queries";
 import { REMOVE_POST, ACCEPT_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
 
 const Posts = ({ postTypeFilter }) => {
-  const { data, refetch } = useQuery(QUERY_POSTS, {
-    variables: { postType: postTypeFilter },
-  });
+  const { data, refetch } = useQuery(QUERY_POSTS);
+  const { data: filteredData } = useQuery(GET_FILTERED_POSTS);
   const { data: myUserData } = useQuery(GET_ME);
   const [posts, setPosts] = useState([]);
   // const [postId, setPostId] = useState(null);
@@ -17,17 +16,25 @@ const Posts = ({ postTypeFilter }) => {
   const [removePost] = useMutation(REMOVE_POST);
   const [acceptPost] = useMutation(ACCEPT_POST);
 
+  // renders filtered data if there is a filter, otherwise renders all posts
   useEffect(() => {
-    refetch({ postType: postTypeFilter });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [postTypeFilter, refetch]);
-
-  useEffect(() => {
-    if (data) {
+    const filteredPosts = data?.getPosts.filter((post) => {
+      if (postTypeFilter === "all") {
+        return true;
+      } else if (postTypeFilter === "Need Other") {
+        return post.postType === "Need Other" || post.postType === "Other";
+      } else {
+        return post.postType === postTypeFilter;
+      }
+    });
+    if (filteredPosts) {
+      setPosts(filteredPosts);
+      setUser(myUserData.me);
+    } else if (data) {
       setPosts(data.getPosts);
       setUser(myUserData.me);
     }
-  }, [data, myUserData]);
+  }, [data, postTypeFilter, myUserData]);
 
   const loggedInUsername = Auth.loggedIn()
     ? Auth.getProfile().data.username

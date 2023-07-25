@@ -141,3 +141,20 @@ export const GET_PROFILE = gql`
     }
   }
 `;
+
+export const GET_FILTERED_POSTS = gql`
+  query Query($postType: String!) {
+    filterPosts(postType: $postType) {
+      _id
+      budget
+      createdAt
+      deadline
+      postDescription
+      postTitle
+      postType
+      userId
+      username
+      email
+    }
+  }
+`;
