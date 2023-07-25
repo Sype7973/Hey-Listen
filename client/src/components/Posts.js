@@ -8,33 +8,31 @@ import Auth from "../utils/auth";
 
 const Posts = ({ postTypeFilter }) => {
   const { data, refetch } = useQuery(QUERY_POSTS);
-  const { data: filteredData } = useQuery(GET_FILTERED_POSTS);
   const { data: myUserData } = useQuery(GET_ME);
+  const { data: filteredData } = useQuery(GET_FILTERED_POSTS, {
+    variables: { postType: postTypeFilter },
+  });
   const [posts, setPosts] = useState([]);
-  // const [postId, setPostId] = useState(null);
   const [user, setUser] = useState(null);
   const [removePost] = useMutation(REMOVE_POST);
   const [acceptPost] = useMutation(ACCEPT_POST);
 
   // renders filtered data if there is a filter, otherwise renders all posts
   useEffect(() => {
-    const filteredPosts = data?.getPosts.filter((post) => {
-      if (postTypeFilter === "all") {
-        return true;
-      } else if (postTypeFilter === "Need Other") {
-        return post.postType === "Need Other" || post.postType === "Other";
-      } else {
-        return post.postType === postTypeFilter;
+    if (postTypeFilter === "all") {
+      // When the filter is set to "all", display all posts from the original data.
+      if (data) {
+        setPosts(data.getPosts);
+        setUser(myUserData.me);
       }
-    });
-    if (filteredPosts) {
-      setPosts(filteredPosts);
-      setUser(myUserData.me);
-    } else if (data) {
-      setPosts(data.getPosts);
-      setUser(myUserData.me);
+    } else {
+      // When the filter is set to a specific value, use the filtered data.
+      if (filteredData) {
+        setPosts(filteredData.filterPost);
+        setUser(myUserData.me);
+      }
     }
-  }, [data, postTypeFilter, myUserData]);
+  }, [data, filteredData, myUserData, postTypeFilter]);
 
   const loggedInUsername = Auth.loggedIn()
     ? Auth.getProfile().data.username

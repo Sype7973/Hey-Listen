@@ -16,6 +16,8 @@ const PostFilter = ({ onFilterChange }) => {
     <div>
       <Select value={postTypeFilter} onChange={handlePostTypeFilterChange}>
         <option value="all">All Posts</option>
+        <option value="Need Artist">Looking for Artists</option>
+        <option value="Need Producer">Looking for Producers</option>
         <option value="Need Sample">Looking for Samples</option>
         <option value="Need Mixing">Looking for Mixing</option>
         <option value="Need Mastering">Looking for Mastering</option>
