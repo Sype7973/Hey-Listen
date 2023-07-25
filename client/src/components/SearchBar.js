@@ -27,10 +27,7 @@ const SearchBar = () => {
         user.username.toLowerCase().includes(searchTerm.toLowerCase())
       ) || [];
 
-    navigate({
-      pathname: "/search",
-      state: { searchTerm, results: { posts: postResults, users: userResults } },
-    });
+    navigate("/search", { state: { searchTerm, results: { posts: postResults, users: userResults } } });
   };
 
   if (!Auth.loggedIn()) {
