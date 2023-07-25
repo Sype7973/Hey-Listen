@@ -21,6 +21,7 @@ import MyPosts from "./pages/MyPosts";
 import SearchBar from "./components/SearchBar";
 import Profile from "./pages/Profile";
 import SearchPage from "./pages/SearchPage";
+import Settings from "./pages/Settings";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -66,10 +67,9 @@ function App() {
               <Route path ="/login" element={<Login />} />
               <Route path ="/signup" element={<Signup />} />
               <Route path ="/my-posts" element={<MyPosts />} />
-              <Route path ="/create-post" element={<CreatePost />} />
-              {/* {location.pathname === "/profile" && <Profile />} */}
+              <Route path ="/create-post" element={<CreatePost />} />              
               <Route path="/profile/:username" element={<Profile />} />
-              {/* <Route path="/profile" element={<Profile />} /> */}
+              <Route path="/settings" element={<Settings />} />
               <Route path="/search" element={<SearchPage />} />
               </Routes>
             </Box>

@@ -1,6 +1,7 @@
 // component to render a commission into PostDashboard.js
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
+import { Link } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -9,8 +10,11 @@ import {
   CardBody,
   Text,
   Divider,
+  Icon,
 } from "@chakra-ui/react";
 import { GET_ME, GET_COMMISSIONS } from "../utils/queries";
+import { MdSettings } from "react-icons/md";
+
 import Commissions from "./Commission";
 import spinner from "../assets/images/spinner.gif";
 import { UPDATE_COMMISSION, DELETE_COMMISSION } from "../utils/mutations";
@@ -153,12 +157,20 @@ const MyProfile = () => {
               color="teal.500"
               borderRadius="none"
             >
-              <CardBody textAlign="center">
-                <Heading color="teal.500" letterSpacing={10} size="4xl">
-                  {user.username}
-                </Heading>
-                <Text letterSpacing={5}>{user.userType}</Text>
-              </CardBody>
+              <Flex flexDir="row">
+                <Flex width="10%"></Flex>
+                <CardBody textAlign="center">
+                  <Heading color="teal.500" letterSpacing={10} size="4xl">
+                    {user.username}
+                  </Heading>
+                  <Text letterSpacing={5}>{user.userType}</Text>
+                </CardBody>
+                <Flex width="10%" justifyContent="center" alignItems="center">
+                  <Link to="/settings">
+                    <Icon as={MdSettings} boxSize="50px" />
+                  </Link>
+                </Flex>
+              </Flex>
             </Card>
 
             <Flex

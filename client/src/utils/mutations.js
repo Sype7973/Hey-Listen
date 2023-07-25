@@ -60,32 +60,58 @@ export const LOGIN_USER = gql`
 
 //  Update user
 export const UPDATE_USER = gql`
-  mutation updateUser(
-    $username: String
-    $email: String
-    $password: String
-    $musicLinks: String
-    $bio: String
+  mutation UpdateUser(
+    $musicLinks: [String]
     $profilePicture: String
+    $bio: String
+    $userType: String
+    $password: String
+    $commissionIds: [ID]
+    $email: String
+    $username: String
+    $id: ID
   ) {
     updateUser(
-      username: $username
-      email: $email
-      password: $password
       musicLinks: $musicLinks
-      bio: $bio
       profilePicture: $profilePicture
+      bio: $bio
+      userType: $userType
+      password: $password
+      commissionIds: $commissionIds
+      email: $email
+      username: $username
+      _id: $id
     ) {
-      _id
-      username
-      email
-      userType
-      musicLinks
-      bio
       profilePicture
+      userType
+      username
+      password
+      musicLinks
+      email
+      commissionIds
+      bio
+      _id
     }
   }
 `;
+
+//  delete user
+export const DELETE_USER = gql`
+  mutation Mutation($id: ID!) {
+    deleteUser(_id: $id) {
+      username
+      userType
+      profilePicture
+      password
+      musicLinks
+      email
+      commissionIds
+      bio
+      _id
+    }
+  }
+`;
+
 // add post
 export const ADD_POST = gql`
   mutation AddPost(
@@ -204,6 +230,7 @@ export const UPDATE_COMMISSION = gql`
   }
 `;
 
+//accept post
 export const ACCEPT_POST = gql`
   mutation AcceptPost($commissions: CommissionInput) {
     acceptPost(commissions: $commissions) {
@@ -222,6 +249,7 @@ export const ACCEPT_POST = gql`
   }
 `;
 
+//  delete commission
 export const DELETE_COMMISSION = gql`
   mutation DeleteCommission($id: ID!) {
     deleteCommission(_id: $id) {

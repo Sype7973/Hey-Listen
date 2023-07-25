@@ -12,6 +12,7 @@ export const GET_ME = gql`
       commissionIds
       musicLinks
       bio
+      password
       posts {
         username
         userId

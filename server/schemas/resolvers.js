@@ -1,6 +1,7 @@
 const { User, Post, Commission } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
+const bcrypt = require("bcrypt");
 
 const resolvers = {
   Query: {
@@ -8,15 +9,14 @@ const resolvers = {
 
     me: async (parent, args, context) => {
       if (context.user) {
-        const userData = await User.findOne({ _id: context.user._id }).select(
-          "-__v -password"
-        ).populate("posts");
+        const userData = await User.findOne({ _id: context.user._id })
+          .select("-__v")
+          .populate("posts");
         console.log("User Data");
         console.log(userData);
         return userData;
       }
       return null;
-      
     },
     getUsers: async (parent, args, context) => {
       return User.find().select("-__v").populate("posts");
@@ -27,8 +27,10 @@ const resolvers = {
         .populate("commissions posts");
     },
     getProfile: async (parent, args, context) => {
+      console.log("GETTTING THE PROFILEEEEE");
+      console.log(args);
       return User.findOne({ username: args.username })
-        .select("-__v -password")
+        .select("-__v")
         .populate("commissions posts");
     },
 
@@ -61,11 +63,23 @@ const resolvers = {
     },
 
     updateUser: async (parent, args, context) => {
+      const { ...updateData } = args;
+      console.log("Update Data, ", updateData);
+      if (updateData.password) {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(
+          updateData.password,
+          saltRounds
+        );
+        updateData.password = hashedPassword;
+      }
+      console.log("Update Data password ", updateData.password);
+
       if (context.user) {
         try {
           const user = await User.findByIdAndUpdate(
-            { _id: args._id },
-            { $set: { ...args } },
+            { _id: updateData._id },
+            { $set: { ...updateData } },
             { new: true }
           );
           return user;
@@ -85,9 +99,14 @@ const resolvers = {
           });
 
           await Post.deleteMany({
-            username: user.username,
+            username: args.username,
           });
 
+          await Commission.deleteMany({
+            $and: [{ creatorUsername: args.username }, { status: true }],
+          });
+          console.log("USERERERERRER");
+          console.log(user);
           return user;
         } catch (err) {
           console.log(err);
@@ -211,25 +230,25 @@ const resolvers = {
 
     addCommission: async (parent, args, context) => {
       if (context.user) {
-      const creator = true;
-      try {
-        const creator = await User.findByIdAndUpdate(
-          { _id: args.commissions.creatorId },
-          { $push: { commissions: [args.commissions] } },
-          { new: true }
-        );
+        const creator = true;
+        try {
+          const creator = await User.findByIdAndUpdate(
+            { _id: args.commissions.creatorId },
+            { $push: { commissions: [args.commissions] } },
+            { new: true }
+          );
 
-        const collaborator = await User.findByIdAndUpdate(
-          { _id: args.commissions.collaboratorId },
-          { $push: { commissions: [args.commissions] } },
-          { new: true }
-        );
+          const collaborator = await User.findByIdAndUpdate(
+            { _id: args.commissions.collaboratorId },
+            { $push: { commissions: [args.commissions] } },
+            { new: true }
+          );
 
-        return creator;
-      } catch (err) {
-        console.log(err);
-        throw new Error(err);
-      }
+          return creator;
+        } catch (err) {
+          console.log(err);
+          throw new Error(err);
+        }
       }
     },
 
