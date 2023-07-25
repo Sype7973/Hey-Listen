@@ -54,7 +54,7 @@ function App() {
     <ApolloProvider client={client}>
       <div>
         <ChakraProvider>
-          <Flex>
+          <Flex flexDirection="column">
             <Sidebar />
             <Box flex="1" zIndex="1">
             <SearchBar />
@@ -73,8 +73,8 @@ function App() {
                 {/* <Route path="/profile" element={<Profile />} /> */}
               </Routes>
               {location.pathname === "/search" && <SearchPage />}
-              <Footer />
             </Box>
+            <Footer position="sticky" bottom={0}/>
           </Flex>
         </ChakraProvider>
       </div>

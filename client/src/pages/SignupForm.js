@@ -101,10 +101,12 @@ function Signup() {
     <Flex
       flexDirection="column"
       width="100%"
-      height="100vh"
+      minHeigh="100vh"
       backgroundColor="gray.100"
       justifyContent="center"
       alignItems="center"
+      pt={8}
+      pb={8}
     >
       <Stack
         flexDir="column"
@@ -114,7 +116,7 @@ function Signup() {
       >
         <Heading color="teal.400">Sign Up</Heading>
         <Text fontSize="lg" color="gray.600">
-          to enjoy all of our cool features ✌️
+          To start making music ✌️
         </Text>
       </Stack>
       <Box
@@ -160,7 +162,6 @@ function Signup() {
               onChange={handleChange}
             />
           </FormControl>
-          {/* Add the userType dropdown */}
           <FormControl id="userType">
             <FormLabel>User Type</FormLabel>
             <Select
@@ -173,7 +174,6 @@ function Signup() {
               <option value="Artist">Artist</option>
             </Select>
           </FormControl>
-          {/* Add the musicLinks input */}
           <FormControl id="musicLinks">
             <FormLabel>Music Links</FormLabel>
             {formState.musicLinks.map((link, index) => (
@@ -196,7 +196,6 @@ function Signup() {
               Add Music Link
             </Button>
           </FormControl>
-          {/* Add the profilePicture upload input */}
           <FormControl id="profilePicture">
             <FormLabel>Profile Picture</FormLabel>
             <Input
@@ -205,7 +204,6 @@ function Signup() {
               onChange={handleProfilePictureChange}
             />
           </FormControl>
-          {/* Add the bio input */}
           <FormControl id="bio">
             <FormLabel>Bio</FormLabel>
             <Textarea
@@ -223,7 +221,6 @@ function Signup() {
           <Button colorScheme="teal" type="submit" onClick={handleFormSubmit}>
             Sign Up
           </Button>
-          {/* Display error if there's an error */}
           {error && <Text color="red.500">{error.message}</Text>}
         </Stack>
       </Box>
