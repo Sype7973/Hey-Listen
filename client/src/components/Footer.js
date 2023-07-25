@@ -16,7 +16,6 @@ const Footer = () => {
       justifyContent="center"
     >
       <Text alignItems="center">
-        <p>
           Created By{' '}
           <Link href="https://github.com/Sype7973" color="white" isExternal>
             Adam Day
@@ -26,7 +25,6 @@ const Footer = () => {
             Elijah Brereton
           </Link>{' '}
           {'\uD83C\uDFB5'}
-        </p>
       </Text>
     </Flex>
   );

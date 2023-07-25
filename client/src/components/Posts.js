@@ -6,9 +6,9 @@ import { QUERY_POSTS, GET_ME } from "../utils/queries";
 import { REMOVE_POST, ACCEPT_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
 
-const Posts = ({ userTypeFilter, postTypeFilter }) => {
+const Posts = ({ postTypeFilter }) => {
   const { data, refetch } = useQuery(QUERY_POSTS, {
-    variables: { userType: userTypeFilter, postType: postTypeFilter },
+    variables: { postType: postTypeFilter },
   });
   const { data: myUserData } = useQuery(GET_ME);
   const [posts, setPosts] = useState([]);
@@ -18,9 +18,9 @@ const Posts = ({ userTypeFilter, postTypeFilter }) => {
   const [acceptPost] = useMutation(ACCEPT_POST);
 
   useEffect(() => {
-    refetch({ userType: userTypeFilter, postType: postTypeFilter });
+    refetch({ postType: postTypeFilter });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userTypeFilter, postTypeFilter, refetch]);
+  }, [postTypeFilter, refetch]);
 
   useEffect(() => {
     if (data) {

@@ -20,12 +20,12 @@ const SearchBar = () => {
     const postResults =
       postData?.getPosts?.filter((post) =>
         post.postTitle.toLowerCase().includes(searchTerm.toLowerCase())
-      ) || [];
+      ).slice(0, 15) || [];
 
     const userResults =
       userData?.getUsers?.filter((user) =>
         user.username.toLowerCase().includes(searchTerm.toLowerCase())
-      ) || [];
+      ).slice(0, 15) || [];
 
     navigate("/search", { state: { searchTerm, results: { posts: postResults, users: userResults } } });
   };
