@@ -15,6 +15,9 @@ const PostFilter = ({ onFilterChange }) => {
     onFilterChange(userTypeFilter, event.target.value);
   };
 
+  console.log(userTypeFilter);
+    console.log(postTypeFilter);
+
   return (
     <div>
       <Select value={userTypeFilter} onChange={handleUserTypeFilterChange}>

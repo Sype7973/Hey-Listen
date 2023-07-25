@@ -18,7 +18,7 @@ const Posts = ({ userTypeFilter, postTypeFilter }) => {
   const [acceptPost] = useMutation(ACCEPT_POST);
 
   useEffect(() => {
-    refetch({ variables: { userType: userTypeFilter, postType: postTypeFilter }});
+    refetch({ userType: userTypeFilter, postType: postTypeFilter });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userTypeFilter, postTypeFilter, refetch]);
 

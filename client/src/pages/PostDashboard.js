@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Posts from "../components/Posts";
 import { Box, Flex, Button, Card, CardBody, Heading } from "@chakra-ui/react";
-import { Link } from "react-router-dom"; // Import the Link component
+import { Link } from "react-router-dom";
 import spinner from "../assets/images/spinner.gif";
 import { useQuery } from "@apollo/client";
 import { GET_ME } from "../utils/queries";
 import PostFilter from "../components/PostFilter";
 
 const PostDashboard = () => {
-  const { loading, data} = useQuery(GET_ME);
+  const { loading, data } = useQuery(GET_ME);
 
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,45 +50,33 @@ const PostDashboard = () => {
   }
 
   return (
-    <>
-      {user ? (
-        <Box>
-          <PostFilter onFilterChange={handleFilterChange} />
-          <Flex
-            p={5}
-            shadow="md"
-            borderWidth="1px"
-            flex="1"
-            borderRadius="md"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            textAlign="center"
-            bg="gray.50"
-            m={5}
-          >
-            {/* Render the Posts component */}
-            <Posts userTypeFilter={userTypeFilter} postTypeFilter={postTypeFilter} />
-          </Flex>
-          <Box textAlign="center">
-            {/* Create Post button that links to CreatePost page */}
-            <Link to="/create-post">
-              <Button colorScheme="teal" mt={4}>
-                Create Post
-              </Button>
-            </Link>
-          </Box>
+    <Flex align="flex-start" justify="space-between">
+      <Box width="20%">
+        <PostFilter onFilterChange={handleFilterChange} />
+      </Box>
+      <Flex
+        p={5}
+        shadow="md"
+        borderWidth="1px"
+        flex="1"
+        borderRadius="md"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+        bg="gray.50"
+        m={5}
+      >
+        <Posts userTypeFilter={userTypeFilter} postTypeFilter={postTypeFilter} />
+        <Box textAlign="center">
+          <Link to="/create-post">
+            <Button colorScheme="teal" mt={4}>
+              Create Post
+            </Button>
+          </Link>
         </Box>
-      ) : (
-        <Flex minHeight="100vh" alignItems="center" bg="teal.500" direction="column">
-          <Card my="auto" width="auto" h="auto">
-            <CardBody textAlign="center">
-              <Heading>Not Logged In!</Heading>
-            </CardBody>
-          </Card>
-        </Flex>
-      )}
-    </>
+      </Flex>
+    </Flex>
   );
 };
 
