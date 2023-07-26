@@ -23,6 +23,7 @@ import SearchBar from "./components/SearchBar";
 import Profile from "./pages/Profile";
 import SearchPage from "./pages/SearchPage";
 import Settings from "./pages/Settings";
+import Post from "./pages/Post";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -72,6 +73,7 @@ function App() {
               <Route path="/profile/:username" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/search" element={<SearchPage />} />
+              <Route path="/post/:id" element={<Post />} />
               </Routes>
             </Box>
             <Footer position="sticky" bottom={0}/>

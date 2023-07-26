@@ -45,9 +45,11 @@ const SearchPage = () => {
                   </Heading>
                   {results.posts.map((post) => (
                     <Box key={post._id} borderWidth="1px" borderColor="gray.200" p={2} my={2}>
-                      <Heading as="h3" size="md">
+                      <Link to={`/post/${post._id}`}>
+                      <Heading as="h3" size="md" color="teal.500">
                         Title:
                       </Heading>
+                      </Link>
                       {post.postTitle}
 
                       <Heading as="h3" size="md">
