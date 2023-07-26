@@ -100,7 +100,7 @@ function Signup() {
     <Flex
       flexDirection="column"
       width="100%"
-      minHeigh="100vh"
+      minHeight="100vh"
       backgroundColor="gray.100"
       justifyContent="center"
       alignItems="center"
@@ -113,8 +113,8 @@ function Signup() {
         justifyContent="center"
         alignItems="center"
       >
-        <Heading color="teal.400">Sign Up</Heading>
-        <Text fontSize="lg" color="gray.600">
+        <Heading color="teal.400" fontSize={['xl', '2xl', '3xl']}>Sign Up</Heading>
+        <Text fontSize={["md", 'lg', 'xl']} color="gray.600">
           To start making music ✌️
         </Text>
       </Stack>

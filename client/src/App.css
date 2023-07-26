@@ -1,0 +1,18 @@
+.chakra-ui-light{
+    font-family: 'Quicksand', sans-serif;
+}
+
+.chakra-heading-css{
+    font-family: 'Quicksand', sans-serif;
+}
+
+#posts-card{
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    opacity: 70%
+}
+
+#posts-card:hover{
+    opacity: 100%;
+}

@@ -8,6 +8,7 @@ import {
   CardBody,
   Heading,
   Button,
+  Text,
 } from "@chakra-ui/react";
 import { GET_ME, QUERY_POSTS } from "../utils/queries";
 import { REMOVE_POST, UPDATE_POST } from "../utils/mutations";
@@ -128,9 +129,11 @@ const MyPosts = () => {
     <Box>
       {myPosts.length > 0 ? (
         <Flex p={5} flexDirection="column" alignItems="center">
-          <Heading as="h2" mb={4}>
+          <Box>
+          <Heading as="h2" mb={8}>
             My Posts
           </Heading>
+          </Box>
           <Grid templateColumns="repeat(auto-fill, minmax(350px, 1fr))" gap={4} w="100%">
             {myPosts.map((post) => (
               <Card
@@ -144,16 +147,37 @@ const MyPosts = () => {
                 w="100%"
               >
                 <CardBody>
-                  <Heading as="h2" fontSize="2xl">
+                  <Heading as="h2" fontSize="2xl" fontWeight="bold" mb={4}>
                     {post.postTitle}
                   </Heading>
-                  <p>Description: {post.postDescription}</p>
-                  <p>Post Type: {post.postType}</p>
-                  <p>User: {post.username}</p>
-                  <p>Budget: ${post.budget}</p>
-                  <p>Deadline: {formatDate(post.deadline)}</p>
-                  <p>Created By: {post.username}</p>
-                  <p>Created At: {formatDate(post.createdAt)}</p>
+                  <Text fontSize="1.2rem" fontWeight="bold">
+                    Description:
+                  </Text>
+                  <p>{post.postDescription}</p>
+                  <Text fontSize="1.2rem" fontWeight="bold">
+                    Post Type:
+                  </Text>
+                  <p>{post.postType}</p>
+                  <Text fontSize="1.2rem" fontWeight="bold">
+                    User:
+                  </Text>
+                  <p>{post.username}</p>
+                  <Text fontSize="1.2rem" fontWeight="bold">
+                    Budget:
+                  </Text>
+                  <p>${post.budget}</p>
+                  <Text fontSize="1.2rem" fontWeight="bold">
+                    Deadline:
+                  </Text>
+                  <p>{formatDate(post.deadline)}</p>
+                  <Text fontSize="1.2rem" fontWeight="bold">
+                    Created By:
+                  </Text>
+                  <p>{post.username}</p>
+                  <Text fontSize="1.2rem" fontWeight="bold">
+                    Created At:
+                  </Text>
+                  <p>{formatDate(post.createdAt)}</p>
                   {loggedInUsername === post.username && (
                     <>
                       <Button colorScheme="red" mt={2} onClick={() => handleRemovePost(post._id)}>
@@ -167,32 +191,19 @@ const MyPosts = () => {
                 </CardBody>
               </Card>
             ))}
-
           </Grid>
           <Box textAlign="center" mt={4}>
-          {/* Create Post button that links to CreatePost page */}
-          <Link to="/create-post">
-            <Button colorScheme="teal">
-              Create Post
-            </Button>
-          </Link>
-        </Box>
+            {/* Create Post button that links to CreatePost page */}
+            <Link to="/create-post">
+              <Button colorScheme="teal">
+                Create Post
+              </Button>
+            </Link>
+          </Box>
         </Flex>
       ) : (
-        <Flex
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          flex="1"
-          borderRadius="md"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          bg="gray.50"
-          m={5}
-        >
-           <Heading as="h2" mb={4}>
+        <Flex p={5} flexDirection="column" alignItems="center">
+          <Heading as="h2" mb={4}>
             No Posts Found
           </Heading>
           <Box textAlign="center" mt={4}>
@@ -217,8 +228,5 @@ const MyPosts = () => {
     </Box>
   );
 };
-
-
-
 
 export default MyPosts;

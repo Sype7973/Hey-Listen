@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
-import { Box, Flex, Button, Text, Card, CardBody, Heading } from "@chakra-ui/react";
+import { Box, Flex, Button, Text, Card, CardBody, Heading, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { QUERY_POSTS, GET_ME, GET_FILTERED_POSTS } from "../utils/queries";
 import { REMOVE_POST, ACCEPT_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
@@ -135,77 +135,121 @@ const Posts = ({ postTypeFilter }) => {
     return "Invalid Date";
   };
 
+  const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3 });
+  const buttonFontSize = useBreakpointValue({ base: "sm", md: "md", lg: "md" });
+
+
   return (
     <Box>
       {posts.length ? (
-        posts.map((post) => (
-          <Flex
-            key={post._id}
-            p={5}
-            shadow="md"
-            borderWidth="1px"
-            flex="1"
-            borderRadius="md"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            textAlign="center"
-            bg="gray.50"
-            m={5}
-          >
-            <Box>
-              <h2>Title: {post.postTitle}</h2>
-              <Link to={`/profile/${post.username}`}>
-                <Text color="teal.500" fontStyle="bold" fontWeight="bold">
-                  {post.username}
+        <SimpleGrid columns={gridColumns} spacing={5}>
+          {posts.map((post) => (
+            <Box
+              key={post._id}
+              p={5}
+              shadow="md"
+              borderWidth="1px"
+              borderRadius="md"
+              flexDirection="column"
+              alignItems="left"
+              justifyContent="center"
+              textAlign="left"
+              bg="gray.50"
+              mt={5}
+              id="posts-card"
+            >
+              <Box m={5}>
+                {/* Title Heading */}
+                <Text fontSize="1.5rem" fontWeight="bold" mb={5} textAlign="center">
+                  {post.postTitle}
                 </Text>
-              </Link>
-              <p>Description: {post.postDescription}</p>
-              <p>Post Type: {post.postType}</p>
-              <p>Budget: ${post.budget}</p>
-              <p>Deadline: {formatDateForm(post.deadline)}</p>
-              <p>Created At: {formatDateForm(post.createdAt)}</p>
 
-              {/* Check if the logged-in user is the same as the post's creator */}
-              {loggedInUsername === post.username && (
-                <>
-                  <Button
-                    colorScheme="red"
-                    mt={2}
-                    onClick={() => handleRemovePost(post._id)}
-                  >
-                    Remove Post
-                  </Button>
-                </>
-              )}
-              {loggedInUsername !== post.username && (
-                <>
-                  <Button
-                    colorScheme="teal"
-                    mt={2}
-                    onClick={() =>
-                      handleContactPoster(
-                        post._id,
-                        post.email,
-                        post.postTitle,
-                        post.username
-                      )
-                    }
-                  >
-                    Contact Poster
-                  </Button>
-                  <Button
-                    colorScheme="blue"
-                    mt={2}
-                    onClick={() => handleAcceptPost(post._id)}
-                  >
-                    Accept Post
-                  </Button>
-                </>
-              )}
+                {/* User Heading */}
+                <Text fontSize="1.5rem" fontWeight="bold" >
+                  User:
+                </Text>
+                <Link to={`/profile/${post.username}`}>
+                  <Text color="teal.500" fontStyle="bold" fontWeight="bold">
+                    {post.username}
+                  </Text>
+                </Link>
+
+                {/* Description */}
+                <Text fontSize="1.2rem" fontWeight="bold">
+                  Description:
+                </Text>
+                <p>{post.postDescription}</p>
+
+                {/* Post Type */}
+                <Text fontSize="1.2rem" fontWeight="bold">
+                  Post Type:
+                </Text>
+                <p>{post.postType}</p>
+
+                {/* Budget */}
+                <Text fontSize="1.2rem" fontWeight="bold">
+                  Budget:
+                </Text>
+                <p>${post.budget}</p>
+
+                {/* Deadline */}
+                <Text fontSize="1.2rem" fontWeight="bold">
+                  Deadline:
+                </Text>
+                <p>{formatDateForm(post.deadline)}</p>
+
+                {/* Created At */}
+                <Text fontSize="1.2rem" fontWeight="bold">
+                  Created At:
+                </Text>
+                <p>{formatDateForm(post.createdAt)}</p>
+
+                {/* Check if the logged-in user is the same as the post's creator */}
+                {loggedInUsername === post.username && (
+                  <>
+                    <Button
+                      colorScheme="red"
+                      mt={2}
+                      m={3}
+                      onClick={() => handleRemovePost(post._id)}
+                    >
+                      Remove Post
+                    </Button>
+                  </>
+                )}
+                {loggedInUsername !== post.username && (
+                  <>
+                    <Button
+                      colorScheme="teal"
+                      mt={2}
+                      m={3}
+                      fontSize={buttonFontSize}
+                      onClick={() =>
+                        handleContactPoster(
+                          post._id,
+                          post.email,
+                          post.postTitle,
+                          post.username
+                        )
+                      }
+                    >
+                      Contact Poster
+                    </Button>
+                    <Button
+                      colorScheme="blue"
+                      mt={2}
+                      m={3}
+                      fontSize={buttonFontSize}
+                      onClick={() => handleAcceptPost(post._id)}
+                    >
+                      Accept Post
+                    </Button>
+                  </>
+                )}
+              </Box>
             </Box>
-          </Flex>
-        ))
+          ))}
+        </SimpleGrid>
       ) : (
         <Card>
           <CardBody>

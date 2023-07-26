@@ -222,8 +222,8 @@ const MyProfile = () => {
                   </Card>
                 )}
               </Flex>
-              <Flex w="30%">
-                <Card w="100%" h="auto" borderRadius="none">
+              <Flex w="40%">
+                <Card w="120%" h="auto" borderRadius="none" >
                   <CardBody>
                     <Flex alignItems="center" justifyContent="center">
                       <Box w="80%" fontSize="25px">

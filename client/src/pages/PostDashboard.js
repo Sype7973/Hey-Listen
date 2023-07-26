@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Posts from "../components/Posts";
-import { Box, Flex, Button, Card, CardBody, Heading } from "@chakra-ui/react";
+import { Box, Flex, Button, Card, CardBody, Heading, useBreakpointValue } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import spinner from "../assets/images/spinner.gif";
 import { useQuery } from "@apollo/client";
@@ -13,6 +13,7 @@ const PostDashboard = () => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [postTypeFilter, setPostTypeFilter] = useState("all");
+  const buttonWidth = useBreakpointValue({ base: "100px", md: "lg" });
 
   useEffect(() => {
     setTimeout(() => {
@@ -23,6 +24,8 @@ const PostDashboard = () => {
       setUser(data.me);
     }
   }, [data]);
+
+
 
   if (isLoading || loading) {
     return (
@@ -44,43 +47,33 @@ const PostDashboard = () => {
   }
 
   return (
-    <Flex align="flex-start" justify="space-between">
-      {user ? (
-        <>
-          <Box width="20%" ml={5} mt={5}>
-            <Heading>Filter</Heading>
+    <Box>
+      {user && (
+        <Box textAlign="center" py={5} bg="gray.100">
+          <Heading as="h1" size="xl">
+            Post Dashboard
+          </Heading>
+          <Link to="/create-post">
+            <Button colorScheme="teal" mt={4} width={buttonWidth}>
+              Create Post
+            </Button>
+          </Link>
+        </Box>
+      )}
+      <Flex justifyContent="space-between" flexWrap="wrap">
+        {user && (
+          <Box width={{ base: "100%", md: "20%" }} mb={{ base: 5, md: 0 }} px={{ base: 5, md: 0 }}>
+            <Heading textAlign="center" mb={2}>
+              Filter
+            </Heading>
             <PostFilter onFilterChange={setPostTypeFilter} />
           </Box>
-        </>
-      ) : null}
-      <Flex
-        p={5}
-        shadow="md"
-        borderWidth="1px"
-        flex="1"
-        borderRadius="md"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        textAlign="center"
-        bg="gray.50"
-        m={5}
-      >
-        <Heading as="h1" size="xl" mb={5}>
-          Posts
-        </Heading>
-        <Posts postTypeFilter={postTypeFilter} />
-        {user ? (
-          <Box textAlign="center">
-            <Link to="/create-post">
-              <Button colorScheme="teal" mt={4}>
-                Create Post
-              </Button>
-            </Link>
-          </Box>
-        ) : null}
+        )}
+        <Box flex="1" p={5} shadow="md" borderWidth="1px" borderRadius="md" bg="gray.50" m={5}>
+          <Posts postTypeFilter={postTypeFilter} />
+        </Box>
       </Flex>
-    </Flex>
+    </Box>
   );
 };
 

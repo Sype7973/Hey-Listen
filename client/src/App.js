@@ -1,5 +1,6 @@
 // This is the main file for the portfolio website. It is the first file that is run when the website is loaded.
 import React, { useEffect } from "react";
+import "./App.css";
 import { ChakraProvider, Box, Flex } from "@chakra-ui/react";
 import { useLocation, Route, Routes } from "react-router-dom";
 import {

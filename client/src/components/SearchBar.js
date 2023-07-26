@@ -15,6 +15,7 @@ const SearchBar = () => {
     setSearchTerm(event.target.value);
   };
 
+  
   const handleSearch = (event) => {
     event.preventDefault();
     const postResults =
@@ -29,6 +30,8 @@ const SearchBar = () => {
 
     navigate("/search", { state: { searchTerm, results: { posts: postResults, users: userResults } } });
   };
+
+  
 
   if (!Auth.loggedIn()) {
     return null;

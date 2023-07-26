@@ -1,14 +1,16 @@
 import React from 'react';
-import { Flex, Text, Link } from '@chakra-ui/react';
+import { Flex, Text, Link, useBreakpointValue } from '@chakra-ui/react';
 
 const Footer = () => {
+  const footerWidth = useBreakpointValue({ base: '100%', md: '100%', lg: '100%' });
+
   return (
     <Flex
       as="footer"
       position="relative"
       bottom={0}
       left={0}
-      width="100%"
+      width={footerWidth}
       backgroundColor="#38B2AC"
       color="white"
       textAlign="center"
