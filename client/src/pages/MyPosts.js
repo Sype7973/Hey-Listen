@@ -130,13 +130,14 @@ const MyPosts = () => {
       {myPosts.length > 0 ? (
         <Flex p={5} flexDirection="column" alignItems="center">
           <Box>
-          <Heading as="h2" mb={8}>
+          <Heading as="h2" mb={8} color="teal.400">
             My Posts
           </Heading>
           </Box>
           <Grid templateColumns="repeat(auto-fill, minmax(350px, 1fr))" gap={4} w="100%">
             {myPosts.map((post) => (
               <Card
+                id="posts-card"
                 key={post._id}
                 p="4"
                 border="1px"

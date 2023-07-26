@@ -17,6 +17,7 @@ import {
   ModalHeader,
   ModalBody,
   Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 
 const CommissionPost = ({
@@ -74,7 +75,7 @@ const CommissionPost = ({
     }
     return "Invalid Date";
   };
-
+  const isSmallerScreen = useBreakpointValue({ base: true, md: false });
   const updatedDeadline = formatDate(commission.deadline);
   const updatedCreatedAt = formatDate(commission.createdAt);
 
@@ -145,27 +146,27 @@ const CommissionPost = ({
         </Tbody>
       </Table>
       <ModalFooter>
-        <Flex direction="row" gap="1">
-          {commission.status === true ? (
-            <>
-              <Button colorScheme="green" onClick={handleCompleteCommission}>
-                Complete Commission
-              </Button>
-              <Button colorScheme="yellow" onClick={handleUpdateCommission}>
-                Update Commission
-              </Button>
-            </>
-          ) : (
-            <></>
-          )}
-          <Button colorScheme="red" onClick={handleOpenDeleteModal}>
-            Delete Commission
-          </Button>
-          <Button colorScheme="blue" mr={3} onClick={closeModal}>
-            Close
-          </Button>
-        </Flex>
-      </ModalFooter>
+      <Flex direction={isSmallerScreen ? "column" : "row"} gap="1">
+        {commission.status === true ? (
+          <>
+            <Button colorScheme="green" onClick={handleCompleteCommission}>
+              Complete Commission
+            </Button>
+            <Button colorScheme="yellow" onClick={handleUpdateCommission}>
+              Update Commission
+            </Button>
+          </>
+        ) : (
+          <></>
+        )}
+        <Button colorScheme="red" onClick={handleOpenDeleteModal}>
+          Delete Commission
+        </Button>
+        <Button colorScheme="blue" mr={3} onClick={closeModal}>
+          Close
+        </Button>
+      </Flex>
+    </ModalFooter>
 
       <Modal
         isOpen={isDeleteModalOpen}

@@ -11,6 +11,8 @@ import {
   ModalCloseButton,
   Heading,
   Image,
+  useBreakpointValue,
+  Text,
 } from "@chakra-ui/react";
 import CommissionPost from "../components/CommissionPost";
 
@@ -20,6 +22,9 @@ import orangeLight from "../assets/images/orangelight.png";
 const Commissions = ({ onHandleUpdateCommission, commissions, user, onHandleDeleteCommission }) => {
   const [activeCommissionIndex, setActiveCommissionIndex] = useState(null);
 
+  const headingSize = useBreakpointValue({ base: "15px", md: "md", lg: "lg", xl: "xl" });
+  const textSize = useBreakpointValue({ base: "12px", md: "md", lg: "lg", xl: "xl" });
+  const imageSize = useBreakpointValue({ base: "25px", md: "40px", lg: "60px", xl: "60px" });
 
   const openModal = (index) => {
     console.log("OPEN MODAL")
@@ -48,7 +53,7 @@ const Commissions = ({ onHandleUpdateCommission, commissions, user, onHandleDele
         commissions.map((commission, index) => (
           <Flex
             key={commission._id}
-            p={5}
+            p={2}
             shadow="md"
             borderWidth="1px"
             flex="1"
@@ -58,12 +63,13 @@ const Commissions = ({ onHandleUpdateCommission, commissions, user, onHandleDele
             justifyContent="center"
             textAlign="center"
             bg="gray.50"
-            m={5}
+            m={3}
             onClick={() => openModal(index)}
             cursor="pointer"
           >
             <Box
-              p={5}
+              pr={2}
+              pl={2}
               flex="1"
               w="50vw"
               flexDirection="column"
@@ -72,18 +78,18 @@ const Commissions = ({ onHandleUpdateCommission, commissions, user, onHandleDele
               textAlign="center"
               m={5}
             >
-              <Heading size="">{`~ ${commission.commissionTitle} ~`}</Heading>
-              <p>{`${commission.commissionDescription}`}</p>
+              <Heading fontSize={headingSize} size="">{`${commission.commissionTitle}`}</Heading>
+              <Text fontSize={textSize}>{`${commission.commissionDescription}`}</Text>
             </Box>
             {commission.status ? (
               <Image
-                boxSize="60px"
+                boxSize={imageSize}
                 objectFit="cover"
                 src={orangeLight}
                 alt="active"
               ></Image>
             ) : (
-              <Image boxSize="60px"
+              <Image boxSize={imageSize}
               objectFit="cover" src={greenLight} alt="complete"></Image>
             )}
             {/* ... Other commission details */}

@@ -59,8 +59,8 @@ function App() {
         <ChakraProvider>
           <Flex flexDirection="column">
             <Sidebar />
-            <Box flex="1" zIndex="1">
             <SearchBar />
+            <Box flex="1" zIndex="1">
             <Routes>
               {/* <Header currentPath={currentPath} /> */}
               <Route path ="/" element={<Home />} />
@@ -76,8 +76,8 @@ function App() {
               <Route path="/post/:id" element={<Post />} />
               </Routes>
             </Box>
-            <Footer position="sticky" bottom={0}/>
           </Flex>
+          <Footer position="sticky" bottom={0}/>
         </ChakraProvider>
       </div>
     </ApolloProvider>
