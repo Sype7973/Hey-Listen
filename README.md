@@ -77,7 +77,7 @@ For usage of this application, visit the [Hey! Listen!](https://hey-listen-sound
 
 Presentation slides: 
 
-[@Presentation]( **INSERT LINK HERE**)
+[@Presentation](https://docs.google.com/presentation/d/1xaL9z1au6VWrvcKnAQohFeYjdJ_MVHoTYoNzXtikf0o/edit?usp=sharing)
 
 Planning documents: 
 
@@ -88,11 +88,11 @@ Planning documents:
 
 ## Application Preview
 ### `Hey! Listen! Home`
-![Hey! Listen! Home](./client/src/assets/images/emptycart.png)
+![Hey! Listen! Home](./client/src/assets/images/home.png)
 ### `Hey! Listen! Dashboard`
-![Hey! Listen! Dashboard](./client/src/assets/images/fullcart.png)
+![Hey! Listen! Dashboard](./client/src/assets/images/dash.png)
 ### `Hey! Listen! My Profile`
-![Hey! Listen! My Profile](./client/src/assets/images/orderhistory.png)
+![Hey! Listen! My Profile](./client/src/assets/images/profile.png)
 ### `Hey! Listen! Signup`
 ![Hey! Listen! Signup](./client/src/assets/images/signup.png)
 

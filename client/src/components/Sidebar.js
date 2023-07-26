@@ -12,6 +12,7 @@ import {
   DrawerContent,
   DrawerCloseButton,
   Image,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { FiMenu, FiHome, FiUser } from "react-icons/fi";
 import { BsPencilSquare } from "react-icons/bs";
@@ -34,6 +35,10 @@ export default function Sidebar() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
+
+  const navHeight = useBreakpointValue({ base: '90vh', sm: '90vh', md: '95vh', lg: '95vh' });
+  const navWidth = useBreakpointValue({ base: '160px', sm: '160px', md: '200px', lg: '200px' });
+
 
   const location = useLocation();
 // use effect to fetch user profile
@@ -98,11 +103,11 @@ export default function Sidebar() {
           >
             <DrawerOverlay />
             <DrawerContent
-              style={{ width: "200px" }}
+              style={{ width: navWidth }}
               align="center"
               ml="5"
               mt="2.5vh"
-              h="95vh"
+              h={navHeight}
               border="1px solid rgba(0, 0, 0, 0.08)"
               boxShadow="8px 4px 6px 0 rgba(0, 0, 0, 0.3)"
               borderRadius={navSize === "small" ? "15px" : "30px"}
