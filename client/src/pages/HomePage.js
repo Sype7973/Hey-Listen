@@ -36,7 +36,7 @@ const HomePage = () => {
     >
       <VStack spacing={4} textAlign="center">
         <Heading as="h1" size="xl" color="white">
-          Hey Listen!
+          Hey! Listen!
         </Heading>
         <Text fontSize="xl" color="white">
           Make music with everyone{user ? `, ${user.username}` : ""}
