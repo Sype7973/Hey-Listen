@@ -36,7 +36,7 @@ export default function Sidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
 
-  const navHeight = useBreakpointValue({ base: '70vh', sm: '70vh', md: '95vh', lg: '95vh' });
+  const navHeight = useBreakpointValue({ base: '80vh', sm: '80vh', md: '95vh', lg: '95vh' });
   const navWidth = useBreakpointValue({ base: '160px', sm: '160px', md: '200px', lg: '200px' });
 
 
