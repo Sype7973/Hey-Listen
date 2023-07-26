@@ -11,6 +11,7 @@ import {
   Divider,
   Avatar,
   Button,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GET_PROFILE, GET_ME } from "../utils/queries";
@@ -95,6 +96,8 @@ const Profile = () => {
     }
   }, [data, meData]);
 
+  const headingSize = useBreakpointValue({ base: "xl", md: "2xl", lg: "3xl", xl: "4xl" });
+  const textSize = useBreakpointValue({ base: "sm", md: "md" , lg: "2xl", xl: "3xl"});
 
   console.log(user);
 // loading statement before rendering
@@ -121,32 +124,32 @@ const Profile = () => {
       <Flex direction="column" justify="center" alignItems="center">
         <Flex
           my="20px"
-          width="80%"
+          width="90%"
           direction="column"
           justify="center"
           alignItems="center"
-          border="8px"
           borderColor="black"
+          borderRadius="md"
+          shadow="md"
         >
           <Card
             width="100%"
             h="auto"
             bg="black"
             color="teal.500"
-            borderRadius="none"
           >
           <CardBody textAlign="center">
-            <Flex direction="row" alignItems="center" justifyContent="center">
+            <Flex direction="column" alignItems="center" justifyContent="center">
             {user && user.userType === "Producer" ? (
             <Avatar
-            width="20%"
+            width="10%"
             height="auto"
             size="2xl"
             src={user ? ProducerPng : ProducerPng}
             />
             ) : (
               <Avatar
-            width="20%"
+            width="10%"
             height="auto"
             size="2xl"
             src={user ? ArtistPng : ArtistPng}
@@ -159,10 +162,10 @@ const Profile = () => {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Heading color="teal.500" letterSpacing={10} size="4xl">
+                  <Heading color="teal.500" letterSpacing={10} size="4xl" fontSize={textSize}>
                     {user.username}
                   </Heading>
-                  <Text letterSpacing={5}>{user.userType}</Text>
+                  <Text fontSize={headingSize}letterSpacing={5}>{user.userType}</Text>
                 </Flex>
               </Flex>
             </CardBody>
@@ -173,7 +176,7 @@ const Profile = () => {
             bg="teal.500"
             direction="row"
             width="100%"
-            borderRadius="none"
+            borderRadius="md"
           >
             <Flex
               minHeight="50vh"
@@ -181,6 +184,7 @@ const Profile = () => {
               bg="white"
               direction="column"
               width="30%"
+              borderRadius="md"
             >
               {" "}
               <Flex
@@ -197,23 +201,25 @@ const Profile = () => {
                   align="center"
                   transition="0.3s ease-in-out"
                 >
-                  <Heading as="h3" size="sm">
+                  <Heading fontSize={textSize} as="h3" size="sm">
                     {user ? user.username : ""}
                   </Heading>
-                  <Text color="gray">{user ? user.userType : ""}</Text>
+                  <Text fontSize={textSize} color="gray">{user ? user.userType : ""}</Text>
                 </Flex>
               </Flex>
             </Flex>
             <Flex w="100%">
-              <Card w="100%" h="auto" borderRadius="none">
+              <Card w="100%" h="auto" borderRadius="md">
                 <CardBody>
                   <Flex alignItems="center" justifyContent="center">
                     <Box w="70%" fontSize="25px">
-                      <Heading fontSize="50px">Profile</Heading>
+                      <Heading fontSize={headingSize}>Profile</Heading>
                       <Divider borderWidth="4px" borderColor="black" />
-                      <Text>
+                      <Text fontSize={textSize}>
                         Contact:
                         <Button
+                          fontSize={textSize}
+                          mb={1}
                           variant="ghost"
                           onClick={() =>
                             handleContactPoster(user.email, user.postTitle)
@@ -224,12 +230,15 @@ const Profile = () => {
                       </Text>
                       <Divider borderWidth="0.5px" borderColor="black" />
 
-                      <Text>Bio: {user.bio}</Text>
+                      <Text fontWeight="bold" fontSize={textSize}>Bio: </Text>
+                      <Text fontSize={textSize}>
+                      {user.bio}
+                      </Text>
                       <Divider borderWidth="0.5px" borderColor="black" />
 
                       {user.musicLinks ? (
                         <Flex direction="column">
-                          <Text fontWeight="bold">Links to music:</Text>
+                          <Text fontWeight="bold" fontSize={textSize}>Links to music:</Text>
                           <Flex direction="column">
                             {user.musicLinks.map((link) => (
                               <a
@@ -243,7 +252,7 @@ const Profile = () => {
                           </Flex>
                         </Flex>
                       ) : (
-                        <Text>Links to music: None</Text>
+                        <Text fontSize={textSize}>Links to music: None</Text>
                       )}
                       <Divider borderWidth="0.5px" borderColor="black" />
                     </Box>

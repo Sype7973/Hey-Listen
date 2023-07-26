@@ -60,6 +60,7 @@ const MyProfile = () => {
     lg: "2xl",
     xl: "3xl",
   });
+
   const largeScreen = useBreakpointValue({ base: false, lg: true });
   const mediumScreen = useBreakpointValue({ base: false, md: true });
   const settingsSize = useBreakpointValue({

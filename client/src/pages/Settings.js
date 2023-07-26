@@ -20,9 +20,10 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { GET_ME } from "../utils/queries";
-import logoPng from "../assets/images/logo.png";
 import SettingsComponent from "../components/SettingsComponent";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
+import ArtistPng from "../assets/images/Artist.png";
+import ProducerPng from "../assets/images/Producer.png";
 
 const Settings = () => {
   const { data, refetch } = useQuery(GET_ME);
@@ -111,13 +112,22 @@ const Settings = () => {
                     <Link to="/my-profile">
                       <Icon as={MdOutlineKeyboardBackspace} boxSize="50px" />
                     </Link>
-                  </Flex>
-                  <Avatar
-                    width="20%"
-                    height="auto"
-                    size="2xl"
-                    src={user ? "avatar-1.jpg" : logoPng}
+                  </Flex >
+                  {user && user.userType === "Producer" ? (
+                <Avatar 
+                  width="10%"
+                  height="auto"
+                  size="2xl"
+                  src={user ? ProducerPng : ProducerPng}
                   />
+                  ) : (
+                  <Avatar
+                 width="10%"
+                 height="auto"
+                  size="2xl"
+                  src={user ? ArtistPng : ArtistPng}
+                  />
+                  )}
                   <Flex
                     width="60%"
                     direction="column"
