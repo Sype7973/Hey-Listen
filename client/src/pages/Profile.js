@@ -17,6 +17,7 @@ import { GET_PROFILE, GET_ME } from "../utils/queries";
 import spinner from "../assets/images/spinner.gif";
 import ArtistPng from "../assets/images/Artist.png";
 import ProducerPng from "../assets/images/Producer.png";
+import ReactPlayer from "react-player";
 // function that maps and renders commissions
 const Profile = () => {
   const { username } = useParams();
@@ -38,9 +39,7 @@ const Profile = () => {
   const [me, setMe] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-
-
-// use effect to check if user is logged in
+  // use effect to check if user is logged in
   useEffect(() => {
     if (me && me.username && username) {
       if (me.username === username) {
@@ -48,11 +47,11 @@ const Profile = () => {
       }
     }
   }, [me, username, navigate]);
-//  use effect to console log username
+  //  use effect to console log username
   useEffect(() => {
     console.log("Received username:", username);
   }, [username]);
-// use effect to refetch username and me
+  // use effect to refetch username and me
   useEffect(() => {
     const handleInitialRefetch = async () => {
       await usernameRefetch();
@@ -61,7 +60,7 @@ const Profile = () => {
     handleInitialRefetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-// handles contact poster button
+  // handles contact poster button
   const handleContactPoster = (postId, email) => {
     if (me && me.username) {
       const subject = `Hey! Listen! I'd like to get in touch!`;
@@ -80,7 +79,7 @@ const Profile = () => {
       window.open(mailtoLink, "_blank");
     }
   };
-// use effect to set loading to false
+  // use effect to set loading to false
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -95,9 +94,8 @@ const Profile = () => {
     }
   }, [data, meData]);
 
-
   console.log(user);
-// loading statement before rendering
+  // loading statement before rendering
   if (isLoading || meLoading || usernameLoading) {
     return (
       <Flex
@@ -135,23 +133,23 @@ const Profile = () => {
             color="teal.500"
             borderRadius="none"
           >
-          <CardBody textAlign="center">
-            <Flex direction="row" alignItems="center" justifyContent="center">
-            {user && user.userType === "Producer" ? (
-            <Avatar
-            width="20%"
-            height="auto"
-            size="2xl"
-            src={user ? ProducerPng : ProducerPng}
-            />
-            ) : (
-              <Avatar
-            width="20%"
-            height="auto"
-            size="2xl"
-            src={user ? ArtistPng : ArtistPng}
-              />
-               )}
+            <CardBody textAlign="center">
+              <Flex direction="row" alignItems="center" justifyContent="center">
+                {user && user.userType === "Producer" ? (
+                  <Avatar
+                    width="20%"
+                    height="auto"
+                    size="2xl"
+                    src={user ? ProducerPng : ProducerPng}
+                  />
+                ) : (
+                  <Avatar
+                    width="20%"
+                    height="auto"
+                    size="2xl"
+                    src={user ? ArtistPng : ArtistPng}
+                  />
+                )}
                 <Flex
                   width="60%"
                   direction="column"
@@ -232,13 +230,13 @@ const Profile = () => {
                           <Text fontWeight="bold">Links to music:</Text>
                           <Flex direction="column">
                             {user.musicLinks.map((link) => (
-                              <a
-                                href={link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {link}
-                              </a>
+                              <Box>
+                                <ReactPlayer
+                                  height="40%"
+                                  width="100%"
+                                  url={link}
+                                />
+                              </Box>
                             ))}
                           </Flex>
                         </Flex>
