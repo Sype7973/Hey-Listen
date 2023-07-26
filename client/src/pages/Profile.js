@@ -16,6 +16,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { GET_PROFILE, GET_ME } from "../utils/queries";
 import spinner from "../assets/images/spinner.gif";
 import logoPng from "../assets/images/logo.png";
+import ArtistPng from "../assets/images/Artist.png";
+import ProducerPng from "../assets/images/Producer.png";
 // function that maps and renders commissions
 const Profile = () => {
   const { username } = useParams();
@@ -134,14 +136,23 @@ const Profile = () => {
             color="teal.500"
             borderRadius="none"
           >
-            <CardBody textAlign="center">
-              <Flex direction="row" alignItems="center" justifyContent="center">
-                <Avatar
-                  width="20%"
-                  height="auto"
-                  size="2xl"
-                  src={user ? "avatar-1.jpg" : logoPng}
-                />
+          <CardBody textAlign="center">
+            <Flex direction="row" alignItems="center" justifyContent="center">
+            {user && user.userType === "Producer" ? (
+            <Avatar
+            width="20%"
+            height="auto"
+            size="2xl"
+            src={user ? ProducerPng : ProducerPng}
+            />
+            ) : (
+              <Avatar
+            width="20%"
+            height="auto"
+            size="2xl"
+            src={user ? ArtistPng : ArtistPng}
+              />
+               )}
                 <Flex
                   width="60%"
                   direction="column"
