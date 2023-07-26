@@ -45,13 +45,6 @@ const HomePage = () => {
           <Button
             colorScheme="teal"
             size="lg"
-            // onClick={() => {
-            //   if (data) {
-            //     window.location.href = '/post';
-            //   } else {
-            //     window.location.href = '/signup';
-            //   }
-            // }}
           >
             Get Started
           </Button>
