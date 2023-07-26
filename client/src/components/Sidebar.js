@@ -199,6 +199,8 @@ export default function Sidebar() {
                           icon={MdLogout}
                           title="Logout"
                           isActive={location.pathname === "/logout"}
+                          position="fixed"
+                          bottom="10px"
                         />
                       </Link>
                     ) : (
@@ -221,6 +223,8 @@ export default function Sidebar() {
                             icon={MdLogin}
                             title="Login"
                             isActive={location.pathname === "/login"}
+                            position="fixed"
+                            bottom="10px"
                           />
                         </Link>
                       </Box>
