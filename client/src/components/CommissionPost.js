@@ -32,15 +32,15 @@ const CommissionPost = ({
   );
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
+// handles modal for deleting commission
   const handleOpenDeleteModal = () => {
     setIsDeleteModalOpen(true);
   };
-
+// handles modal for deleting commission
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
-
+// handles updating a commission
   const handleUpdateCommission = () => {
     const updatedCommission = {
       ...commission,
@@ -51,7 +51,7 @@ const CommissionPost = ({
   };
 
   const [date] = useState(new Date());
-
+// handles completing a commission
   const handleCompleteCommission = () => {
     const updatedCommission = {
       ...commission,
@@ -60,11 +60,11 @@ const CommissionPost = ({
     };
     onUpdateCommission(updatedCommission);
   };
-
+// handles deleting a commission
   const handleDeleteCommission = () => {
     onDeleteCommission(commission._id);
   };
-
+// formats date
   const formatDate = (timestamp) => {
     if (timestamp) {
       const date = new Date(parseInt(timestamp));
@@ -75,7 +75,9 @@ const CommissionPost = ({
     }
     return "Invalid Date";
   };
+  // media query for smaller screens
   const isSmallerScreen = useBreakpointValue({ base: true, md: false });
+  // formats date
   const updatedDeadline = formatDate(commission.deadline);
   const updatedCreatedAt = formatDate(commission.createdAt);
 

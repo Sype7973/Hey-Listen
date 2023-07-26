@@ -12,7 +12,6 @@ import {
   Divider,
   Icon,
   useBreakpointValue,
-  Stack,
 } from "@chakra-ui/react";
 import { GET_ME, GET_COMMISSIONS } from "../utils/queries";
 import { MdSettings } from "react-icons/md";
@@ -50,7 +49,7 @@ const MyProfile = () => {
   const settingsSize = useBreakpointValue({ base: "30px", md: "50px", lg: "50px", xl: "50px" });
   const userSize = useBreakpointValue({ base: "30px", md: "50px", lg: "50px", xl: "50px" });
 
-
+// useEffect to set commissions to state
   useEffect(() => {
     // Check if commissionData and getCommissions are available
     if (commissionData && commissionData.getCommissions && user && user._id) {
@@ -83,7 +82,7 @@ const MyProfile = () => {
   console.log(commissions);
 
   console.log(user);
-
+// useEffect to refetch data
   useEffect(() => {
     const handleInitialRefetch = async () => {
       await refetch();
@@ -91,7 +90,7 @@ const MyProfile = () => {
     handleInitialRefetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+// useEffect to set isLoading to false
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -101,7 +100,7 @@ const MyProfile = () => {
       setUser(data.me);
     }
   }, [data]);
-
+// handles deleting a commission
   const handleDeleteCommission = async (commissionId) => {
     try {
       await deleteCommission({
@@ -113,7 +112,7 @@ const MyProfile = () => {
       console.error(error);
     }
   };
-
+// handles updating a commission
   const handleUpdateCommission = async (updatedCommission) => {
     console.log("UPDATED COMMISSION");
     console.log(updatedCommission);
@@ -163,14 +162,16 @@ const MyProfile = () => {
             justify="center"
             alignItems="center"
             border="8px"
-            borderColor="black"
+            borderColor="blackAlpha.200"
+            borderRadius="md"
+            shadow={largeScreen ? "lg" : "md"}
           >
             <Card
               width="100%"
               h="auto"
               bg="black"
               color="teal.500"
-              borderRadius="none"
+              opacity={largeScreen ? "1" : "0.8"}
             >
               <Flex flexDir="row" alignItems="center"> 
                 <Flex width="10%"></Flex>
@@ -216,7 +217,8 @@ const MyProfile = () => {
                 alignItems="center"
                 bg="white"
                 direction="column"
-                width={largeScreen ? "70%" : "100%"}
+                width={largeScreen ? "60%" : "100%"}
+                borderRadius="md"
               >
                 {commissions ? (
                   <Box h="auto" width="100%">
@@ -224,8 +226,10 @@ const MyProfile = () => {
                       width="100%"
                       marginBottom="20px"
                       display={largeScreen ? "none" : "block"}
+                      borderRadius="md"
                     >
-                      <Card width="100%" borderRadius="none" >
+                      <Card 
+                      width="100%">
                         <CardBody textAlign="center">
                           <Heading fontSize={textSize}>Profile</Heading>
                           <Divider borderWidth="4px" borderColor="black" />

@@ -21,27 +21,27 @@ import orangeLight from "../assets/images/orangelight.png";
 
 const Commissions = ({ onHandleUpdateCommission, commissions, user, onHandleDeleteCommission }) => {
   const [activeCommissionIndex, setActiveCommissionIndex] = useState(null);
-
+// media query for smaller screens
   const headingSize = useBreakpointValue({ base: "15px", md: "md", lg: "lg", xl: "xl" });
   const textSize = useBreakpointValue({ base: "12px", md: "md", lg: "lg", xl: "xl" });
   const imageSize = useBreakpointValue({ base: "25px", md: "40px", lg: "60px", xl: "60px" });
-
+// handles opening modal
   const openModal = (index) => {
     console.log("OPEN MODAL")
     setActiveCommissionIndex(index);
   };
   console.log(activeCommissionIndex)
 
-
+// handles closing modal
   const closeModal = () => {
     setActiveCommissionIndex(null);
   };
-
+// handles updating a commission
   const handleUpdateCommission = async (updatedCommission) => {
     onHandleUpdateCommission(updatedCommission);
     closeModal();
   };
-
+// handles deleting a commission
   const handleDeleteCommission = async (commissionId) => {
     onHandleDeleteCommission(commissionId);
     closeModal();

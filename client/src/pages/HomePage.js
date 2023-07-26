@@ -5,6 +5,7 @@ import { Button, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import { GET_ME } from "../utils/queries";
 import { useQuery } from "@apollo/client";
 
+// renders homepage with a button to get started
 const HomePage = () => {
   const [user, setUser] = useState(null);
 

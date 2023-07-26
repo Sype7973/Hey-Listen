@@ -35,7 +35,7 @@ function Signup() {
 
   const [loggingIn, setLoggingIn] = useState(false);
   const [addUser, { error }] = useMutation(ADD_USER);
-
+// handles form submit for signup
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const handleToast = () => {
@@ -69,29 +69,29 @@ function Signup() {
       console.error(e);
     }
   };
-
+// handles form change for signup
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormState({ ...formState, [name]: value });
   };
-
+// handles music links change for signup
   const handleMusicLinksChange = (event, index) => {
     const { value } = event.target;
     const updatedLinks = [...formState.musicLinks];
     updatedLinks[index] = value;
     setFormState({ ...formState, musicLinks: updatedLinks });
   };
-
+// handles adding music links for signup
   const handleAddLink = () => {
     setFormState({ ...formState, musicLinks: [...formState.musicLinks, ""] });
   };
-
+// handles removing music links for signup
   const handleRemoveLink = (index) => {
     const updatedLinks = [...formState.musicLinks];
     updatedLinks.splice(index, 1);
     setFormState({ ...formState, musicLinks: updatedLinks });
   };
-
+// future dev for profile picture
   const handleProfilePictureChange = (event) => {
     // Handle the profile picture upload here (e.g., using FileReader or FormData)
   };

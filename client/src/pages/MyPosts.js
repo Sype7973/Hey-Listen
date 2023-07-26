@@ -17,6 +17,7 @@ import Auth from "../utils/auth";
 import UpdatePostModal from "../components/UpdatePostModal";
 import { Link } from "react-router-dom";
 
+// format date function
 const formatDate = (timestamp) => {
   if (timestamp) {
     const date = new Date(parseInt(timestamp));
@@ -44,7 +45,7 @@ const MyPosts = () => {
     deadline: new Date(),
   });
   const [activePostIndex, setActivePostIndex] = useState(null);
-
+// use effect to set loading to false
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -53,7 +54,7 @@ const MyPosts = () => {
 
   const myPosts = user.posts ? user.posts.filter((post) => post.username === loggedInUsername) : [];
 
-
+// handles the remove post button
   const handleRemovePost = (postId) => {
     console.log(`Removing the post with ID: ${postId}`);
     removePost({
@@ -70,7 +71,7 @@ const MyPosts = () => {
     });
   };
   
-  
+  // handles opening the modal
   const handleOpenModal = (post) => {
   
     setSelectedPostData({
@@ -83,12 +84,12 @@ const MyPosts = () => {
     setActivePostIndex(post._id);
     setIsModalOpen(true);
   };
-
+// handles closing the modal
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setActivePostIndex(null);
   };
-
+// handles updating the post from modal
   const handleModalFormSubmit = async () => {
     console.log("Updating Post:", selectedPostData);
     try {
