@@ -207,6 +207,7 @@ const Settings = () => {
                         setInputChange={setInputChange}
                         setChangePassword={setChangePassword}
                         changePassword={changePassword}
+                        refetch={refetch}
                       />
                     </Flex>
                   </CardBody>

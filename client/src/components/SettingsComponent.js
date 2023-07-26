@@ -23,7 +23,7 @@ import { UPDATE_USER, DELETE_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
 
 // for settings page
-const SettingsComponent = ({ title, userData, setInputChange, setChangePassword, changePassword }) => {
+const SettingsComponent = ({ title, userData, setInputChange, setChangePassword, changePassword, refetch }) => {
   console.log(userData);
 
   const [updateUser] = useMutation(UPDATE_USER);
@@ -50,6 +50,17 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
     bio: bio,
     password: password,
   });
+
+
+  const [musicLinksState, setMusicLinksState] = useState(userData.musicLinks);
+
+  const handleAddLink = async () => {
+    setInputChange(true);
+    setMusicLinksState([...musicLinksState, '']);
+    updateUser({ variables: { id: userData._id, musicLinks: [...musicLinksState, ''] } });
+    await refetch();
+  };
+
 
   useEffect(() => {
     console.log(formState);
@@ -86,31 +97,50 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
     });
   };
 // handles music links change
-  const handleMusicLinksChange = (index, value) => {
-    setInputChange(true);
-    const updatedMusicLinks = [...formState.musicLinks];
-    updatedMusicLinks[index] = value;
 
-    setFormState({
-      ...formState,
-      musicLinks: updatedMusicLinks,
-    });
-  };
+const handleMusicLinksChange = (index, value) => {
+  setInputChange(true);
+  const updatedMusicLinks = [...musicLinksState];
+  updatedMusicLinks[index] = value;
+
+  setMusicLinksState(updatedMusicLinks);
+  setFormState({
+    ...formState,
+    musicLinks: updatedMusicLinks,
+  });
+};
+
+  //  const handleMusicLinksChange = (index, value) => {
+  //   setInputChange(true);
+  //   const updatedMusicLinks = [...formState.musicLinks];
+  //   updatedMusicLinks[index] = value;
+
+  //   setFormState({
+  //     ...formState,
+  //     musicLinks: updatedMusicLinks,
+  //   });
+  // };
+
 // handles overall update
   const handleUpdate = async () => {
     setInputChange(false);
     setChangePassword(false);
+
+    const filteredMusicLinks = musicLinksState.filter(link => link !== undefined && link !== null && link !== '');
+
 // deconstructs user data
     const updateData = {
       id: userData._id,
       username: formState.username,
       email: formState.email,
       userType: formState.userType,
-      musicLinks: formState.musicLinks,
+      musicLinks: filteredMusicLinks,
       profilePicture: formState.profilePicture,
       bio: formState.bio,
     };
 
+    setMusicLinksState(filteredMusicLinks);
+    
     if (formState.password !== password) {
       updateData.password = formState.password;
     }
@@ -146,7 +176,7 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
                   </Td>
                 </Tr>
                 <Tr>
-                  <Td> Music Links: </Td>
+                  <Td> Music Links: <Button onClick={handleAddLink}>Add Link</Button></Td>
                   <Td>
                     <Flex
                       justifyContent="right"
@@ -162,7 +192,7 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
                             name="musicLinks"
                             defaultValue={`${link}`}
                             onChange={(event) =>
-                              handleMusicLinksChange(index, event.target.value)
+                            handleMusicLinksChange(index, event.target.value)
                             }
                           ></Input>
                         ))
