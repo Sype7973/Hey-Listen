@@ -18,6 +18,7 @@ import { GET_PROFILE, GET_ME } from "../utils/queries";
 import spinner from "../assets/images/spinner.gif";
 import ArtistPng from "../assets/images/Artist.png";
 import ProducerPng from "../assets/images/Producer.png";
+import ReactPlayer from "react-player";
 // function that maps and renders commissions
 const Profile = () => {
   const { username } = useParams();
@@ -39,9 +40,7 @@ const Profile = () => {
   const [me, setMe] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-
-
-// use effect to check if user is logged in
+  // use effect to check if user is logged in
   useEffect(() => {
     if (me && me.username && username) {
       if (me.username === username) {
@@ -49,11 +48,11 @@ const Profile = () => {
       }
     }
   }, [me, username, navigate]);
-//  use effect to console log username
+  //  use effect to console log username
   useEffect(() => {
     console.log("Received username:", username);
   }, [username]);
-// use effect to refetch username and me
+  // use effect to refetch username and me
   useEffect(() => {
     const handleInitialRefetch = async () => {
       await usernameRefetch();
@@ -62,7 +61,7 @@ const Profile = () => {
     handleInitialRefetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-// handles contact poster button
+  // handles contact poster button
   const handleContactPoster = (postId, email) => {
     if (me && me.username) {
       const subject = `Hey! Listen! I'd like to get in touch!`;
@@ -81,7 +80,7 @@ const Profile = () => {
       window.open(mailtoLink, "_blank");
     }
   };
-// use effect to set loading to false
+  // use effect to set loading to false
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -96,11 +95,21 @@ const Profile = () => {
     }
   }, [data, meData]);
 
-  const headingSize = useBreakpointValue({ base: "xl", md: "2xl", lg: "3xl", xl: "4xl" });
-  const textSize = useBreakpointValue({ base: "sm", md: "md" , lg: "2xl", xl: "3xl"});
+  const headingSize = useBreakpointValue({
+    base: "xl",
+    md: "2xl",
+    lg: "3xl",
+    xl: "4xl",
+  });
+  const textSize = useBreakpointValue({
+    base: "sm",
+    md: "md",
+    lg: "2xl",
+    xl: "3xl",
+  });
 
   console.log(user);
-// loading statement before rendering
+  // loading statement before rendering
   if (isLoading || meLoading || usernameLoading) {
     return (
       <Flex
@@ -132,29 +141,28 @@ const Profile = () => {
           borderRadius="md"
           shadow="md"
         >
-          <Card
-            width="100%"
-            h="auto"
-            bg="black"
-            color="teal.500"
-          >
-          <CardBody textAlign="center">
-            <Flex direction="column" alignItems="center" justifyContent="center">
-            {user && user.userType === "Producer" ? (
-            <Avatar
-            width="10%"
-            height="auto"
-            size="2xl"
-            src={user ? ProducerPng : ProducerPng}
-            />
-            ) : (
-              <Avatar
-            width="10%"
-            height="auto"
-            size="2xl"
-            src={user ? ArtistPng : ArtistPng}
-              />
-               )}
+          <Card width="100%" h="auto" bg="black" color="teal.500">
+            <CardBody textAlign="center">
+              <Flex
+                direction="column"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {user && user.userType === "Producer" ? (
+                  <Avatar
+                    width="10%"
+                    height="auto"
+                    size="2xl"
+                    src={user ? ProducerPng : ProducerPng}
+                  />
+                ) : (
+                  <Avatar
+                    width="10%"
+                    height="auto"
+                    size="2xl"
+                    src={user ? ArtistPng : ArtistPng}
+                  />
+                )}
                 <Flex
                   width="60%"
                   direction="column"
@@ -162,10 +170,17 @@ const Profile = () => {
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Heading color="teal.500" letterSpacing={10} size="4xl" fontSize={textSize}>
+                  <Heading
+                    color="teal.500"
+                    letterSpacing={10}
+                    size="4xl"
+                    fontSize={textSize}
+                  >
                     {user.username}
                   </Heading>
-                  <Text fontSize={headingSize}letterSpacing={5}>{user.userType}</Text>
+                  <Text fontSize={headingSize} letterSpacing={5}>
+                    {user.userType}
+                  </Text>
                 </Flex>
               </Flex>
             </CardBody>
@@ -204,7 +219,9 @@ const Profile = () => {
                   <Heading fontSize={textSize} as="h3" size="sm">
                     {user ? user.username : ""}
                   </Heading>
-                  <Text fontSize={textSize} color="gray">{user ? user.userType : ""}</Text>
+                  <Text fontSize={textSize} color="gray">
+                    {user ? user.userType : ""}
+                  </Text>
                 </Flex>
               </Flex>
             </Flex>
@@ -230,24 +247,24 @@ const Profile = () => {
                       </Text>
                       <Divider borderWidth="0.5px" borderColor="black" />
 
-                      <Text fontWeight="bold" fontSize={textSize}>Bio: </Text>
-                      <Text fontSize={textSize}>
-                      {user.bio}
+                      <Text fontWeight="bold" fontSize={textSize}>
+                        Bio:{" "}
                       </Text>
+                      <Text fontSize={textSize}>{user.bio}</Text>
                       <Divider borderWidth="0.5px" borderColor="black" />
 
                       {user.musicLinks ? (
                         <Flex direction="column">
-                          <Text fontWeight="bold" fontSize={textSize}>Links to music:</Text>
+                          <Text fontWeight="bold" fontSize={textSize}>
+                            Links to music:
+                          </Text>
                           <Flex direction="column">
                             {user.musicLinks.map((link) => (
-                              <a
-                                href={link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {link}
-                              </a>
+                              <ReactPlayer
+                                height="40%"
+                                width="100%"
+                                url={link}
+                              />
                             ))}
                           </Flex>
                         </Flex>
