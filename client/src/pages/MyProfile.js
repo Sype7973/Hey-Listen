@@ -20,6 +20,7 @@ import Commissions from "./Commission";
 import spinner from "../assets/images/spinner.gif";
 import { UPDATE_COMMISSION, DELETE_COMMISSION } from "../utils/mutations";
 // import MyPosts from "./MyPosts";
+import ReactPlayer from "react-player";
 
 // function that maps and renders commissions
 const MyProfile = () => {
@@ -40,16 +41,47 @@ const MyProfile = () => {
   const [activeCommissions, setActiveCommissions] = useState([]);
   const [completedCommissions, setCompletedCommissions] = useState([]);
 
-//  Chakra UI breakpoints
-  const headingSize = useBreakpointValue({ base: "lg", md: "xl", lg: "1xl", xl: "2xl" });
-  const textSize = useBreakpointValue({ base: "sm", md: "md" , lg: "2xl", xl: "3xl"});
-  const bioTextSize = useBreakpointValue({ base: "sm", md: "md", lg: "2xl", xl: "3xl" });
+  //  Chakra UI breakpoints
+  const headingSize = useBreakpointValue({
+    base: "lg",
+    md: "xl",
+    lg: "1xl",
+    xl: "2xl",
+  });
+  const textSize = useBreakpointValue({
+    base: "sm",
+    md: "md",
+    lg: "2xl",
+    xl: "3xl",
+  });
+  const bioTextSize = useBreakpointValue({
+    base: "sm",
+    md: "md",
+    lg: "2xl",
+    xl: "3xl",
+  });
   const largeScreen = useBreakpointValue({ base: false, lg: true });
   const mediumScreen = useBreakpointValue({ base: false, md: true });
-  const settingsSize = useBreakpointValue({ base: "30px", md: "50px", lg: "50px", xl: "50px" });
-  const userSize = useBreakpointValue({ base: "30px", md: "50px", lg: "50px", xl: "50px" });
+  const settingsSize = useBreakpointValue({
+    base: "30px",
+    md: "50px",
+    lg: "50px",
+    xl: "50px",
+  });
+  const userSize = useBreakpointValue({
+    base: "30px",
+    md: "50px",
+    lg: "50px",
+    xl: "50px",
+  });
 
-// useEffect to set commissions to state
+  const videoSize = useBreakpointValue({
+    base: "0em",
+    md: "md",
+    lg: "lg",
+  });
+
+  // useEffect to set commissions to state
   useEffect(() => {
     // Check if commissionData and getCommissions are available
     if (commissionData && commissionData.getCommissions && user && user._id) {
@@ -82,7 +114,7 @@ const MyProfile = () => {
   console.log(commissions);
 
   console.log(user);
-// useEffect to refetch data
+  // useEffect to refetch data
   useEffect(() => {
     const handleInitialRefetch = async () => {
       await refetch();
@@ -90,7 +122,7 @@ const MyProfile = () => {
     handleInitialRefetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-// useEffect to set isLoading to false
+  // useEffect to set isLoading to false
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -100,7 +132,7 @@ const MyProfile = () => {
       setUser(data.me);
     }
   }, [data]);
-// handles deleting a commission
+  // handles deleting a commission
   const handleDeleteCommission = async (commissionId) => {
     try {
       await deleteCommission({
@@ -112,7 +144,7 @@ const MyProfile = () => {
       console.error(error);
     }
   };
-// handles updating a commission
+  // handles updating a commission
   const handleUpdateCommission = async (updatedCommission) => {
     console.log("UPDATED COMMISSION");
     console.log(updatedCommission);
@@ -149,8 +181,6 @@ const MyProfile = () => {
     );
   }
 
-  
-
   return (
     <Box background="teal.500">
       {user ? (
@@ -173,18 +203,23 @@ const MyProfile = () => {
               color="teal.500"
               opacity={largeScreen ? "1" : "0.8"}
             >
-              <Flex flexDir="row" alignItems="center"> 
+              <Flex flexDir="row" alignItems="center">
                 <Flex width="10%"></Flex>
-                <CardBody textAlign="center" width="80%"> 
-                  <Heading color="teal.500" letterSpacing={10} size="4xl" fontSize={userSize}>
+                <CardBody textAlign="center" width="80%">
+                  <Heading
+                    color="teal.500"
+                    letterSpacing={10}
+                    size="4xl"
+                    fontSize={userSize}
+                  >
                     {user.username}
                   </Heading>
                   <Text letterSpacing={5} fontSize={textSize}>
                     {user.userType}
                   </Text>
                 </CardBody>
-                {largeScreen ? ( 
-                  <Flex justifyContent="center" alignItems="center">
+                {largeScreen ? (
+                  <Flex width="10%" justifyContent="center" alignItems="center">
                     <Link to="/settings">
                       <Icon as={MdSettings} boxSize={settingsSize} />
                     </Link>
@@ -228,8 +263,7 @@ const MyProfile = () => {
                       display={largeScreen ? "none" : "block"}
                       borderRadius="md"
                     >
-                      <Card 
-                      width="100%">
+                      <Card width="100%">
                         <CardBody textAlign="center">
                           <Heading fontSize={textSize}>Profile</Heading>
                           <Divider borderWidth="4px" borderColor="black" />
@@ -244,14 +278,17 @@ const MyProfile = () => {
                               <Text fontWeight="bold">Links to music:</Text>
                               <Flex direction="column">
                                 {user.musicLinks.map((link, index) => (
-                                  <a
-                                    key={index}
-                                    href={link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {link}
-                                  </a>
+                                  <Box>
+                                    {/* <a
+                                      key={index}
+                                      href={link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      {link}
+                                    </a> */}
+                                    <ReactPlayer height="40%" width="100%" url={link} />
+                                  </Box>
                                 ))}
                               </Flex>
                             </Flex>
@@ -263,8 +300,17 @@ const MyProfile = () => {
                       </Card>
                     </Box>
 
-                    <Card width="100%" h="auto" borderRadius="none" mb={largeScreen ? "0": "20px"}>
-                      <CardBody width="100%" textAlign="center" paddingX={mediumScreen ? "1rem": "2rem"}>
+                    <Card
+                      width="100%"
+                      h="auto"
+                      borderRadius="none"
+                      mb={largeScreen ? "0" : "20px"}
+                    >
+                      <CardBody
+                        width="100%"
+                        textAlign="center"
+                        paddingX={mediumScreen ? "1rem" : "2rem"}
+                      >
                         <Heading size={headingSize}>Active Commissions</Heading>
                         <Commissions
                           commissions={activeCommissions}
@@ -274,9 +320,19 @@ const MyProfile = () => {
                         />
                       </CardBody>
                     </Card>
-                    <Card width="100%" h="auto" borderRadius="none" mb={largeScreen ? "0": "20px"}>
-                      <CardBody textAlign="center" paddingX={mediumScreen ? "1rem": "2rem"}>
-                        <Heading size={headingSize}>Completed Commissions</Heading>
+                    <Card
+                      width="100%"
+                      h="auto"
+                      borderRadius="none"
+                      mb={largeScreen ? "0" : "20px"}
+                    >
+                      <CardBody
+                        textAlign="center"
+                        paddingX={mediumScreen ? "1rem" : "2rem"}
+                      >
+                        <Heading size={headingSize}>
+                          Completed Commissions
+                        </Heading>
                         <Commissions
                           commissions={completedCommissions}
                           user={user}
@@ -289,7 +345,9 @@ const MyProfile = () => {
                 ) : (
                   <Card width="100%" h="auto">
                     <CardBody textAlign="center">
-                      <Heading size={headingSize}>No Active Commissions</Heading>
+                      <Heading size={headingSize}>
+                        No Active Commissions
+                      </Heading>
                     </CardBody>
                   </Card>
                 )}
@@ -313,13 +371,22 @@ const MyProfile = () => {
                               <Text fontWeight="bold">Links to music:</Text>
                               <Flex direction="column">
                                 {user.musicLinks.map((link) => (
-                                  <a
-                                    href={link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
+                                  <Box>
+                                    {/* <a
+                                   href={link}
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                 > 
                                     {link}
-                                  </a>
+                                    </a> */}
+                                    <Flex>
+                                      <ReactPlayer
+                                        width="100%"
+                                        height="auto"
+                                        url={link}
+                                      />
+                                    </Flex>
+                                  </Box>
                                 ))}
                               </Flex>
                             </Flex>
