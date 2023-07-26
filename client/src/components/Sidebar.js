@@ -23,7 +23,8 @@ import { GET_ME } from "../utils/queries";
 import { useDisclosure } from "@chakra-ui/react";
 import burgerIconWhite from "../assets/images/burgericonwhite.png";
 import burgerIconGrey from "../assets/images/burgericongrey.png";
-import logoPng from "../assets/images/logo.png";
+import ProducerPng from "../assets/images/Producer.png";
+import ArtistPng from "../assets/images/Artist.png";
 
 export default function Sidebar() {
   const [navSize] = useState("large");
@@ -174,7 +175,21 @@ export default function Sidebar() {
                     mb="20px"
                     justifyContent="center"
                   >
-                    <Avatar size={user ? "sm" : "xl"} src={user ? "avatar-1.jpg" : logoPng} />
+                  {user && user.userType === "Producer" ? (
+                <Avatar
+                  width="10%"
+                  height="auto"
+                  size="2xl"
+                  src={user ? ProducerPng : ProducerPng}
+                />
+                  ) : (
+                <Avatar
+                width="10%"
+                height="auto"
+                size="2xl"
+                src={user ? ArtistPng : ArtistPng}
+                />
+                    )}
                     <Flex
                       flexDir="column"
                       ml={4}
