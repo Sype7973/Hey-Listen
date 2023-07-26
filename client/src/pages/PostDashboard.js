@@ -63,7 +63,7 @@ const PostDashboard = () => {
       <Flex justifyContent="space-between" flexWrap="wrap">
         {user && (
           <Box width={{ base: "100%", md: "20%" }} mb={{ base: 5, md: 0 }} px={{ base: 5, md: 0 }}>
-            <Heading textAlign="center" mb={2}>
+            <Heading textAlign="center" mt={2} mb={2}>
               Filter
             </Heading>
             <PostFilter onFilterChange={setPostTypeFilter} />

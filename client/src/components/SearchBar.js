@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Flex, Input, Button, Text } from "@chakra-ui/react";
+import { Flex, Input, Button, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useQuery } from "@apollo/client";
 import { GET_USERS, QUERY_POSTS } from "../utils/queries";
 import { useNavigate } from "react-router-dom"; // Correct import for useNavigate
@@ -15,6 +15,7 @@ const SearchBar = () => {
     setSearchTerm(event.target.value);
   };
 
+  const textSize = useBreakpointValue({ base: "12px", md: "sm", lg: "lg", xl: "2xl" });
   
   const handleSearch = (event) => {
     event.preventDefault();
@@ -50,11 +51,12 @@ const SearchBar = () => {
       bg="gray.50"
       m={5}
     >
-      <Text fontSize="3xl" fontWeight="bold">
+      <Text fontSize={textSize} fontWeight="bold" color="teal.400">
         Search for posts or users
       </Text>
       <form onSubmit={handleSearch}>
         <Input
+          fontSize={textSize}
           type="text"
           name="search"
           placeholder="Search"
@@ -64,7 +66,7 @@ const SearchBar = () => {
           w="50%"
           m={5}
         />
-        <Button type="submit" colorScheme="teal" size="lg">
+        <Button mb={2} type="submit" colorScheme="teal" size="lg" fontSize={textSize}>
           Search
         </Button>
       </form>

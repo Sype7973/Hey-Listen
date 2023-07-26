@@ -14,7 +14,7 @@ const PostFilter = ({ onFilterChange }) => {
 
   return (
     <div>
-      <Select value={postTypeFilter} onChange={handlePostTypeFilterChange}>
+      <Select m={2} value={postTypeFilter} onChange={handlePostTypeFilterChange}>
         <option value="all">All Posts</option>
         <option value="Need Artist">Looking for Artists</option>
         <option value="Need Producer">Looking for Producers</option>

@@ -11,6 +11,8 @@ import {
   Text,
   Divider,
   Icon,
+  useBreakpointValue,
+  Stack,
 } from "@chakra-ui/react";
 import { GET_ME, GET_COMMISSIONS } from "../utils/queries";
 import { MdSettings } from "react-icons/md";
@@ -38,6 +40,16 @@ const MyProfile = () => {
 
   const [activeCommissions, setActiveCommissions] = useState([]);
   const [completedCommissions, setCompletedCommissions] = useState([]);
+
+//  Chakra UI breakpoints
+  const headingSize = useBreakpointValue({ base: "lg", md: "xl", lg: "1xl", xl: "2xl" });
+  const textSize = useBreakpointValue({ base: "sm", md: "md" , lg: "2xl", xl: "3xl"});
+  const bioTextSize = useBreakpointValue({ base: "sm", md: "md", lg: "2xl", xl: "3xl" });
+  const largeScreen = useBreakpointValue({ base: false, lg: true });
+  const mediumScreen = useBreakpointValue({ base: false, md: true });
+  const settingsSize = useBreakpointValue({ base: "30px", md: "50px", lg: "50px", xl: "50px" });
+  const userSize = useBreakpointValue({ base: "30px", md: "50px", lg: "50px", xl: "50px" });
+
 
   useEffect(() => {
     // Check if commissionData and getCommissions are available
@@ -138,6 +150,8 @@ const MyProfile = () => {
     );
   }
 
+  
+
   return (
     <Box background="teal.500">
       {user ? (
@@ -158,42 +172,95 @@ const MyProfile = () => {
               color="teal.500"
               borderRadius="none"
             >
-              <Flex flexDir="row">
+              <Flex flexDir="row" alignItems="center"> 
                 <Flex width="10%"></Flex>
-                <CardBody textAlign="center">
-                  <Heading color="teal.500" letterSpacing={10} size="4xl">
+                <CardBody textAlign="center" width="80%"> 
+                  <Heading color="teal.500" letterSpacing={10} size="4xl" fontSize={userSize}>
                     {user.username}
                   </Heading>
-                  <Text letterSpacing={5}>{user.userType}</Text>
+                  <Text letterSpacing={5} fontSize={textSize}>
+                    {user.userType}
+                  </Text>
                 </CardBody>
-                <Flex width="10%" justifyContent="center" alignItems="center">
-                  <Link to="/settings">
-                    <Icon as={MdSettings} boxSize="50px" />
-                  </Link>
-                </Flex>
+                {largeScreen ? ( 
+                  <Flex justifyContent="center" alignItems="center">
+                    <Link to="/settings">
+                      <Icon as={MdSettings} boxSize={settingsSize} />
+                    </Link>
+                  </Flex>
+                ) : (
+                  <Flex
+                    width="100%"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Link to="/settings">
+                      <Icon as={MdSettings} boxSize={settingsSize} />
+                    </Link>
+                  </Flex>
+                )}
               </Flex>
             </Card>
-
             <Flex
+              flex={1}
               minHeight="100vh"
               justifyContent="center"
               bg="teal.500"
-              direction="row"
+              direction={largeScreen ? "row" : "column"}
               width="100%"
               borderRadius="none"
+              flexWrap={largeScreen ? "nowrap" : "wrap"}
             >
               <Flex
                 minHeight="100vh"
                 alignItems="center"
                 bg="white"
                 direction="column"
-                width="70%"
+                width={largeScreen ? "70%" : "100%"}
               >
                 {commissions ? (
                   <Box h="auto" width="100%">
-                    <Card width="100%" h="auto" borderRadius="none">
-                      <CardBody width="100%" textAlign="center">
-                        <Heading>Active Commissions</Heading>
+                    <Box // Profile and Bio Card
+                      width="100%"
+                      marginBottom="20px"
+                      display={largeScreen ? "none" : "block"}
+                    >
+                      <Card width="100%" borderRadius="none" >
+                        <CardBody textAlign="center">
+                          <Heading fontSize={textSize}>Profile</Heading>
+                          <Divider borderWidth="4px" borderColor="black" />
+                          <Text fontSize={bioTextSize}>{user.email}</Text>
+                          <Divider borderWidth="0.5px" borderColor="black" />
+
+                          <Text fontSize={bioTextSize}>Bio: {user.bio}</Text>
+                          <Divider borderWidth="0.5px" borderColor="black" />
+
+                          {user.musicLinks ? (
+                            <Flex direction="column">
+                              <Text fontWeight="bold">Links to music:</Text>
+                              <Flex direction="column">
+                                {user.musicLinks.map((link) => (
+                                  <a
+                                    href={link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {link}
+                                  </a>
+                                ))}
+                              </Flex>
+                            </Flex>
+                          ) : (
+                            <Text>Links to music: None</Text>
+                          )}
+                          <Divider borderWidth="0.5px" borderColor="black" />
+                        </CardBody>
+                      </Card>
+                    </Box>
+
+                    <Card width="100%" h="auto" borderRadius="none" mb={largeScreen ? "0": "20px"}>
+                      <CardBody width="100%" textAlign="center" paddingX={mediumScreen ? "1rem": "2rem"}>
+                        <Heading size={headingSize}>Active Commissions</Heading>
                         <Commissions
                           commissions={activeCommissions}
                           user={user}
@@ -202,9 +269,9 @@ const MyProfile = () => {
                         />
                       </CardBody>
                     </Card>
-                    <Card width="100%" h="auto" borderRadius="none">
-                      <CardBody textAlign="center">
-                        <Heading>Completed Commissions</Heading>
+                    <Card width="100%" h="auto" borderRadius="none" mb={largeScreen ? "0": "20px"}>
+                      <CardBody textAlign="center" paddingX={mediumScreen ? "1rem": "2rem"}>
+                        <Heading size={headingSize}>Completed Commissions</Heading>
                         <Commissions
                           commissions={completedCommissions}
                           user={user}
@@ -217,48 +284,50 @@ const MyProfile = () => {
                 ) : (
                   <Card width="100%" h="auto">
                     <CardBody textAlign="center">
-                      <Heading>No Active Commissions</Heading>
+                      <Heading size={headingSize}>No Active Commissions</Heading>
                     </CardBody>
                   </Card>
                 )}
               </Flex>
-              <Flex w="40%">
-                <Card w="120%" h="auto" borderRadius="none" >
-                  <CardBody>
-                    <Flex alignItems="center" justifyContent="center">
-                      <Box w="80%" fontSize="25px">
-                        <Heading fontSize="50px">Profile</Heading>
-                        <Divider borderWidth="4px" borderColor="black" />
-                        <Text>{user.email}</Text>
-                        <Divider borderWidth="0.5px" borderColor="black" />
+              {largeScreen && (
+                <Flex w="40%">
+                  <Card w="120%" h="auto" borderRadius="none">
+                    <CardBody>
+                      <Flex alignItems="center" justifyContent="center">
+                        <Box w="80%" fontSize="25px">
+                          <Heading fontSize={textSize}>Profile</Heading>
+                          <Divider borderWidth="4px" borderColor="black" />
+                          <Text fontSize={bioTextSize}>{user.email}</Text>
+                          <Divider borderWidth="0.5px" borderColor="black" />
 
-                        <Text>Bio: {user.bio}</Text>
-                        <Divider borderWidth="0.5px" borderColor="black" />
+                          <Text fontSize={bioTextSize}>Bio: {user.bio}</Text>
+                          <Divider borderWidth="0.5px" borderColor="black" />
 
-                        {user.musicLinks ? (
-                          <Flex direction="column">
-                            <Text fontWeight="bold">Links to music:</Text>
+                          {user.musicLinks ? (
                             <Flex direction="column">
-                              {user.musicLinks.map((link) => (
-                                <a
-                                  href={link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {link}
-                                </a>
-                              ))}
+                              <Text fontWeight="bold">Links to music:</Text>
+                              <Flex direction="column">
+                                {user.musicLinks.map((link) => (
+                                  <a
+                                    href={link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {link}
+                                  </a>
+                                ))}
+                              </Flex>
                             </Flex>
-                          </Flex>
-                        ) : (
-                          <Text>Links to music: None</Text>
-                        )}
-                        <Divider borderWidth="0.5px" borderColor="black" />
-                      </Box>
-                    </Flex>
-                  </CardBody>
-                </Card>
-              </Flex>
+                          ) : (
+                            <Text>Links to music: None</Text>
+                          )}
+                          <Divider borderWidth="0.5px" borderColor="black" />
+                        </Box>
+                      </Flex>
+                    </CardBody>
+                  </Card>
+                </Flex>
+              )}
             </Flex>
           </Flex>
         </Flex>
@@ -271,7 +340,7 @@ const MyProfile = () => {
         >
           <Card my="auto" width="auto" h="auto">
             <CardBody textAlign="center">
-              <Heading>Not Logged In!</Heading>
+              <Heading size={headingSize}>Not Logged In!</Heading>
             </CardBody>
           </Card>
         </Flex>
