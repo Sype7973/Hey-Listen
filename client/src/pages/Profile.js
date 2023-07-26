@@ -96,7 +96,7 @@ const Profile = () => {
     }
   }, [data, meData]);
 
-  const headingSize = useBreakpointValue({ base: "lg", md: "1xl", lg: "2xl", xl: "3xl" });
+  const headingSize = useBreakpointValue({ base: "xl", md: "2xl", lg: "3xl", xl: "4xl" });
   const textSize = useBreakpointValue({ base: "sm", md: "md" , lg: "2xl", xl: "3xl"});
 
   console.log(user);
@@ -201,10 +201,10 @@ const Profile = () => {
                   align="center"
                   transition="0.3s ease-in-out"
                 >
-                  <Heading as="h3" size="sm">
+                  <Heading fontSize={textSize} as="h3" size="sm">
                     {user ? user.username : ""}
                   </Heading>
-                  <Text color="gray">{user ? user.userType : ""}</Text>
+                  <Text fontSize={textSize} color="gray">{user ? user.userType : ""}</Text>
                 </Flex>
               </Flex>
             </Flex>
@@ -218,6 +218,8 @@ const Profile = () => {
                       <Text fontSize={textSize}>
                         Contact:
                         <Button
+                          fontSize={textSize}
+                          mb={1}
                           variant="ghost"
                           onClick={() =>
                             handleContactPoster(user.email, user.postTitle)
@@ -228,7 +230,10 @@ const Profile = () => {
                       </Text>
                       <Divider borderWidth="0.5px" borderColor="black" />
 
-                      <Text fontSize={textSize}>Bio: {user.bio}</Text>
+                      <Text fontWeight="bold" fontSize={textSize}>Bio: </Text>
+                      <Text fontSize={textSize}>
+                      {user.bio}
+                      </Text>
                       <Divider borderWidth="0.5px" borderColor="black" />
 
                       {user.musicLinks ? (
@@ -247,7 +252,7 @@ const Profile = () => {
                           </Flex>
                         </Flex>
                       ) : (
-                        <Text>Links to music: None</Text>
+                        <Text fontSize={textSize}>Links to music: None</Text>
                       )}
                       <Divider borderWidth="0.5px" borderColor="black" />
                     </Box>

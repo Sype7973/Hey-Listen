@@ -41,7 +41,7 @@ const MyProfile = () => {
   const [completedCommissions, setCompletedCommissions] = useState([]);
 
 //  Chakra UI breakpoints
-  const headingSize = useBreakpointValue({ base: "lg", md: "xl", lg: "1xl", xl: "2xl" });
+  const headingSize = useBreakpointValue({ base: "md", md: "lg", lg: "2xl", xl: "3xl" });
   const textSize = useBreakpointValue({ base: "sm", md: "md" , lg: "2xl", xl: "3xl"});
   const bioTextSize = useBreakpointValue({ base: "sm", md: "md", lg: "2xl", xl: "3xl" });
   const largeScreen = useBreakpointValue({ base: false, lg: true });
