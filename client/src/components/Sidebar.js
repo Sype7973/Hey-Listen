@@ -210,6 +210,8 @@ export default function Sidebar() {
                             icon={BsPencilSquare}
                             title="Signup"
                             isActive={location.pathname === "/signup"}
+                            position="fixed"
+                            bottom="10px"
                           />
                         </Link>
                         <Link to="/login">

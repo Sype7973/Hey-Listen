@@ -243,8 +243,9 @@ const MyProfile = () => {
                             <Flex direction="column">
                               <Text fontWeight="bold">Links to music:</Text>
                               <Flex direction="column">
-                                {user.musicLinks.map((link) => (
+                                {user.musicLinks.map((link, index) => (
                                   <a
+                                    key={index}
                                     href={link}
                                     target="_blank"
                                     rel="noopener noreferrer"
