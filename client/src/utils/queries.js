@@ -103,6 +103,7 @@ export const QUERY_POST = gql`
       budget
       deadline
       createdAt
+      userId
     }
   }
 `;

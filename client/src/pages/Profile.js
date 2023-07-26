@@ -15,7 +15,6 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import { GET_PROFILE, GET_ME } from "../utils/queries";
 import spinner from "../assets/images/spinner.gif";
-import logoPng from "../assets/images/logo.png";
 import ArtistPng from "../assets/images/Artist.png";
 import ProducerPng from "../assets/images/Producer.png";
 // function that maps and renders commissions

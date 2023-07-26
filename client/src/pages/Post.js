@@ -8,7 +8,6 @@ import {
   Button,
   Avatar,
   Divider,
-  useToast,
   Spinner,
   useMediaQuery,
   Link,
@@ -16,87 +15,138 @@ import {
 
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
-import { QUERY_POST, GET_ME, GET_USER } from "../utils/queries";
-import { ACCEPT_POST } from "../utils/mutations";
-
+import { QUERY_POST, GET_ME, GET_USER, QUERY_POSTS } from "../utils/queries";
+import { ACCEPT_POST, REMOVE_POST } from "../utils/mutations";
 
 const Post = () => {
-  const { id: postId } = useParams();;
+  const { id: postId } = useParams();
   const [loading, setLoading] = useState(true);
-  const { data: postData, loading: postLoading } = useQuery(QUERY_POST, {
+  const { data: postData, loading: postLoading, refetch } = useQuery(QUERY_POST, {
     variables: { id: postId },
   });
   const { data: userData, loading: userLoading } = useQuery(GET_USER, {
     variables: { id: postData?.getPost.userId },
   });
+  const [removePost] = useMutation(REMOVE_POST);
   const { data: meData, loading: meLoading } = useQuery(GET_ME);
   const [acceptPost] = useMutation(ACCEPT_POST);
-  const toast = useToast();
   const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
   const [isLargerThan1280] = useMediaQuery("(min-width: 1280px)");
   const [isLargerThan1440] = useMediaQuery("(min-width: 1440px)");
   const [isLargerThan1920] = useMediaQuery("(min-width: 1920px)");
 
+  const [me, setMe] = useState(null);
+  const [post, setPost] = useState(null);
+
   useEffect(() => {
     if (!postLoading && postData?.getPost) {
       setLoading(false);
     }
-  }, [postLoading, postData]);
 
-// uses the ACCEPT_POST mutation to accept a post (BROKEN)
-const handleAcceptPost = async (postId) => {
-    if (!meData || !postData) {
-        console.error("User or post data not available!");
-        return;
-        }
-        const post = postData.getPost;
-        const me = meData.me;
+    if (meData?.me) {
+      setMe(meData.me);
+    }
 
-        try {
-            await acceptPost({
-                variables: { postId },
-            });
-            toast({
-                title: "Post accepted.",
-                status: "success",
-                duration: 9000,
-                isClosable: true,
-                position: "top",
-            });
-        } catch (err) {
-            console.error(err);
-            toast({
-                title: "Something went wrong.",
-                description: "Unable to accept post.",
-                status: "error",
-                duration: 9000,
-                isClosable: true,
-                position: "top",
-            });
-        }
+    if (postData?.getPost) {
+      setPost(postData.getPost);
+    }
+  }, [postLoading, postData, userData, meData]);
+
+  const handleAcceptPost = async () => {
+    if (!postData) {
+      console.error("No posts found!");
+      return;
+    }
+
+    const post = postData.getPost;
+    console.log(post.deadline);
+
+    if (post.length === 0) {
+      console.error(`No post found with ID: ${post._id}`);
+      return;
+    }
+
+    if (!post.deadline) {
+      console.error(`No deadline found for post with ID: ${post._id}`);
+      return;
+    }
+    console.log("POST");
+    console.log(post);
+    // deconstructs the post data
+    const acceptedCommission = {
+      commissionTitle: post.postTitle,
+      commissionType: post.postType,
+      commissionDescription: post.postDescription,
+      creatorId: post.userId,
+      collaboratorId: me._id,
+      collaboratorUsername: me.username,
+      budget: post.budget,
+      deadline: post.deadline,
+      status: true,
+      creatorUsername: post.username,
+      createdAt: post.createdAt,
     };
 
-// handles contact poster (BROKEN)
-    const handleContactPoster = () => {
-        if (meLoading || postLoading || userLoading) {
-          console.log("Loading user or post data...");
-          return;
-        }
-      
-        if (!meData || !postData || !userData || !userData.getUser) {
-          console.error("User or post data not available!");
-          return;
-        }
-      
-        const post = postData.getPost;
-        const me = meData.me;
-        const posterEmail = userData.getUser.email;
-      
-        const subject = `I'm interested in your post: ${post.postTitle}`;
-        const body = `Hi ${post.username},\n\nI'm interested in: ${post.postTitle}.\n\nPlease let me know if it's still available.\n\nThanks,\n\n${me.username}`;
-        const mailtoLink = `mailto:${posterEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        window.open(mailtoLink, "_blank");
-      };
+    console.log("ACCEPTED COMMISSION");
+    console.log(acceptedCommission);
+
+    try {
+      const { data: acceptedPostData, error: acceptError } = await acceptPost({
+        variables: { commissions: acceptedCommission },
+      });
+      handleRemovePost(post._id);
+      refetch();
+
+      if (acceptError) {
+        console.error("Error accepting the post:", acceptError);
+      }
+      console.log("Accepted Post Data");
+      console.log(acceptedPostData);
+    } catch (err) {
+      console.error(`ERRRRRRRRRRR: ${err}`);
+    }
+
+    console.log(`Accepting the post with ID: ${postId}`);
+    window.location.assign("/search");
+  };
+
+  const handleRemovePost = (postId) => {
+    console.log(`Removing the post with ID: ${postId}`);
+    removePost({
+      variables: { postId },
+      update: (cache, { data: { removePost } }) => {
+        const existingPosts = cache.readQuery({ query: QUERY_POSTS });
+        const updatedPosts = existingPosts.getPosts.filter(
+          (post) => post._id !== removePost._id
+        );
+        cache.writeQuery({
+          query: QUERY_POSTS,
+          data: { getPosts: updatedPosts },
+        });
+      },
+    });
+  };
+
+  // handles contact poster (BROKEN)
+  const handleContactPoster = () => {
+    if (meLoading || postLoading || userLoading) {
+      console.log("Loading user or post data...");
+      return;
+    }
+
+    if (!meData || !postData || !userData || !userData.getUser) {
+      console.error("User or post data not available!");
+      return;
+    }
+    const posterEmail = userData.getUser.email;
+
+    const subject = `I'm interested in your post: ${post.postTitle}`;
+    const body = `Hi ${post.username},\n\nI'm interested in: ${post.postTitle}.\n\nPlease let me know if it's still available.\n\nThanks,\n\n${me.username}`;
+    const mailtoLink = `mailto:${posterEmail}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+    window.open(mailtoLink, "_blank");
+  };
 
   if (loading || postLoading || meLoading) {
     return (
@@ -117,12 +167,14 @@ const handleAcceptPost = async (postId) => {
     return "Invalid Date";
   };
 
-  const post = postData.getPost;
-  const me = meData.me;
-
   return (
     <Box>
-      <Flex justifyContent="center" alignItems="center" height="100vh" bg="gray.100">
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+        bg="gray.100"
+      >
         <Box
           width={
             isLargerThan1920
@@ -195,7 +247,12 @@ const handleAcceptPost = async (postId) => {
           <Divider my={5} />
           {me && post && me.username !== post.username && (
             <Flex justify="center" mt={5}>
-              <Button colorScheme="teal" size="lg" mr={3} onClick={handleAcceptPost}>
+              <Button
+                colorScheme="teal"
+                size="lg"
+                mr={3}
+                onClick={handleAcceptPost}
+              >
                 Accept Post
               </Button>
               <Button size="lg" ml={3} onClick={handleContactPoster}>

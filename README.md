@@ -111,6 +111,6 @@ To test, simply run the application by using the instructions provided above. If
 ## Questions
 For questions and enquiries, please contact us at: 
 
-[**INSERT ADAM EMAIL**](**AND HERE**)
+[adam.day7973@gmail.com](adam.day7973@gmail.com)
 
 [eli.brer@gmail.com](eli.brer@gmail.com)
