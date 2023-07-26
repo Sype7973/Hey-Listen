@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Box, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
+import { Flex, Box, Grid, GridItem, Heading, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useLocation, Link } from "react-router-dom";
 
 const SearchPage = () => {
@@ -9,6 +9,7 @@ const SearchPage = () => {
 
   console.log("Search Term:", finalSearchTerm);
   console.log("Search Results:", results);
+
 
   return (
     <Flex
@@ -44,17 +45,16 @@ const SearchPage = () => {
                   </Heading>
                   {results.posts.map((post) => (
                     <Box key={post._id} borderWidth="1px" borderColor="gray.200" p={2} my={2}>
-                      <Text fontSize="lg">
-                        <Heading as="h3" size="md">
-                          Title:
-                        </Heading>
-                        {post.postTitle}
+                      <Heading as="h3" size="md">
+                        Title:
+                      </Heading>
+                      {post.postTitle}
 
-                        <Heading as="h3" size="md">
-                          Description:
-                        </Heading>
-                        {post.postDescription}
-                      </Text>
+                      <Heading as="h3" size="md">
+                        Description:
+                      </Heading>
+                      {post.postDescription}
+
                       <Heading as="h3" size="md">
                         User:
                       </Heading>
@@ -120,18 +120,14 @@ const SearchPage = () => {
                   </Heading>
                   {results.posts.map((post) => (
                     <Box key={post._id} borderWidth="1px" borderColor="gray.200" p={2} my={2}>
-                      <Text fontSize="lg">
-                        <Heading as="h3" size="md">
-                          Title:
-                        </Heading>
-                        {post.postTitle}
-                      </Text>
-                      <Text>
-                        <Heading as="h3" size="md">
-                          Description:
-                        </Heading>
-                        {post.postDescription}
-                      </Text>
+                      <Heading as="h3" size="md">
+                        Title:
+                      </Heading>
+                      {post.postTitle}
+                      <Heading as="h3" size="md">
+                        Description:
+                      </Heading>
+                      {post.postDescription}
                       <Link to={`/profile/${post.username}`}>
                         <Text color="teal.500" fontStyle="bold" fontWeight="bold">
                           {post.username}
