@@ -15,6 +15,7 @@ const PostDashboard = () => {
   const [postTypeFilter, setPostTypeFilter] = useState("all");
   const buttonWidth = useBreakpointValue({ base: "100px", md: "lg" });
 
+  // use effect to fetch user profile
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -26,7 +27,7 @@ const PostDashboard = () => {
   }, [data]);
 
 
-
+// if loading, display spinner
   if (isLoading || loading) {
     return (
       <Flex
@@ -45,7 +46,7 @@ const PostDashboard = () => {
       </Flex>
     );
   }
-
+// renders posts component
   return (
     <Box>
       {user && (

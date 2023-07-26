@@ -18,15 +18,15 @@ import { useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_POST, GET_ME, GET_USER } from "../utils/queries";
 import { ACCEPT_POST } from "../utils/mutations";
-import Auth from "../utils/auth";
+
 
 const Post = () => {
   const { id: postId } = useParams();;
   const [loading, setLoading] = useState(true);
-  const { data: postData, loading: postLoading, error: postError } = useQuery(QUERY_POST, {
+  const { data: postData, loading: postLoading } = useQuery(QUERY_POST, {
     variables: { id: postId },
   });
-  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
+  const { data: userData, loading: userLoading } = useQuery(GET_USER, {
     variables: { id: postData?.getPost.userId },
   });
   const { data: meData, loading: meLoading } = useQuery(GET_ME);
@@ -43,7 +43,7 @@ const Post = () => {
     }
   }, [postLoading, postData]);
 
-// uses the ACCEPT_POST mutation to accept a post
+// uses the ACCEPT_POST mutation to accept a post (BROKEN)
 const handleAcceptPost = async (postId) => {
     if (!meData || !postData) {
         console.error("User or post data not available!");
@@ -76,7 +76,7 @@ const handleAcceptPost = async (postId) => {
         }
     };
 
-
+// handles contact poster (BROKEN)
     const handleContactPoster = () => {
         if (meLoading || postLoading || userLoading) {
           console.log("Loading user or post data...");

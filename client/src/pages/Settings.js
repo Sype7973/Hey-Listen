@@ -33,7 +33,7 @@ const Settings = () => {
   const [inputChange, setInputChange] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
-
+// handles tab change
   const handleTabChange = (tab) => {
     if (!inputChange) {
       switch (tab) {
@@ -58,7 +58,7 @@ const Settings = () => {
       handleOpenUpdateModal();
     }
   };
-
+// use effect to refetch data
   useEffect(() => {
     const handleInitialRefetch = async () => {
       await refetch();
@@ -66,17 +66,17 @@ const Settings = () => {
     handleInitialRefetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+// use effect to set user
   useEffect(() => {
     if (data && data.me) {
       setUser(data.me);
     }
   }, [data]);
-
+// handles open update modal
   const handleOpenUpdateModal = () => {
     setIsUpdateModalOpen(true);
   };
-
+// handles close update modal
   const handleCloseUpdateModal = () => {
     setIsUpdateModalOpen(false);
   };

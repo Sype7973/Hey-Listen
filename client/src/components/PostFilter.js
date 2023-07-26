@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Select } from "@chakra-ui/react";
 
+
 const PostFilter = ({ onFilterChange }) => {
   const [postTypeFilter, setPostTypeFilter] = useState("all");
-
+// handles filtering posts
   const handlePostTypeFilterChange = (event) => {
     const selectedValue = event.target.value;
     setPostTypeFilter(selectedValue);

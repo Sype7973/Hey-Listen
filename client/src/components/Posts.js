@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
-import { Box, Flex, Button, Text, Card, CardBody, Heading, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Button, Text, Card, CardBody, Heading, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { QUERY_POSTS, GET_ME, GET_FILTERED_POSTS } from "../utils/queries";
 import { REMOVE_POST, ACCEPT_POST } from "../utils/mutations";
 import Auth from "../utils/auth";
 
+// this component is to display all posts
 const Posts = ({ postTypeFilter }) => {
   const { data, refetch } = useQuery(QUERY_POSTS);
   const { data: myUserData } = useQuery(GET_ME);
@@ -38,7 +39,7 @@ const Posts = ({ postTypeFilter }) => {
     ? Auth.getProfile().data.username
     : null;
 
-  // still need to implement these functions correctly, coming up as undefined
+  // handles the contact poster button
   const handleContactPoster = (postId, email, postTitle, username) => {
     const subject = `I'm interested in your post: ${postTitle}`;
     const body = `Hi ${username},\n\nI'm interested in: ${postTitle}.\n\nPlease let me know if it's still available.\n\nThanks,\n\n${user.username}`;
@@ -70,7 +71,7 @@ const Posts = ({ postTypeFilter }) => {
     }
 
     console.log(postData[0].deadline);
-
+// deconstructs the post data
     const acceptedCommission = {
       commissionTitle: postData[0].postTitle,
       commissionType: postData[0].postType,
@@ -106,7 +107,7 @@ const Posts = ({ postTypeFilter }) => {
 
     console.log(`Accepting the post with ID: ${postId}`);
   };
-
+// handles removing posts
   const handleRemovePost = (postId) => {
     console.log(`Removing the post with ID: ${postId}`);
     removePost({
@@ -123,7 +124,7 @@ const Posts = ({ postTypeFilter }) => {
       },
     });
   };
-
+// formats the date
   const formatDateForm = (timestamp) => {
     if (timestamp) {
       const date = new Date(parseInt(timestamp));
@@ -134,7 +135,7 @@ const Posts = ({ postTypeFilter }) => {
     }
     return "Invalid Date";
   };
-
+// medua query for smaller screens
   const gridColumns = useBreakpointValue({ base: 1, md: 2, lg: 3 });
   const buttonFontSize = useBreakpointValue({ base: "sm", md: "md", lg: "md" });
 

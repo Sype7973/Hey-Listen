@@ -11,7 +11,7 @@ const SearchPage = () => {
   console.log("Search Results:", results);
 
   const isSmallerScreen = useBreakpointValue({ base: true, md: false });
-
+// renders search results based on search term from search bar
   return (
     <Flex
       p={5}

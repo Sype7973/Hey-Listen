@@ -35,7 +35,7 @@ export default function Sidebar() {
   const btnRef = React.useRef();
 
   const location = useLocation();
-
+// use effect to fetch user profile
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -51,7 +51,7 @@ export default function Sidebar() {
     };
     fetchUserProfile();
   }, [data]);
-
+// use effect to change burger icon color
   useEffect(() => {
     if (location.pathname === "/" || location.pathname === "/my-profile") {
       setBurgerColor(true);
@@ -154,7 +154,7 @@ export default function Sidebar() {
                     <NavItem
                       navSize={navSize}
                       icon={MdLibraryMusic}
-                      title="Posts"
+                      title="My Posts"
                       isActive={location.pathname === "/my-posts"}
                     />
                   </Link>

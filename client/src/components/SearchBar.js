@@ -5,6 +5,7 @@ import { GET_USERS, QUERY_POSTS } from "../utils/queries";
 import { useNavigate } from "react-router-dom"; // Correct import for useNavigate
 import Auth from "../utils/auth";
 
+// this is the searchbar component
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { data: userData } = useQuery(GET_USERS);
@@ -14,9 +15,9 @@ const SearchBar = () => {
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
+ // media query for smaller screens
   const textSize = useBreakpointValue({ base: "12px", md: "sm", lg: "lg", xl: "2xl" });
-  
+  // handles the search
   const handleSearch = (event) => {
     event.preventDefault();
     const postResults =

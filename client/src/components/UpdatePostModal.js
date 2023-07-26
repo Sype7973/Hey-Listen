@@ -17,6 +17,7 @@ import {
   SliderThumb,
 } from "@chakra-ui/react";
 
+// this is the modal for updating a post from my posts page
 const postTypeOptions = [
   "Need Artist",
   "Need Producer",

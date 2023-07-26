@@ -22,6 +22,7 @@ import {
 import { UPDATE_USER, DELETE_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
 
+// for settings page
 const SettingsComponent = ({ title, userData, setInputChange, setChangePassword, changePassword }) => {
   console.log(userData);
 
@@ -29,7 +30,7 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
   const [deleteUser] = useMutation(DELETE_USER);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [passwordField, setPasswordField] = useState("");
-
+// deconstructs user data
   const {
     password,
     username,
@@ -39,7 +40,7 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
     profilePicture,
     bio,
   } = userData;
-
+// sets form state for updating user
   const [formState, setFormState] = useState({
     username: username,
     email: email,
@@ -53,21 +54,21 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
   useEffect(() => {
     console.log(formState);
   }, [formState]);
-
+// handles modal for deleting account
   const handleOpenDeleteModal = () => {
     setIsDeleteModalOpen(true);
   };
-
+// handles modal for deleting account
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
-
+//  handles deleting account
   const handleDeleteAccount = async () => {
     const userId = userData._id;
     await deleteUser({ variables: { id: userId } });
     Auth.logout();
   };
-
+// handles input change
   const handleInputChange = (event) => {
     setInputChange(true);
     const { name, value } = event.target;
@@ -76,7 +77,7 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
       [name]: value,
     });
   };
-
+// handles password change
   const handlePasswordChange = (event) => {
     setPasswordField(event.target.value);
     setFormState({
@@ -84,7 +85,7 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
       password: event.target.value,
     });
   };
-
+// handles music links change
   const handleMusicLinksChange = (index, value) => {
     setInputChange(true);
     const updatedMusicLinks = [...formState.musicLinks];
@@ -95,11 +96,11 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
       musicLinks: updatedMusicLinks,
     });
   };
-
+// handles overall update
   const handleUpdate = async () => {
     setInputChange(false);
     setChangePassword(false);
-
+// deconstructs user data
     const updateData = {
       id: userData._id,
       username: formState.username,
@@ -117,7 +118,7 @@ const SettingsComponent = ({ title, userData, setInputChange, setChangePassword,
     updateUser({ variables: updateData });
     setPasswordField("");
   };
-
+// changes password state
   const changePasswordState = () => {
     setChangePassword(true);
   };

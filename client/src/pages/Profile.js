@@ -20,7 +20,7 @@ import logoPng from "../assets/images/logo.png";
 const Profile = () => {
   const { username } = useParams();
   const navigate = useNavigate();
-  
+  // loading queries
   const {
     loading: usernameLoading,
     data,
@@ -39,7 +39,7 @@ const Profile = () => {
 
 
 
-
+// use effect to check if user is logged in
   useEffect(() => {
     if (me && me.username && username) {
       if (me.username === username) {
@@ -47,11 +47,11 @@ const Profile = () => {
       }
     }
   }, [me, username, navigate]);
-
+//  use effect to console log username
   useEffect(() => {
     console.log("Received username:", username);
   }, [username]);
-
+// use effect to refetch username and me
   useEffect(() => {
     const handleInitialRefetch = async () => {
       await usernameRefetch();
@@ -60,7 +60,7 @@ const Profile = () => {
     handleInitialRefetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+// handles contact poster button
   const handleContactPoster = (postId, email) => {
     if (me && me.username) {
       const subject = `Hey! Listen! I'd like to get in touch!`;
@@ -79,7 +79,7 @@ const Profile = () => {
       window.open(mailtoLink, "_blank");
     }
   };
-
+// use effect to set loading to false
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -96,7 +96,7 @@ const Profile = () => {
 
 
   console.log(user);
-
+// loading statement before rendering
   if (isLoading || meLoading || usernameLoading) {
     return (
       <Flex

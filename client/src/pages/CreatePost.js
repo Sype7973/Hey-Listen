@@ -31,6 +31,7 @@ const CreatePost = () => {
     deadline: "",
   });
 
+  // preformatted post types
   const postTypeOptions = [
     "Need Artist",
     "Need Producer",
@@ -50,13 +51,13 @@ const CreatePost = () => {
   const [addPost, { error }] = useMutation(ADD_POST);
   const { data } = useQuery(GET_ME);
   const [user, setUser] = useState(null);
-
+// use effect to fetch user profile
   useEffect(() => {
     if (data) {
       setUser(data.me);
     }
   }, [data]);
-
+// use effect to set username and email
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   useEffect(() => {
@@ -68,35 +69,35 @@ const CreatePost = () => {
 
 
   const [selectedPostType, setSelectedPostType] = useState("");
-
+// handles post type change
   const handlePostTypeChange = (e) => {
     setSelectedPostType(e.target.value);
   };
-
+// handles adding custom post type
   const handleAddCustomPostType = () => {
     setShowCustomPostTypeInput(true);
   };
 
   const [showCustomPostTypeInput, setShowCustomPostTypeInput] = useState(false);
   const [customPostType, setCustomPostType] = useState("");
-
+// handles custom post type change
   const handleCustomPostTypeChange = (e) => {
     setCustomPostType(e.target.value);
   };
-
+// handles input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
+// handles slider change
   const handleSliderChange = (value) => {
     setFormData({ ...formData, budget: value });
   };
-
+// handles date change
   const handleDateChange = (date) => {
     setFormData({ ...formData, deadline: date });
   };
-
+// handles form submit
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
