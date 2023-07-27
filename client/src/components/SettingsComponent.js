@@ -18,6 +18,7 @@ import {
   ModalFooter,
   ModalBody,
   Select,
+  Textarea
 } from "@chakra-ui/react";
 import { UPDATE_USER, DELETE_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
@@ -110,17 +111,6 @@ const handleMusicLinksChange = (index, value) => {
   });
 };
 
-  //  const handleMusicLinksChange = (index, value) => {
-  //   setInputChange(true);
-  //   const updatedMusicLinks = [...formState.musicLinks];
-  //   updatedMusicLinks[index] = value;
-
-  //   setFormState({
-  //     ...formState,
-  //     musicLinks: updatedMusicLinks,
-  //   });
-  // };
-
 // handles overall update
   const handleUpdate = async () => {
     setInputChange(false);
@@ -140,7 +130,7 @@ const handleMusicLinksChange = (index, value) => {
     };
 
     setMusicLinksState(filteredMusicLinks);
-    
+
     if (formState.password !== password) {
       updateData.password = formState.password;
     }
@@ -164,14 +154,14 @@ const handleMusicLinksChange = (index, value) => {
                   <Td>Bio: </Td>
                   <Td>
                     <Flex justifyContent="right" alignItems="center">
-                      <Input
+                      <Textarea
                         width="50%"
                         style={{ textAlign: "right" }}
                         defaultValue={bio}
                         name="bio"
                         value={formState.bio}
                         onChange={handleInputChange}
-                      ></Input>
+                      ></Textarea>
                     </Flex>
                   </Td>
                 </Tr>
