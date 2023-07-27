@@ -44,9 +44,9 @@ const MyProfile = () => {
   //  Chakra UI breakpoints
   const headingSize = useBreakpointValue({
     base: "lg",
-    md: "xl",
-    lg: "1xl",
-    xl: "2xl",
+    md: "2xl",
+    lg: "4xl",
+    xl: "6xl",
   });
   const textSize = useBreakpointValue({
     base: "sm",
@@ -54,6 +54,7 @@ const MyProfile = () => {
     lg: "2xl",
     xl: "3xl",
   });
+
   const bioTextSize = useBreakpointValue({
     base: "sm",
     md: "md",
@@ -266,29 +267,26 @@ const MyProfile = () => {
                     >
                       <Card width="100%">
                         <CardBody textAlign="center">
-                          <Heading fontSize={textSize}>Profile</Heading>
+                          <Heading fontSize={headingSize}>Profile</Heading>
                           <Divider borderWidth="4px" borderColor="black" />
                           <Text fontSize={bioTextSize}>{user.email}</Text>
                           <Divider borderWidth="0.5px" borderColor="black" />
-
-                          <Text fontSize={bioTextSize}>Bio: {user.bio}</Text>
+                          <Heading fontSize={textSize}>Bio: </Heading>
+                          <Box fontSize={bioTextSize} whiteSpace="pre-wrap">
+                            {user.bio}
+                          </Box>{" "}
                           <Divider borderWidth="0.5px" borderColor="black" />
-
                           {user.musicLinks ? (
                             <Flex direction="column">
                               <Text fontWeight="bold">Links to music:</Text>
                               <Flex direction="column">
                                 {user.musicLinks.map((link, index) => (
                                   <Box>
-                                    {/* <a
-                                      key={index}
-                                      href={link}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      {link}
-                                    </a> */}
-                                    <ReactPlayer height="40%" width="100%" url={link} />
+                                    <ReactPlayer
+                                      height="40%"
+                                      width="100%"
+                                      url={link}
+                                    />
                                   </Box>
                                 ))}
                               </Flex>
@@ -359,12 +357,14 @@ const MyProfile = () => {
                     <CardBody>
                       <Flex alignItems="center" justifyContent="center">
                         <Box w="80%" fontSize="25px">
-                          <Heading fontSize={textSize}>Profile</Heading>
+                          <Heading fontSize={headingSize}>Profile</Heading>
                           <Divider borderWidth="4px" borderColor="black" />
                           <Text fontSize={bioTextSize}>{user.email}</Text>
                           <Divider borderWidth="0.5px" borderColor="black" />
-
-                          <Text fontSize={bioTextSize}>Bio: {user.bio}</Text>
+                          <Heading fontSize={textSize}>Bio: </Heading>
+                          <Box fontSize={bioTextSize} whiteSpace="pre-wrap">
+                            {user.bio}
+                          </Box>
                           <Divider borderWidth="0.5px" borderColor="black" />
 
                           {user.musicLinks ? (
