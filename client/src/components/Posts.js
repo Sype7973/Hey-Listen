@@ -218,7 +218,7 @@ const Posts = ({ postTypeFilter }) => {
                     </Button>
                   </>
                 )}
-                {loggedInUsername !== post.username && (
+                {Auth.loggedIn() && loggedInUsername !== post.username && (
                   <>
                     <Button
                       colorScheme="teal"
