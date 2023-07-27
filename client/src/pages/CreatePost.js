@@ -93,6 +93,12 @@ const CreatePost = () => {
   const handleSliderChange = (value) => {
     setFormData({ ...formData, budget: value });
   };
+  // handles budget input change
+  const handleBudgetInputChange = (e) => {
+    const { value } = e.target;
+    const parsedValue = parseInt(value);
+    setFormData({ ...formData, budget: parsedValue });
+  };
 // handles date change
   const handleDateChange = (date) => {
     setFormData({ ...formData, deadline: date });
@@ -200,7 +206,7 @@ const CreatePost = () => {
                 type="number"
                 name="budget"
                 value={formData.budget}
-                onChange={handleInputChange}
+                onChange={handleBudgetInputChange}
               />
             </FormControl>
             <FormControl id="deadline" marginBottom="1rem">
