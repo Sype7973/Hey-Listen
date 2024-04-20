@@ -1,5 +1,5 @@
 // This is the main file for the portfolio website. It is the first file that is run when the website is loaded.
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { ChakraProvider, Box, Flex } from "@chakra-ui/react";
 import { useLocation, Route, Routes } from "react-router-dom";
@@ -10,6 +10,7 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+
 import Home from "./pages/HomePage";
 import PostDashboard from "./pages/PostDashboard";
 import Login from "./pages/LoginForm";
@@ -24,6 +25,9 @@ import Profile from "./pages/Profile";
 import SearchPage from "./pages/SearchPage";
 import Settings from "./pages/Settings";
 import Post from "./pages/Post";
+import ChatBox from "./components/ChatBox";
+
+import auth from "./utils/auth";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -47,8 +51,11 @@ const client = new ApolloClient({
 });
 
 function App() {
-  // const [currentPath] = useState(window.location.pathname);
+  const [currentPath] = useState(window.location.pathname);
   const location = useLocation();
+
+  const user = auth.loggedIn() ? auth.getProfile() : null;
+  
 
   useEffect(() => {
     console.log("location changed to " + location.pathname);
@@ -60,24 +67,28 @@ function App() {
           <Flex flexDirection="column">
             <Sidebar />
             <SearchBar />
-            <Box flex="1" zIndex="1">
-            <Routes>
-              {/* <Header currentPath={currentPath} /> */}
-              <Route path ="/" element={<Home />} />
-              <Route path ="/my-profile" element={<MyProfile />} />
-              <Route path ="/post-dashboard" element={<PostDashboard/>} />
-              <Route path ="/login" element={<Login />} />
-              <Route path ="/signup" element={<Signup />} />
-              <Route path ="/my-posts" element={<MyPosts />} />
-              <Route path ="/create-post" element={<CreatePost />} />              
-              <Route path="/profile/:username" element={<Profile />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/post/:id" element={<Post />} />
+            <Box flex="1" zIndex={1}>
+              <Routes>
+                {/* <Header currentPath={currentPath} /> */}
+                <Route path="/" element={<Home />} />
+                <Route path="/my-profile" element={<MyProfile />} />
+                <Route path="/post-dashboard" element={<PostDashboard />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/my-posts" element={<MyPosts />} />
+                <Route path="/create-post" element={<CreatePost />} />
+                <Route path="/profile/:username" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/post/:id" element={<Post />} />
               </Routes>
             </Box>
           </Flex>
-          <Footer position="sticky" bottom={0}/>
+
+          <Footer position="sticky" bottom={0} />
+          {user ? (<Flex zIndex={10000} >
+            <ChatBox/>
+          </Flex>) : ( null )};
         </ChakraProvider>
       </div>
     </ApolloProvider>

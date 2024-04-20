@@ -1,4 +1,4 @@
-const { User, Post, Commission } = require("../models");
+const { User, Post, Commission, Conversation } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 const bcrypt = require("bcrypt");
@@ -283,6 +283,42 @@ const resolvers = {
           throw new Error(err);
         }
       }
+    },
+
+    /*------------Conversation------------*/
+    createMessage: async (parent, args) => {
+      // Extract the sender, receiver, and content from args
+      const { content, sender, receiver } = args;
+
+      // Create a new message object
+      const newMessage = {
+        content,
+        sender,
+        timestamp: new Date(),
+      };
+
+      // Find or create a conversation between the sender and receiver
+
+      let conversation = await Conversation.findOne({
+        participants: { $all: [sender, receiver] },
+      });
+
+      // If no conversation exists, create a new one
+      if (!conversation) {
+        conversation = new Conversation({
+          participants: [sender, receiver],
+          messages: [],
+        });
+      }
+
+      // Add the new message to the conversation
+      conversation.messages.push(newMessage);
+
+      // Save the updated conversation
+      await conversation.save();
+
+      // Return the new message object
+      return newMessage;
     },
   },
 };
