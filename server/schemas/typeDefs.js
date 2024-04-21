@@ -14,6 +14,20 @@ const typeDefs = gql`
     posts: [Post]
   }
 
+  input MessageInput {
+    content: String!
+    sender: ID!
+  }
+  type Message {
+    content: String!
+    sender: User!
+    timestamp: String!
+  }
+  type Conversation {
+    id: ID!
+    participants: [User!]!
+    messages: [Message!]!
+  }
   type Commission {
     _id: ID
     commissionTitle: String
@@ -79,6 +93,11 @@ const typeDefs = gql`
     getCommissions: [Commission]
     getProfile(username: String!): User
     filterPost(postType: String!): [Post]
+    messages: [Message!]
+    message(id: ID!): Message
+    conversations: [Conversation!]
+    conversation(id: ID!): Conversation
+    getConversation(participants: [ID!]!): Conversation
   }
 
   type Mutation {
@@ -91,6 +110,7 @@ const typeDefs = gql`
       bio: String
       profilePicture: String
     ): Auth
+    
     login(email: String!, password: String!): Auth
 
     updateUser(
@@ -131,6 +151,10 @@ const typeDefs = gql`
     acceptPost(commissions: CommissionInput): Commission
     createCommission(commissionInput: CommissionInput): Commission
     deleteCommission(_id: ID!): Commission
+
+    createMessage(content: String!, sender: ID!, receiver: ID!): Conversation
+    updateMessage(id: ID!, content: String!): Message
+    deleteMessage(id: ID!): Boolean
   }
 `;
 

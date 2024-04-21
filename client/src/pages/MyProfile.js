@@ -184,7 +184,7 @@ const MyProfile = () => {
   }
 
   return (
-    <Box background="teal.500">
+    <Box background="teal.500" zIndex={1}>
       {user ? (
         <Flex direction="column" justify="center" alignItems="center">
           <Flex
