@@ -12,8 +12,8 @@ const resolvers = {
         const userData = await User.findOne({ _id: context.user._id })
           .select("-__v")
           .populate("posts");
-        console.log("User Data");
-        console.log(userData);
+        // console.log("User Data");
+        // console.log(userData);
         return userData;
       }
       return null;
@@ -49,7 +49,22 @@ const resolvers = {
     filterPost: async (parent, args) => {
       return Post.find({ postType: args.postType });
     },
+
+          /*------------Conversation------------*/
+    getConversation: async(parent, args) => {
+      console.log(args)
+
+      const conversation = await Conversation.findOne({
+        participants: { $all: [args.sender, args.receiver] },
+      });
+      return conversation;
+    
+    }
   },
+
+
+    
+
 
   Mutation: {
     /*------------User------------*/
@@ -287,37 +302,27 @@ const resolvers = {
 
     /*------------Conversation------------*/
     createMessage: async (parent, args) => {
-      // Extract the sender, receiver, and content from args
       const { content, sender, receiver } = args;
-
-      // Create a new message object
       const newMessage = {
         content,
         sender,
         timestamp: new Date(),
       };
 
-      // Find or create a conversation between the sender and receiver
-
       let conversation = await Conversation.findOne({
         participants: { $all: [sender, receiver] },
       });
 
-      // If no conversation exists, create a new one
       if (!conversation) {
         conversation = new Conversation({
           participants: [sender, receiver],
           messages: [],
         });
       }
-
-      // Add the new message to the conversation
       conversation.messages.push(newMessage);
 
-      // Save the updated conversation
       await conversation.save();
 
-      // Return the new message object
       return newMessage;
     },
   },

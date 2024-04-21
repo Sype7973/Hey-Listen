@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import { Box, Button, Flex, Icon } from "@chakra-ui/react";
 import SingleChat from "./SingleChat";
 import ChatWindow from "./ChatWindow"; // Import the chat window component
+import auth from "../utils/auth";
 
 import { AiOutlineMessage } from "react-icons/ai";
 
 const ChatBox = () => {
+
+    
+    const user = auth.loggedIn() ? auth.getProfile() : null;
+
+
   // State to manage active chat
   const [activeChatId, setActiveChatId] = useState(null);
   const [isChatboxOpen, setIsChatboxOpen] = useState(false);
@@ -21,6 +27,7 @@ const ChatBox = () => {
     setActiveChatId(chatId);
   };
   const toggleChatbox = () => {
+    console.log(user.data._id)
     setActiveChatId(null);
     setIsChatboxOpen(!isChatboxOpen);
   };
@@ -33,7 +40,8 @@ const ChatBox = () => {
             chatId={activeChatId}
             closeChat={() => setActiveChatId(null)}
             isChatBoxOpen={isChatboxOpen}
-          />
+            userId={user.data._id}
+            />
         )}
 
         <Flex flexDir="column" width="15em" justifyContent="end"
@@ -53,6 +61,7 @@ const ChatBox = () => {
                 {/* Map over the user's chats and render each chat as a SingleChat button */}
                 {chats.map((chat) => (
                   <SingleChat
+                    userId={user.data._id}
                     key={chat.id}
                     chatId={chat.id}
                     username={chat.username}

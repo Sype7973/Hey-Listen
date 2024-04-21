@@ -3,7 +3,7 @@ import { Box, Button, Flex, Text, Input, FormControl } from "@chakra-ui/react";
 import io from "socket.io-client";
 import { useLocation, Route, Routes } from "react-router-dom";
 
-const ChatWindow = ({ chatId, closeChat, isChatBoxOpen }) => {
+const ChatWindow = ({ chatId, closeChat, isChatBoxOpen, userId }) => {
   const [inputValue, setInputValue] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const [serverOffset, setServerOffset] = useState(0);
@@ -20,18 +20,20 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    console.log("inputValue");
+    console.log(inputValue);
     // socket.emit("chat message",{
     //    username: 'ron'
     //   });
-
     if (inputValue) {
+      console.log("Emitting 'chat message' event");
       // Emit the message to the server
       socket.emit("chat message", {
         content: inputValue,
-        sender: "6623df58b9c2d18233a4a241", // Provide the sender's ID or name
+        sender: userId, // Provide the sender's ID or name
         receiver: "6623df72b9c2d18233a4a243", // Provide the receiver's ID or name
       });
+      console.log("Message emitted to server");
 
       // Clear the input field
       setInputValue("");
@@ -80,10 +82,8 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen }) => {
           borderColor="#319795"
           borderRadius={20}
           bg="white"
-          
         >
-          <Box width="100%" height="100%"
-          >
+          <Box width="100%" height="100%">
             <Flex
               borderWidth={1}
               borderRadius={20}
@@ -107,14 +107,18 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen }) => {
                 >
                   X
                 </Button>
-              
-              <Flex direction="column" gap={2}                 bg="white" width="100%"
->
-                <Text>{chatId}</Text>
+
+                <Flex direction="column" gap={2} bg="white" width="100%">
+                  <Text>{chatId}</Text>
+                </Flex>
               </Flex>
-              </Flex>
-              <Flex className="App" flexDir="row" >
-                <Flex as="header" className="App-header" flexDir="column" justifyContent="end">
+              <Flex className="App" flexDir="row">
+                <Flex
+                  as="header"
+                  className="App-header"
+                  flexDir="column"
+                  justifyContent="end"
+                >
                   <Box width="100%" bg="slateGray">
                     <ul id="messages">
                       {messagesList.map((msg, index) => (
@@ -140,9 +144,11 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen }) => {
                         onChange={handleInputChange}
                         borderBottomLeftRadius={20}
                       />{" "}
-                      <Button type="submit" onClick={handleSubmit}
-                                              borderBottomRightRadius={20}
-                                              >
+                      <Button
+                        type="submit"
+                        onClick={handleSubmit}
+                        borderBottomRightRadius={20}
+                      >
                         Send
                       </Button>
                     </Flex>
