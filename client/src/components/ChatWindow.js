@@ -1,44 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Box, Button, Flex, Text, Input, FormControl } from "@chakra-ui/react";
 import io from "socket.io-client";
 import { useLocation, Route, Routes } from "react-router-dom";
+import getSocketInstance from "../utils/socket";
 
-const ChatWindow = ({ chatId, closeChat, isChatBoxOpen, userId }) => {
+const ChatWindow = ({
+  chatId,
+  closeChat,
+  isChatBoxOpen,
+  userId,
+  otherUsername,
+  otherUserId,
+}) => {
+  const socket = getSocketInstance(chatId);
+
   const [inputValue, setInputValue] = useState("");
   const [messagesList, setMessagesList] = useState([]);
   const [serverOffset, setServerOffset] = useState(0);
+
+  const chatContainerRef = useRef(null); // Reference to the chat container
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
-  const socket = io("http://localhost:3001", {
-    auth: {
-      serverOffset: 0,
-    },
-  });
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("inputValue");
-    console.log(inputValue);
-    // socket.emit("chat message",{
-    //    username: 'ron'
-    //   });
     if (inputValue) {
-      console.log("Emitting 'chat message' event");
-      // Emit the message to the server
-      socket.emit("chat message", {
+      // Create the message object
+      const message = {
         content: inputValue,
-        sender: userId, // Provide the sender's ID or name
-        receiver: "6623df72b9c2d18233a4a243", // Provide the receiver's ID or name
-      });
-      console.log("Message emitted to server");
+        sender: userId,
+        receiver: otherUserId,
+      };
+
+      // Emit the message to the server using chatId as the room ID
+      socket.emit("chat message", { roomId: chatId, message });
 
       // Clear the input field
       setInputValue("");
     }
   };
+
+  useEffect(() => {
+    if (chatId) {
+      // Join the chat room using the chatId as the room ID
+      socket.emit("join room", chatId);
+
+      // Load previous messages
+      socket.emit("load previous messages", {
+        sender: userId,
+        receiver: otherUserId,
+      });
+    }
+
+    const handlePreviousMessages = (messages) => {
+      setMessagesList(messages.messages);
+    };
+
+    socket.on("previous messages", handlePreviousMessages);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      socket.off("previous messages", handlePreviousMessages);
+      // Leave the room when the component unmounts
+      socket.emit("leave room", chatId);
+    };
+  }, [chatId, userId]);
 
   useEffect(() => {
     // Set up the event listener
@@ -69,6 +97,13 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen, userId }) => {
   const location = useLocation();
 
   useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messagesList]);
+
+  useEffect(() => {
     console.log("location changed to " + location.pathname);
   }, [location]);
 
@@ -76,8 +111,8 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen, userId }) => {
     <>
       {isChatBoxOpen && (
         <Flex
-          width="15em"
-          height="20em"
+          width="20em"
+          height="30em"
           border="2px"
           borderColor="#319795"
           borderRadius={20}
@@ -95,11 +130,12 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen, userId }) => {
             >
               <Flex
                 bg="gray.100"
-                justifyContent="end"
+                justifyContent="space-between"
                 borderTopRadius={20}
-                flexDir="column"
-                alignItems="end"
+                flexDir="row"
+                alignItems="center"
               >
+                <Text pl="10px">{otherUsername}</Text>
                 <Button
                   bg="gray.100"
                   onClick={closeChat}
@@ -107,10 +143,6 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen, userId }) => {
                 >
                   X
                 </Button>
-
-                <Flex direction="column" gap={2} bg="white" width="100%">
-                  <Text>{chatId}</Text>
-                </Flex>
               </Flex>
               <Flex className="App" flexDir="row">
                 <Flex
@@ -118,12 +150,40 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen, userId }) => {
                   className="App-header"
                   flexDir="column"
                   justifyContent="end"
+                  width="100%"
                 >
-                  <Box width="100%" bg="slateGray">
-                    <ul id="messages">
+                  <Box width="100%">
+                    <ul
+                      id="messages"
+                      style={{
+                        height: "24em",
+                        overflowY: "auto",
+                        padding: "10px",
+                      }}
+                      ref={chatContainerRef}
+                    >
                       {messagesList.map((msg, index) => (
-                        <li key={index}>
-                          <div>{msg.content}</div>
+                        <li key={index} style={{ listStyleType: "none" }}>
+                          <Flex
+                            justify={msg.sender === userId ? "end" : "start"}
+                            borderRadius={100}
+                            p={0.8}
+                          >
+                            <Text
+                              borderRadius={20}
+                              //   width="80%"
+                              px="10px"
+                              bg={msg.sender === userId ? "#38b2ac" : "#319795"}
+                              ml={msg.sender === userId ? "0px" : "5px"}
+                              mr={msg.sender === userId ? "5px" : "0px"}
+                              textAlign="left"
+                            //   textAlign={
+                            //     msg.sender === userId ? "right" : "left"
+                            //   }
+                            >
+                              {msg.content}
+                            </Text>
+                          </Flex>
                         </li>
                       ))}
                     </ul>
@@ -132,7 +192,7 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen, userId }) => {
                     id="form"
                     as="form"
                     action=""
-                    inputValue={setInputValue}
+                    // inputValue={setInputValue}
                     onSubmit={handleSubmit}
                     onChange={handleInputChange}
                   >
@@ -142,12 +202,15 @@ const ChatWindow = ({ chatId, closeChat, isChatBoxOpen, userId }) => {
                         autoComplete="off"
                         value={inputValue}
                         onChange={handleInputChange}
-                        borderBottomLeftRadius={20}
+                        borderBottomLeftRadius={16}
+                        borderTopLeftRadius={0}
+                        borderRightRadius={0}
                       />{" "}
                       <Button
                         type="submit"
                         onClick={handleSubmit}
                         borderBottomRightRadius={20}
+                        borderLeftRadius={0}
                       >
                         Send
                       </Button>

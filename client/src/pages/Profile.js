@@ -1,6 +1,6 @@
 // component to render a commission into PostDashboard.js
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import {
   Box,
   Flex,
@@ -12,6 +12,7 @@ import {
   Avatar,
   Button,
   useBreakpointValue,
+  Icon,
 } from "@chakra-ui/react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GET_PROFILE, GET_ME } from "../utils/queries";
@@ -19,8 +20,38 @@ import spinner from "../assets/images/spinner.gif";
 import ArtistPng from "../assets/images/Artist.png";
 import ProducerPng from "../assets/images/Producer.png";
 import ReactPlayer from "react-player";
+import { AiOutlineMessage } from "react-icons/ai";
+import { CREATE_CONVERSATION } from "../utils/mutations";
+import { useRefetchContext } from "../utils/refetchContext";
+
 // function that maps and renders commissions
-const Profile = () => {
+const Profile = ({ toggleChatbox, isChatboxOpen, setProfileActiveUser }) => {
+
+  const { refetchChatboxData } = useRefetchContext();
+
+  const [createConversation, { error }] = useMutation(CREATE_CONVERSATION);
+
+  const handleActivateChatbox = async () => {
+    try {
+      const participants = [me._id, user._id];
+
+      const { data } = await createConversation({
+        variables: {
+          participants,
+        },
+      });
+      if (!isChatboxOpen) {
+        toggleChatbox(user._id, user.username, data.createConversation.id);
+      }
+      refetchChatboxData();
+      setProfileActiveUser(user._id);
+    } catch (err) {
+      console.log("An error:");
+      console.error(err);
+    }
+
+    
+  };
   const { username } = useParams();
   const navigate = useNavigate();
   // loading queries
@@ -95,6 +126,12 @@ const Profile = () => {
     }
   }, [data, meData]);
 
+  const handleNewChat = () => {
+    console.log("Creating a new chat with:", me.username);
+    console.log(user);
+    handleActivateChatbox();
+  };
+
   const headingSize = useBreakpointValue({
     base: "xl",
     md: "2xl",
@@ -108,7 +145,6 @@ const Profile = () => {
     xl: "3xl",
   });
 
-  console.log(user);
   // loading statement before rendering
   if (isLoading || meLoading || usernameLoading) {
     return (
@@ -141,50 +177,74 @@ const Profile = () => {
           borderRadius="md"
           shadow="md"
         >
-          <Card width="100%" h="auto" bg="black" color="teal.500">
-            <CardBody textAlign="center">
-              <Flex
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-              >
-                {user && user.userType === "Producer" ? (
-                  <Avatar
-                    width="10%"
-                    height="auto"
-                    size="2xl"
-                    src={user ? ProducerPng : ProducerPng}
-                  />
-                ) : (
-                  <Avatar
-                    width="10%"
-                    height="auto"
-                    size="2xl"
-                    src={user ? ArtistPng : ArtistPng}
-                  />
-                )}
+          <Flex width="100%">
+            <Flex width="15%" bg="black" color="teal.500"></Flex>
+
+            <Card
+              width="70%"
+              h="auto"
+              bg="black"
+              color="teal.500"
+              borderRadius={0}
+            >
+              <CardBody textAlign="center">
                 <Flex
-                  width="60%"
                   direction="column"
-                  textAlign="center"
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <Heading
-                    color="teal.500"
-                    letterSpacing={10}
-                    size="4xl"
-                    fontSize={textSize}
+                  {user && user.userType === "Producer" ? (
+                    <Avatar
+                      width="10%"
+                      height="auto"
+                      size="2xl"
+                      src={user ? ProducerPng : ProducerPng}
+                    />
+                  ) : (
+                    <Avatar
+                      width="10%"
+                      height="auto"
+                      size="2xl"
+                      src={user ? ArtistPng : ArtistPng}
+                    />
+                  )}
+                  <Flex
+                    width="60%"
+                    direction="column"
+                    textAlign="center"
+                    alignItems="center"
+                    justifyContent="center"
                   >
-                    {user.username}
-                  </Heading>
-                  <Text fontSize={headingSize} letterSpacing={5}>
-                    {user.userType}
-                  </Text>
+                    <Heading
+                      color="teal.500"
+                      letterSpacing={10}
+                      size="4xl"
+                      fontSize={textSize}
+                    >
+                      {user.username}
+                    </Heading>
+                    <Text fontSize={headingSize} letterSpacing={5}>
+                      {user.userType}
+                    </Text>
+                  </Flex>
                 </Flex>
-              </Flex>
-            </CardBody>
-          </Card>
+              </CardBody>
+            </Card>
+            <Flex
+              width="15%"
+              bg="black"
+              color="teal.500"
+              justiftyContent="center"
+              alignItems="center"
+            >
+              <Icon
+                as={AiOutlineMessage}
+                boxSize="50px"
+                cursor="pointer"
+                onClick={handleNewChat}
+              />
+            </Flex>
+          </Flex>
 
           <Flex
             justifyContent="center"

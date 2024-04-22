@@ -1,36 +1,40 @@
-import React, { useState } from "react";
-import { Box, Button, Flex, Icon } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Box, Button, Flex, Icon, Text } from "@chakra-ui/react";
 import SingleChat from "./SingleChat";
-import ChatWindow from "./ChatWindow"; // Import the chat window component
+import ChatWindow from "./ChatWindow";
 import auth from "../utils/auth";
+import { GET_ME } from "../utils/queries";
+import { useRefetchContext } from "../utils/refetchContext";
+
+import { useQuery } from "@apollo/client";
 
 import { AiOutlineMessage } from "react-icons/ai";
 
-const ChatBox = () => {
+const ChatBox = ({
+  isChatboxOpen,
+  toggleChatbox,
+  activeChatId,
+  setActiveChatId,
+  handleChatClick,
+  activeOtherUsername,
+  activeOtherUserId,
+  refetchCallback,
+}) => {
+  const { data, loading, error, refetch } = useQuery(GET_ME);
+  const user = auth.loggedIn() ? auth.getProfile() : null;
+  const [chats, setChats] = useState([]);
 
-    
-    const user = auth.loggedIn() ? auth.getProfile() : null;
+  const { refetchChatboxData } = useRefetchContext();
 
-
-  // State to manage active chat
-  const [activeChatId, setActiveChatId] = useState(null);
-  const [isChatboxOpen, setIsChatboxOpen] = useState(false);
-
-  // Mock data for the user's chats
-  const chats = [
-    { id: 1, username: "Ron" },
-    { id: 2, username: "Billy" },
-  ];
-
-  // Function to handle click on SingleChat button
-  const handleChatClick = (chatId) => {
-    setActiveChatId(chatId);
-  };
-  const toggleChatbox = () => {
-    console.log(user.data._id)
-    setActiveChatId(null);
-    setIsChatboxOpen(!isChatboxOpen);
-  };
+  useEffect(() => {
+    if (data && data.me) {
+      setChats(data.me.conversations);
+    }
+    refetch()
+    refetchCallback(refetch);
+    refetchChatboxData(refetch);
+    console.log("Refetch function set in ChatBox.js");
+  }, [data]);
 
   return (
     <Box position="fixed" bottom={0} right={0} p={4} zIndex={10000}>
@@ -41,11 +45,18 @@ const ChatBox = () => {
             closeChat={() => setActiveChatId(null)}
             isChatBoxOpen={isChatboxOpen}
             userId={user.data._id}
-            />
+            otherUsername={activeOtherUsername}
+            otherUserId={activeOtherUserId}
+          />
         )}
 
-        <Flex flexDir="column" width="15em" justifyContent="end"
-        alignItems="end" pl="10px">
+        <Flex
+          flexDir="column"
+          width="15em"
+          justifyContent="end"
+          alignItems="end"
+          pl="10px"
+        >
           {/* Chatbox */}
           {isChatboxOpen && (
             <Box
@@ -58,32 +69,44 @@ const ChatBox = () => {
               borderRadius={20}
             >
               <Flex direction="column" gap={2}>
-                {/* Map over the user's chats and render each chat as a SingleChat button */}
-                {chats.map((chat) => (
-                  <SingleChat
-                    userId={user.data._id}
-                    key={chat.id}
-                    chatId={chat.id}
-                    username={chat.username}
-                    onChatClick={handleChatClick}
-                    isChatBoxOpen={isChatboxOpen}
-                  />
-                ))}
+                {chats && chats.length > 0 ? (
+                  chats.map((chat) => (
+                    <SingleChat
+                      key={chat.conversationId}
+                      convoId={chat.conversationId}
+                      otherUsername={chat.otherUsername}
+                      otherUserId={chat.otherUserId}
+                      onChatClick={handleChatClick}
+                      isChatBoxOpen={isChatboxOpen}
+                    />
+                  ))
+                ) : (
+                  <Text>
+                    No chats. Go to someone's profile to start chatting!
+                  </Text>
+                )}
               </Flex>
             </Box>
-          )}<Box pt="10px">
-          <Flex bg="blue.500" width="60px" height="60px" borderRadius={100} justifyContent="center" alignItems="center">
-            {/* <Button > */}
-            <Icon as={AiOutlineMessage} boxSize="50px" onClick={toggleChatbox} 
-            cursor="pointer"
-            
-            /> {/* The boxSize is based on Chakra's sizing scale */}
-            {/* </Button> */}
-          </Flex>
+          )}
+          <Box pt="10px">
+            <Flex
+              bg="blue.500"
+              width="60px"
+              height="60px"
+              borderRadius={100}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Icon
+                as={AiOutlineMessage}
+                boxSize="50px"
+                onClick={toggleChatbox}
+                cursor="pointer"
+              />
+            </Flex>
           </Box>
         </Flex>
       </Flex>
-      {/* Chat window (displayed conditionally) */}
     </Box>
   );
 };

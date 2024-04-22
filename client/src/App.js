@@ -10,6 +10,7 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import RefetchContext, { useRefetchContext } from "./utils/refetchContext";
 
 import Home from "./pages/HomePage";
 import PostDashboard from "./pages/PostDashboard";
@@ -55,9 +56,38 @@ function App() {
   const location = useLocation();
 
   const user = auth.loggedIn() ? auth.getProfile() : null;
-  
+
+  const [isChatboxOpen, setIsChatboxOpen] = useState(false);
+  const [activeOtherUsername, setActiveOtherUsername] = useState(null);
+  const [activeOtherUserId, setActiveOtherUserId] = useState(null);
+
+  const [activeChatId, setActiveChatId] = useState(null);
+
+  let refetchChatboxData = () => {};
+
+  function refetchCallback(refetch) {
+    refetchChatboxData = refetch;
+  }
+
+  const setProfileActiveUser = (otherUserId) => {
+    setActiveOtherUserId(otherUserId);
+  };
+
+  const toggleChatbox = (otherUserId, otherUsername, chatId) => {
+    setActiveChatId(chatId);
+    setActiveOtherUsername(otherUsername);
+    setActiveOtherUserId(otherUserId);
+    setIsChatboxOpen(!isChatboxOpen);
+  };
+
+  const handleChatClick = (chatId, otherUsername, otherUserId) => {
+    setActiveChatId(chatId);
+    setActiveOtherUsername(otherUsername);
+    setActiveOtherUserId(otherUserId);
+  };
 
   useEffect(() => {
+    // console.log(data)
     console.log("location changed to " + location.pathname);
   }, [location]);
   return (
@@ -77,18 +107,39 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/my-posts" element={<MyPosts />} />
                 <Route path="/create-post" element={<CreatePost />} />
-                <Route path="/profile/:username" element={<Profile />} />
+                <Route
+                  path="/profile/:username"
+                  element={
+                    <Profile
+                      toggleChatbox={toggleChatbox}
+                      isChatboxOpen={isChatboxOpen}
+                      setProfileActiveUser={setProfileActiveUser}
+                      refetchChatboxData={refetchChatboxData}
+                    />
+                  }
+                />{" "}
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/post/:id" element={<Post />} />
               </Routes>
             </Box>
           </Flex>
-
           <Footer position="sticky" bottom={0} />
-          {user ? (<Flex zIndex={10000} >
-            <ChatBox/>
-          </Flex>) : ( null )};
+          {user ? (
+            <Flex zIndex={10000}>
+              <ChatBox
+                isChatboxOpen={isChatboxOpen}
+                toggleChatbox={toggleChatbox}
+                activeChatId={activeChatId}
+                setActiveChatId={setActiveChatId}
+                handleChatClick={handleChatClick}
+                activeOtherUsername={activeOtherUsername}
+                activeOtherUserId={activeOtherUserId}
+                refetchCallback={refetchCallback}
+              />
+            </Flex>
+          ) : null}
+          ;
         </ChakraProvider>
       </div>
     </ApolloProvider>

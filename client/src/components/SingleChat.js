@@ -1,15 +1,22 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
 
-const SingleChat = ({ chatId, username, onChatClick, isChatBoxOpen }) => {
+const SingleChat = ({ convoId, otherUsername, otherUserId, onChatClick, isChatBoxOpen }) => {
+    
   // Function to handle button click
   const handleClick = () => {
-    onChatClick(chatId);
+    console.log(convoId)
+    console.log(otherUsername)
+    console.log(otherUserId)
+    console.log(onChatClick)
+    console.log(isChatBoxOpen)
+
+    onChatClick(convoId, otherUsername, otherUserId);
   };
 
   return (
     <Button onClick={handleClick} width="100%">
-      {username} {/* Display the username */}
+      {otherUsername} {/* Display the username */}
     </Button>
   );
 };
