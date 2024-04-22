@@ -1,7 +1,7 @@
-const { Schema, model } = require('mongoose');
-const bcrypt = require('bcrypt');
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcrypt");
 
-const commissionSchema = require('./Commission');
+const commissionSchema = require("./Commission");
 
 const userSchema = new Schema(
   {
@@ -14,33 +14,57 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      match: [/^([a-z0-9_.-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/, 'Must use a valid email address'],
+      match: [
+        /^([a-z0-9_.-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/,
+        "Must use a valid email address",
+      ],
     },
     password: {
       type: String,
       required: true,
-        minlength: 8,
-        match: [/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/, "Must contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character"],
+      minlength: 8,
+      match: [
+        /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/,
+        "Must contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
+      ],
     },
     userType: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     bio: {
-        type: String,
+      type: String,
     },
     profilePicture: {
-        type: String,
+      type: String,
     },
     musicLinks: {
-        type: [String],
+      type: [String],
     },
-    posts: [{
+    posts: [
+      {
         type: Schema.Types.ObjectId,
-        ref: 'Post',
-    }],
-    commissionIds: [{ type: Schema.Types.ObjectId, ref: 'Commission' }],  },
-  // set this to use virtual below
+        ref: "Post",
+      },
+    ],
+    commissionIds: [{ type: Schema.Types.ObjectId, ref: "Commission" }],
+    conversations: [
+      {
+        conversationId: {
+          type: Schema.Types.ObjectId,
+          ref: 'Conversation',
+        },
+        otherUsername: {
+          type: String,
+          required: true,
+        },
+        otherUserId: {
+          type: Schema.Types.ObjectId,
+          ref: 'User',
+        },
+      },
+    ],
+  },
   {
     toJSON: {
       virtuals: true,
@@ -49,8 +73,8 @@ const userSchema = new Schema(
 );
 
 // hash user password
-userSchema.pre('save', async function (next) {
-  if (this.isNew || this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified("password")) {
     const saltRounds = 10;
     this.password = await bcrypt.hash(this.password, saltRounds);
   }
@@ -62,10 +86,10 @@ userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-userSchema.virtual('commissionCount').get(function () {
+userSchema.virtual("commissionCount").get(function () {
   return this.commissionSchema.length;
 });
 
-const User = model('User', userSchema);
+const User = model("User", userSchema);
 
 module.exports = User;

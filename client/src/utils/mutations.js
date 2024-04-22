@@ -261,3 +261,24 @@ export const DELETE_COMMISSION = gql`
     }
   }
 `;
+
+export const CREATE_CONVERSATION = gql`
+  mutation CreateConversation($participants: [ID!]!) {
+    createConversation(participants: $participants) {
+      id
+      participants {
+        _id
+        username
+        email
+      }
+      messages {
+        content
+        sender {
+          _id
+          username
+        }
+        timestamp
+      }
+    }
+  }
+`;

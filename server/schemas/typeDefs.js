@@ -12,6 +12,14 @@ const typeDefs = gql`
     profilePicture: String
     musicLinks: [String]
     posts: [Post]
+    conversations: [ConversationEntry]
+
+  }
+
+  type ConversationEntry {
+    conversationId: ID
+    otherUsername: String
+    otherUserId: ID
   }
 
   input MessageInput {
@@ -155,6 +163,8 @@ const typeDefs = gql`
     createMessage(content: String!, sender: ID!, receiver: ID!): Conversation
     updateMessage(id: ID!, content: String!): Message
     deleteMessage(id: ID!): Boolean
+
+    createConversation(participants: [ID!]!): Conversation
   }
 `;
 

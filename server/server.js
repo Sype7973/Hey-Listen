@@ -49,22 +49,44 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  /*
+  console.log("CONNECTED");
+
+  socket.on("disconnect", () => {
+    console.log(`Client disconnected: ${socket.id}`);
+  });
+
+  socket.on("join room", (roomId) => {
+    socket.join(roomId);
+    console.log(`Client ${socket.id} joined room ${roomId}`);
+  });
+
+  socket.on("leave room", (roomId) => {
+    socket.leave(roomId);
+    console.log(`Client ${socket.id} left room ${roomId}`);
+  });
+
   socket.on("load previous messages", async (conversationId) => {
     try {
-      const previousMessages = await resolvers.Query.getConversation(conversationId);
+      let { sender, receiver } = conversationId;
+
+      const previousMessages = await resolvers.Query.getConversation(null, {
+        conversationId,
+      });
 
       socket.emit("previous messages", previousMessages);
     } catch (error) {
       console.error("Error loading previous messages:", error);
     }
   });
-*/
 
-  socket.on("chat message", async (data) => {
-    // console.log("data");
-    // console.log(data);
-    const { content, sender, receiver } = data;
+  socket.on("chat message", async ({ roomId, message }) => {
+    const { content, sender, receiver } = message;
+
+    // Check for required fields
+    if (!content || !sender || !receiver) {
+      console.error("Missing required fields: content, sender, or receiver");
+      return;
+    }
 
     try {
       // Call the createMessage mutation resolver to handle the new message
@@ -74,12 +96,15 @@ io.on("connection", (socket) => {
         receiver,
       });
 
-      // console.log(newMessage);
-
-      // Emit the new message back to all connected clients
-      io.emit("chat message", { content, sender, receiver }, newMessage._id);
+      // Emit the new message to the specific room
+      io.to(roomId).emit("chat message", {
+        content,
+        sender,
+        receiver,
+        id: newMessage._id,
+      });
     } catch (error) {
-      console.error("Error handling chat message:", error);
+      console.error(`Error handling chat message for room ${roomId}:`, error);
     }
   });
 });

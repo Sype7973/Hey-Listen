@@ -24,6 +24,11 @@ export const GET_ME = gql`
         budget
         _id
       }
+      conversations {
+        conversationId
+        otherUsername
+        otherUserId
+      }
     }
   }
 `;

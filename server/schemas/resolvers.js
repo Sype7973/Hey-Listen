@@ -50,21 +50,20 @@ const resolvers = {
       return Post.find({ postType: args.postType });
     },
 
-          /*------------Conversation------------*/
-    getConversation: async(parent, args) => {
-      console.log(args)
+    /*------------Conversation------------*/
+    getConversation: async (parent, args) => {
+      console.log("Args?");
+      console.log(args);
 
       const conversation = await Conversation.findOne({
-        participants: { $all: [args.sender, args.receiver] },
+        participants: {
+          $all: [args.conversationId.sender, args.conversationId.receiver],
+        },
       });
+
       return conversation;
-    
-    }
+    },
   },
-
-
-    
-
 
   Mutation: {
     /*------------User------------*/
@@ -301,29 +300,124 @@ const resolvers = {
     },
 
     /*------------Conversation------------*/
+    createConversation: async (parent, args) => {
+      const sender = args.participants[0];
+      const receiver = args.participants[1];
+
+
+      const existingConversation = await Conversation.findOne({
+        participants: { $all: [sender, receiver] },
+      });
+      console.log("Existing Conversation")
+      console.log(existingConversation);
+
+      if (existingConversation) {
+        return existingConversation;
+      }
+
+      const conversation = await Conversation.create({
+        participants: [sender, receiver],
+      });
+
+      if (!existingConversation) {
+        const senderUser = await User.findById(sender);
+        const receiverUser = await User.findById(receiver);
+
+        console.log("Sender User");
+        console.log(senderUser);
+        console.log("Receiver User");
+        console.log(receiverUser);
+
+        const senderName = senderUser.username;
+        const receiverName = receiverUser.username;
+
+        // Update sender's conversations
+        senderUser.conversations.push({
+          conversationId: conversation._id,
+          otherUsername: receiverName,
+          otherUserId: receiver,
+        });
+
+        // Update receiver's conversations
+        receiverUser.conversations.push({
+          conversationId: conversation._id,
+          otherUsername: senderName,
+          otherUserId: sender,
+        });
+
+        // Save the users
+        await senderUser.save();
+        await receiverUser.save();
+      }
+
+
+      return conversation;
+    },
+
     createMessage: async (parent, args) => {
       const { content, sender, receiver } = args;
+
+      // Create a new message
       const newMessage = {
         content,
         sender,
         timestamp: new Date(),
       };
 
+      // Find or create a conversation between the sender and receiver
       let conversation = await Conversation.findOne({
         participants: { $all: [sender, receiver] },
       });
 
+      let isNewConversation = false;
+
+      // If no conversation exists, create a new one
       if (!conversation) {
+        isNewConversation = true;
         conversation = new Conversation({
           participants: [sender, receiver],
-          messages: [],
+          messages: [newMessage],
         });
+        await conversation.save();
+      } else {
+        // If the conversation already exists, add the message to the conversation
+        conversation.messages.push(newMessage);
+        await conversation.save();
       }
-      conversation.messages.push(newMessage);
 
-      await conversation.save();
+      // If a new conversation was created, update the users' `conversations` arrays
+      if (isNewConversation) {
+        const senderUser = await User.findById(sender);
+        const receiverUser = await User.findById(receiver);
 
-      return newMessage;
+        console.log("Sender User");
+        console.log(senderUser);
+        console.log("Receiver User");
+        console.log(receiverUser);
+
+        const senderName = senderUser.username;
+        const receiverName = receiverUser.username;
+
+        // Update sender's conversations
+        senderUser.conversations.push({
+          conversationId: conversation._id,
+          otherUsername: receiverName,
+          otherUserId: receiver,
+        });
+
+        // Update receiver's conversations
+        receiverUser.conversations.push({
+          conversationId: conversation._id,
+          otherUsername: senderName,
+          otherUserId: sender,
+        });
+
+        // Save the users
+        await senderUser.save();
+        await receiverUser.save();
+      }
+
+      return conversation;
     },
   },
 };
